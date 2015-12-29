@@ -1,5 +1,7 @@
 package point
 
+import "math"
+
 const (
 	x = iota
 	y
@@ -7,6 +9,9 @@ const (
 )
 
 type Point [2]float64
+
+var NullPt = Point{math.NaN(),math.NaN()}
+
 //New constructor of Point
 func New(array []float64) Point {
 	var pt Point
