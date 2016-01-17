@@ -131,11 +131,11 @@ func (self *MBR) Intersects(other MBR) bool {
 	other.ur[y] < self.ll[y])
 }
 
-func (self *MBR) Intersects_point(p point.Point) bool {
-	return self.Contains_xy(p[x], p[y])
+func (self *MBR) IntersectsPoint(p point.Point) bool {
+	return self.ContainsXY(p[x], p[y])
 }
 
-func (self *MBR) Intersects_bounds(q1, q2 point.Point) bool {
+func (self *MBR) IntersectsBounds(q1, q2 point.Point) bool {
 
 	minq := math.Min(q1[x], q2[x])
 	maxq := math.Max(q1[x], q2[x])
@@ -159,7 +159,7 @@ func (self *MBR)  Contains(other MBR) bool {
 	(other.ur[y] <= self.ur[y]))
 }
 
-func (self *MBR) Contains_xy(x, y float64) bool {
+func (self *MBR) ContainsXY(x, y float64) bool {
 	return (
 	(x >= self.ll[0]) &&
 	(x <= self.ur[0]) &&
@@ -167,7 +167,8 @@ func (self *MBR) Contains_xy(x, y float64) bool {
 	(y <= self.ur[1]))
 }
 
-func (self *MBR) Completely_contains_xy(x, y float64) bool {
+//CompletelyContainsXY is true if mbr completely contains location with {x, y}
+func (self *MBR) CompletelyContainsXY(x, y float64) bool {
 	return (
 	(x > self.ll[0]) &&
 	(x < self.ur[0]) &&
@@ -175,7 +176,8 @@ func (self *MBR) Completely_contains_xy(x, y float64) bool {
 	(y < self.ur[1]))
 }
 
-func (self *MBR) Completely_contains_mbr(other MBR) bool {
+//CompletelyContainsMBR is true if mbr completely contains other
+func (self *MBR) CompletelyContainsMBR(other MBR) bool {
 	return (
 	(other.ll[x] > self.ll[x]) &&
 	(other.ur[x] < self.ur[x]) &&
@@ -183,9 +185,11 @@ func (self *MBR) Completely_contains_mbr(other MBR) bool {
 	(other.ur[y] < self.ur[y]))
 }
 
+//Disjoint of mbr do not intersect
 func (self *MBR) Disjoint(m MBR) bool {
 	return !(self.Intersects(m))
 }
+
 //Expand to include other mbr
 func (self *MBR) Expand(other MBR) *MBR {
 
@@ -204,8 +208,8 @@ func (self *MBR) Expand(other MBR) *MBR {
 	return self
 }
 
-//Expand_by expands mbr by change in x and y
-func (self *MBR) Expand_by(dx, dy float64) *MBR {
+//ExpandBy expands mbr by change in x and y
+func (self *MBR) ExpandBy(dx, dy float64) *MBR {
 
 	minx, miny := self.ll[x] - dx, self.ll[y] - dy
 	maxx, maxy := self.ur[x] + dx, self.ur[y] + dy
@@ -219,8 +223,8 @@ func (self *MBR) Expand_by(dx, dy float64) *MBR {
 	return self
 }
 
-//Expand_xy expands mbr to include x and y
-func (self *MBR) Expand_xy(x_coord, y_coord float64) *MBR {
+//ExpandXY expands mbr to include x and y
+func (self *MBR) ExpandXY(x_coord, y_coord float64) *MBR {
 
 	if x_coord < self.ll[x] {
 		self.ll[x] = x_coord

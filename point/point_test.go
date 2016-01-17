@@ -40,10 +40,12 @@ func TestPoint(t *testing.T) {
 		g.It("sqrt(3**2,4**2) ", func() {
 			pt := Point{3., 0.}
 			g.Assert(pt.Distance(Point{0., 4.})).Equal(5.0)
+			g.Assert(pt.DistanceSquare(Point{0., 4.})).Equal(25.0)
 		})
 		g.It("sqrt(2)", func() {
 			pt := Point{3, 4}
 			g.Assert(pt.Distance(Point{4, 5})).Equal(math.Sqrt2)
+			g.Assert(pt.DistanceSquare(Point{4, 5})).Equal(2.0)
 		})
 	})
 
@@ -67,7 +69,7 @@ func TestPoint(t *testing.T) {
 			g.Assert(a.String()).Equal("3.87 7.45")
 			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.Bbox()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}})
-			g.Assert(a.Convex_hull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.ConvexHull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
 	})
 
@@ -77,7 +79,7 @@ func TestPoint(t *testing.T) {
 			g.Assert(a.String()).Equal("3.87 7.45")
 			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.Bbox()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}})
-			g.Assert(a.Convex_hull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.ConvexHull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
 	})
 

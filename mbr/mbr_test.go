@@ -11,13 +11,13 @@ func TestMBR(t *testing.T) {
 	g := Goblin(t)
 
 	m00 := New(point.Point{0, 0}, point.Point{0, 0})
-	m00.Expand_xy(2, 2)
+	m00.ExpandXY(2, 2)
 
 	n00 := New(point.Point{0, 0}, point.Point{0, 0})
-	n00.Expand_xy(-2, -2)
+	n00.ExpandXY(-2, -2)
 
 	m0 := New(point.Point{1, 1}, point.Point{1, 1})
-	m0.Expand_by(1, 1)
+	m0.ExpandBy(1, 1)
 
 	m1 := New(point.Point{0, 0}, point.Point{2, 2})
 	m2 := New(point.Point{4, 5}, point.Point{8, 9})
@@ -43,7 +43,7 @@ func TestMBR(t *testing.T) {
 
 		})
 		g.It("intersects, distance", func() {
-			g.Assert(m1.Intersects_point(p)).IsTrue()
+			g.Assert(m1.IntersectsPoint(p)).IsTrue()
 
 			g.Assert(m00.Intersects(n00)).IsTrue()
 			nm00, success := m00.Intersection(n00)
@@ -112,10 +112,10 @@ func TestMBR(t *testing.T) {
 
 			// intersects but segment are disjoint
 			g.Assert(mp12.Intersects(mp34)).IsTrue()
-			g.Assert(mp12.Intersects_bounds(p3, p4)).IsTrue()
-			g.Assert(mp12.Intersects_bounds(m1.ll, m1.ur)).IsFalse()
-			g.Assert(mp12.Intersects_point(p3)).IsFalse()
-			g.Assert(m1.Contains_xy(1, 1)).IsTrue()
+			g.Assert(mp12.IntersectsBounds(p3, p4)).IsTrue()
+			g.Assert(mp12.IntersectsBounds(m1.ll, m1.ur)).IsFalse()
+			g.Assert(mp12.IntersectsPoint(p3)).IsFalse()
+			g.Assert(m1.ContainsXY(1, 1)).IsTrue()
 
 			mbr11 := New(point.Point{1, 1}, point.Point{1.5, 1.5})
 			mbr12 := New(point.Point{1, 1}, point.Point{2, 2})
@@ -129,15 +129,15 @@ func TestMBR(t *testing.T) {
 			g.Assert(m1.Disjoint(mbr14)).IsTrue()   // True disjoint
 
 
-			g.Assert(m1.Contains_xy(1.5, 1.5)).IsTrue()
-			g.Assert(m1.Contains_xy(2, 2)).IsTrue()
+			g.Assert(m1.ContainsXY(1.5, 1.5)).IsTrue()
+			g.Assert(m1.ContainsXY(2, 2)).IsTrue()
 
-			g.Assert(m1.Completely_contains_mbr(mbr11)).IsTrue()
-			g.Assert(m1.Completely_contains_xy(1.5, 1.5)).IsTrue()
-			g.Assert(m1.Completely_contains_xy(1.5, 1.5)).IsTrue()
-			g.Assert(m1.Completely_contains_xy(2, 2)).IsFalse()
-			g.Assert(m1.Completely_contains_mbr(mbr12)).IsFalse()
-			g.Assert(m1.Completely_contains_mbr(mbr13)).IsFalse()
+			g.Assert(m1.CompletelyContainsMBR(mbr11)).IsTrue()
+			g.Assert(m1.CompletelyContainsXY(1.5, 1.5)).IsTrue()
+			g.Assert(m1.CompletelyContainsXY(1.5, 1.5)).IsTrue()
+			g.Assert(m1.CompletelyContainsXY(2, 2)).IsFalse()
+			g.Assert(m1.CompletelyContainsMBR(mbr12)).IsFalse()
+			g.Assert(m1.CompletelyContainsMBR(mbr13)).IsFalse()
 		})
 
 		g.It("translate, expand by, area", func() {
@@ -158,7 +158,7 @@ func TestMBR(t *testing.T) {
 
 			mt := m1.Translate(1, 1)
 			mby := m1.Clone()
-			mby.Expand_by(-3, -3)
+			mby.ExpandBy(-3, -3)
 
 			m1c := m1.Center()
 			mtc := mt.Center()
