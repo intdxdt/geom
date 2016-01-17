@@ -5,6 +5,7 @@ import (
 	. "github.com/franela/goblin"
 	"github.com/intdxdt/simplex/geom/point"
 	"math"
+	util "github.com/intdxdt/simplex/util/math"
 )
 
 func TestMBR(t *testing.T) {
@@ -88,12 +89,15 @@ func TestMBR(t *testing.T) {
 			g.Assert(m34.Height()).Equal(0.5)
 			g.Assert(m3.Distance(m4)).Equal(0.0)
 
-			g.Assert(m1.Distance(m2)).Equal(math.Hypot(2, 3))
+			d := math.Hypot(2, 3)
+			g.Assert(m1.Distance(m2)).Equal(d)
+			g.Assert(m1.DistanceSquare(m2)).Equal(util.Round(d * d, 12))
 			g.Assert(m1.Distance(m3)).Equal(0.0)
+			g.Assert(m1.DistanceSquare(m3)).Equal(0.0)
 
-			a := New(point.Point{-7.703505430214746 ,3.0022503796012305},
+			a := New(point.Point{-7.703505430214746, 3.0022503796012305},
 				point.Point{-5.369812194018422, 5.231449888803689})
-			g.Assert(m1.Distance(a)).Equal(math.Hypot(-5.369812194018422, 3.0022503796012305-2))
+			g.Assert(m1.Distance(a)).Equal(math.Hypot(-5.369812194018422, 3.0022503796012305 - 2))
 
 			b := New(point.Point{-4.742849832055231, -4.1033230559816065},
 				point.Point{-1.9563504455521576, -2.292098454754609})
@@ -104,7 +108,7 @@ func TestMBR(t *testing.T) {
 		g.It("contains, disjoint , contains completely", func() {
 			p1 := point.Point{-5.95, 9.28}
 			p2 := point.Point{-0.11, 12.56}
-			p3 := point.Point{3.58, 11.79}
+			p3 := point.Point{3.58,  11.79}
 			p4 := point.Point{-1.16, 14.71}
 
 			mp12 := New(p1, p2)
@@ -151,7 +155,7 @@ func TestMBR(t *testing.T) {
 
 			g.Assert(ma.AsArray()).Equal([]float64{0, 0, 5, 9}) //ma modified by expand
 			g.Assert(mc.AsArray()).Equal([]float64{1.7, 1.5, 5, 9})//should not be touched
-			g.Assert(md.AsArray()).Equal([]float64{-1,-1, 2,2}) //ma modified by expand
+			g.Assert(md.AsArray()).Equal([]float64{-1, -1, 2, 2}) //ma modified by expand
 
 			//mc area
 			g.Assert(mc.Area()).Equal(24.75)
