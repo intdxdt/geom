@@ -31,7 +31,7 @@ func TestPoint(t *testing.T) {
 		})
 
 		g.It("as array", func() {
-			g.Assert(p1.As_array()).Equal([2]float64{p1[x], p1[y]})
+			g.Assert(p1.AsArray()).Equal([2]float64{p1[x], p1[y]})
 		})
 
 	})

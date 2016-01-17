@@ -36,7 +36,7 @@ func TestMBR(t *testing.T) {
 		clone_m0123 := m0123.Clone()
 
 		g.It("equals ", func() {
-			g.Assert(m1.As_array()).Equal([]float64{0, 0, 2, 2})
+			g.Assert(m1.AsArray()).Equal([]float64{0, 0, 2, 2})
 			g.Assert(clone_m0123.Equals(m0123)).IsTrue()
 			g.Assert(m0.Equals(m1)).IsTrue()
 			g.Assert(m00.Equals(m1)).IsTrue()
@@ -63,8 +63,8 @@ func TestMBR(t *testing.T) {
 			_m13 := []float64{1.7, 1.5, 2, 2}
 			_m23 := []float64{4, 5, 5, 9}
 
-			g.Assert(_m13).Equal(m13.As_array())
-			g.Assert(_m23).Equal(m23.As_array())
+			g.Assert(_m13).Equal(m13.AsArray())
+			g.Assert(_m23).Equal(m23.AsArray())
 
 			g.Assert(m3.Intersects(m4)).IsTrue()
 			g.Assert(m2.Intersects(m5)).IsTrue()
@@ -149,9 +149,9 @@ func TestMBR(t *testing.T) {
 			ma.Expand(mc)
 			md.Expand(mb)
 
-			g.Assert(ma.As_array()).Equal([]float64{0, 0, 5, 9}) //ma modified by expand
-			g.Assert(mc.As_array()).Equal([]float64{1.7, 1.5, 5, 9})//should not be touched
-			g.Assert(md.As_array()).Equal([]float64{-1,-1, 2,2}) //ma modified by expand
+			g.Assert(ma.AsArray()).Equal([]float64{0, 0, 5, 9}) //ma modified by expand
+			g.Assert(mc.AsArray()).Equal([]float64{1.7, 1.5, 5, 9})//should not be touched
+			g.Assert(md.AsArray()).Equal([]float64{-1,-1, 2,2}) //ma modified by expand
 
 			//mc area
 			g.Assert(mc.Area()).Equal(24.75)
@@ -165,15 +165,15 @@ func TestMBR(t *testing.T) {
 
 			g.Assert(m1c.Equals(point.Point{1, 1}))
 			g.Assert(mtc.Equals(point.Point{2, 2}))
-			g.Assert(mt.As_array()).Equal([]float64{1, 1, 3, 3})
-			g.Assert(mby.As_array()).Equal([]float64{-1, -1, 3, 3})
+			g.Assert(mt.AsArray()).Equal([]float64{1, 1, 3, 3})
+			g.Assert(mby.AsArray()).Equal([]float64{-1, -1, 3, 3})
 		})
 
 		g.It("is null, string", func() {
 			mm := m1.Clone()
 			mm.ur[1] = math.NaN()
-			g.Assert(mm.Is_null()).IsTrue()
-			g.Assert(m1.Is_null()).IsFalse()
+			g.Assert(mm.IsNull()).IsTrue()
+			g.Assert(m1.IsNull()).IsFalse()
 			g.Assert(m1.String()).Equal("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
 		})
 

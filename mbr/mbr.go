@@ -48,11 +48,11 @@ func (self *MBR) String() string {
 	ul, lr := point.Point{ll[x], ur[y]}, point.Point{ur[x], ll[y]}
 
 	return "POLYGON ((" +
-	ll.String() + ", " +
-	ul.String() + ", " +
-	ur.String() + ", " +
-	lr.String() + ", " +
-	ll.String() +
+		ll.String() + ", " +
+		ul.String() + ", " +
+		ur.String() + ", " +
+		lr.String() + ", " +
+		ll.String() +
 	"))"
 }
 
@@ -60,7 +60,7 @@ func (self *MBR ) Clone() MBR {
 	return New(self.ll, self.ur)
 }
 
-func (self *MBR) As_array() []float64 {
+func (self *MBR) AsArray() []float64 {
 	return []float64{self.ll[x], self.ll[y], self.ur[x], self.ur[y]}
 }
 
@@ -68,7 +68,7 @@ func (self *MBR) Equals(other MBR) bool {
 	return self.ll.Equals(other.ll) && self.ur.Equals(other.ur)
 }
 
-func (self *MBR) Is_null() bool {
+func (self *MBR) IsNull() bool {
 	return self.ll.IsNull() || self.ur.IsNull()
 }
 
