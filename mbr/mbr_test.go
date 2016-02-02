@@ -2,9 +2,9 @@ package mbr
 
 import (
 	"testing"
-	. "github.com/franela/goblin"
-	"github.com/intdxdt/simplex/geom/point"
 	"math"
+	"github.com/intdxdt/simplex/geom/point"
+	. "github.com/franela/goblin"
 	util "github.com/intdxdt/simplex/util/math"
 )
 
@@ -12,13 +12,13 @@ func TestMBR(t *testing.T) {
 	g := Goblin(t)
 
 	m00 := New(point.Point{0, 0}, point.Point{0, 0})
-	m00.ExpandXY(2, 2)
+	m00.ExpandIncludeXY(2, 2)
 
 	n00 := New(point.Point{0, 0}, point.Point{0, 0})
-	n00.ExpandXY(-2, -2)
+	n00.ExpandIncludeXY(-2, -2)
 
 	m0 := New(point.Point{1, 1}, point.Point{1, 1})
-	m0.ExpandBy(1, 1)
+	m0.ExpandByDelta(1, 1)
 
 	m1 := New(point.Point{0, 0}, point.Point{2, 2})
 	m2 := New(point.Point{4, 5}, point.Point{8, 9})
@@ -132,7 +132,6 @@ func TestMBR(t *testing.T) {
 			g.Assert(m1.Disjoint(mbr13)).IsFalse()  // False
 			g.Assert(m1.Disjoint(mbr14)).IsTrue()   // True disjoint
 
-
 			g.Assert(m1.ContainsXY(1.5, 1.5)).IsTrue()
 			g.Assert(m1.ContainsXY(2, 2)).IsTrue()
 
@@ -150,8 +149,8 @@ func TestMBR(t *testing.T) {
 			mb := New(point.Point{-1, -1}, point.Point{1.5, 1.9})
 			mc := New(point.Point{1.7, 1.5}, point.Point{5, 9})
 			md := ma.Clone()
-			ma.Expand(mc)
-			md.Expand(mb)
+			ma.ExpandIncludeMBR(mc)
+			md.ExpandIncludeMBR(mb)
 
 			g.Assert(ma.AsArray()).Equal([]float64{0, 0, 5, 9}) //ma modified by expand
 			g.Assert(mc.AsArray()).Equal([]float64{1.7, 1.5, 5, 9})//should not be touched
@@ -162,7 +161,7 @@ func TestMBR(t *testing.T) {
 
 			mt := m1.Translate(1, 1)
 			mby := m1.Clone()
-			mby.ExpandBy(-3, -3)
+			mby.ExpandByDelta(-3, -3)
 
 			m1c := m1.Center()
 			mtc := mt.Center()

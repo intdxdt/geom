@@ -5,7 +5,6 @@ import (
 	"math"
 )
 
-
 func (self *MBR) Equals(other MBR) bool {
 	return self.ll.Equals(other.ll) && self.ur.Equals(other.ur)
 }
@@ -13,8 +12,6 @@ func (self *MBR) Equals(other MBR) bool {
 func (self *MBR) IsNull() bool {
 	return self.ll.IsNull() || self.ur.IsNull()
 }
-
-
 
 func (self *MBR) Intersection(other MBR) (MBR, bool) {
 	nan := math.NaN()
