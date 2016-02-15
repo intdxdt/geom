@@ -1,17 +1,19 @@
 package mbr
 
 import (
-	point "github.com/intdxdt/simplex/geom/point"
 	"math"
+    "github.com/intdxdt/simplex/geom/point"
+    util "github.com/intdxdt/simplex/util/math"
 )
 
 func (self *MBR) Equals(other MBR) bool {
-	return self.ll.Equals(other.ll) && self.ur.Equals(other.ur)
+    return (
+    util.Float_equal(self[x1], other[x1]) &&
+    util.Float_equal(self[y1], other[y1]) &&
+    util.Float_equal(self[x2], other[x2]) &&
+    util.Float_equal(self[y2], other[y2]))
 }
 
-func (self *MBR) IsNull() bool {
-	return self.ll.IsNull() || self.ur.IsNull()
-}
 
 func (self *MBR) Intersection(other MBR) (MBR, bool) {
 	nan := math.NaN()
@@ -22,96 +24,96 @@ func (self *MBR) Intersection(other MBR) (MBR, bool) {
 	inters := self.Intersects(other)
 
 	if inters {
-		if self.ll[x] > other.ll[x] {
-			minx = self.ll[x]
+		if self[x1] > other[x1] {
+			minx = self[x1]
 		} else {
-			minx = other.ll[x]
+			minx = other[x1]
 		}
 
-		if self.ll[y] > other.ll[y] {
-			miny = self.ll[y]
+		if self[y1] > other[y1] {
+			miny = self[y1]
 		}else {
-			miny = other.ll[y]
+			miny = other[y1]
 		}
 
-		if self.ur[x] < other.ur[x] {
-			maxx = self.ur[x]
+		if self[x2] < other[x2] {
+			maxx = self[x2]
 		}else {
-			maxx = other.ur[x]
+			maxx = other[x2]
 		}
 
-		if self.ur[y] < other.ur[y] {
-			maxy = self.ur[y]
+		if self[y2] < other[y2] {
+			maxy = self[y2]
 		}else {
-			maxy = other.ur[y]
+			maxy = other[y2]
 		}
 
 	}
 
-	return New(point.Point{minx, miny}, point.Point{maxx, maxy}), inters
+	return New(minx, miny, maxx, maxy), inters
 }
 
 func (self *MBR) Intersects(other MBR) bool {
 	//not disjoint
 	return ! (
-	other.ll[x] > self.ur[x] ||
-	other.ur[x] < self.ll[x] ||
-	other.ll[y] > self.ur[y] ||
-	other.ur[y] < self.ll[y])
+	other[x1] > self[x2] ||
+	other[x2] < self[x1] ||
+	other[y1] > self[y2] ||
+	other[y2] < self[y1])
 }
 
 func (self *MBR) IntersectsPoint(p point.Point) bool {
-	return self.ContainsXY(p[x], p[y])
+	return self.ContainsXY(p[x1], p[y1])
 }
 
 func (self *MBR) IntersectsBounds(q1, q2 point.Point) bool {
 
-	minq := math.Min(q1[x], q2[x])
-	maxq := math.Max(q1[x], q2[x])
+	minq := math.Min(q1[x1], q2[x1])
+	maxq := math.Max(q1[x1], q2[x1])
 
-	if (self.ll[x] > maxq || self.ur[x] < minq) {
+	if (self[x1] > maxq || self[x2] < minq) {
 		return false
 	}
 
-	minq = math.Min(q1[y], q2[y])
-	maxq = math.Max(q1[y], q2[y])
+	minq = math.Min(q1[y1], q2[y1])
+	maxq = math.Max(q1[y1], q2[y1])
 
 	// not disjoint
-	return !(self.ll[y] > maxq || self.ur[y] < minq)
+	return !(self[y1] > maxq || self[y2] < minq)
 }
 
 func (self *MBR)  Contains(other MBR) bool {
 	return (
-	(other.ll[x] >= self.ll[x]) &&
-	(other.ur[x] <= self.ur[x]) &&
-	(other.ll[y] >= self.ll[y]) &&
-	(other.ur[y] <= self.ur[y]))
+	(other[x1] >= self[x1]) &&
+	(other[x2] <= self[x2]) &&
+	(other[y1] >= self[y1]) &&
+	(other[y2] <= self[y2]))
 }
 
 func (self *MBR) ContainsXY(x, y float64) bool {
 	return (
-	(x >= self.ll[0]) &&
-	(x <= self.ur[0]) &&
-	(y >= self.ll[1]) &&
-	(y <= self.ur[1]))
+	(x >= self[x1]) &&
+	(x <= self[x2]) &&
+	(y >= self[y1]) &&
+	(y <= self[y2]))
 }
 
 //CompletelyContainsXY is true if mbr completely contains location with {x, y}
 func (self *MBR) CompletelyContainsXY(x, y float64) bool {
 	return (
-	(x > self.ll[0]) &&
-	(x < self.ur[0]) &&
-	(y > self.ll[1]) &&
-	(y < self.ur[1]))
+	(x > self[x1]) &&
+	(x < self[x2]) &&
+	(y > self[y1]) &&
+	(y < self[y2]))
 }
 
 //CompletelyContainsMBR is true if mbr completely contains other
 func (self *MBR) CompletelyContainsMBR(other MBR) bool {
 	return (
-	(other.ll[x] > self.ll[x]) &&
-	(other.ur[x] < self.ur[x]) &&
-	(other.ll[y] > self.ll[y]) &&
-	(other.ur[y] < self.ur[y]))
+	(other[x1] > self[x1]) &&
+	(other[x2] < self[x2]) &&
+	(other[y1] > self[y1]) &&
+	(other[y2] < self[y2]))
 }
 
 //Disjoint of mbr do not intersect

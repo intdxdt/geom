@@ -5,17 +5,17 @@ import "math"
 //Expand to include other mbr
 func (self *MBR) ExpandIncludeMBR(other MBR) *MBR {
 
-	if other.ll[x] < self.ll[x] {
-		self.ll[x] = other.ll[x]
+	if other[x1] < self[x1] {
+		self[x1] = other[x1]
 	}
-	if other.ur[x] > self.ur[x] {
-		self.ur[x] = other.ur[x]
+	if other[x2] > self[x2] {
+		self[x2] = other[x2]
 	}
-	if other.ll[y] < self.ll[y] {
-		self.ll[y] = other.ll[y]
+	if other[y1] < self[y1] {
+		self[y1] = other[y1]
 	}
-	if other.ur[y] > self.ur[y] {
-		self.ur[y] = other.ur[y]
+	if other[y2] > self[y2] {
+		self[y2] = other[y2]
 	}
 	return self
 }
@@ -23,14 +23,14 @@ func (self *MBR) ExpandIncludeMBR(other MBR) *MBR {
 //ExpandBy expands mbr by change in x and y
 func (self *MBR) ExpandByDelta(dx, dy float64) *MBR {
 
-	minx, miny := self.ll[x] - dx, self.ll[y] - dy
-	maxx, maxy := self.ur[x] + dx, self.ur[y] + dy
+	minx, miny := self[x1] - dx, self[y1] - dy
+	maxx, maxy := self[x2] + dx, self[y2] + dy
 
 	minx, maxx = math.Min(minx, maxx), math.Max(minx, maxx)
 	miny, maxy = math.Min(miny, maxy), math.Max(miny, maxy)
 
-	self.ll[x], self.ll[y] = minx, miny
-	self.ur[x], self.ur[y] = maxx, maxy
+	self[x1], self[y1] = minx, miny
+	self[x2], self[y2] = maxx, maxy
 
 	return self
 }
@@ -38,16 +38,16 @@ func (self *MBR) ExpandByDelta(dx, dy float64) *MBR {
 //ExpandXY expands mbr to include x and y
 func (self *MBR) ExpandIncludeXY(x_coord, y_coord float64) *MBR {
 
-	if x_coord < self.ll[x] {
-		self.ll[x] = x_coord
-	}else if x_coord > self.ur[x] {
-		self.ur[x] = x_coord
+	if x_coord < self[x1] {
+		self[x1] = x_coord
+	}else if x_coord > self[x2] {
+		self[x2] = x_coord
 	}
 
-	if y_coord < self.ll[y] {
-		self.ll[y] = y_coord
-	}else if y_coord > self.ur[y] {
-		self.ur[y] = y_coord
+	if y_coord < self[y1] {
+		self[y1] = y_coord
+	}else if y_coord > self[y2] {
+		self[y2] = y_coord
 	}
 
 	return self

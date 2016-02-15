@@ -1,18 +1,16 @@
 package mbr
 
 import (
-	point "github.com/intdxdt/simplex/geom/point"
+    "fmt"
 )
 
+//String converts mbr to wkt string
 func (self *MBR) String() string {
-	ll, ur := self.ll, self.ur
-	ul, lr := point.Point{ll[x], ur[y]}, point.Point{ur[x], ll[y]}
+    lx, ly := self[x1], self[y1]
+    ux, uy := self[x2], self[y2]
 
-	return "POLYGON ((" +
-		ll.String() + ", " +
-		ul.String() + ", " +
-		ur.String() + ", " +
-		lr.String() + ", " +
-		ll.String() +
-	"))"
+    return fmt.Sprintf(
+        "POLYGON ((%v %v, %v %v, %v %v, %v %v, %v %v))",
+        lx, ly, lx, uy, ux, uy, ux, ly, lx, ly,
+    )
 }

@@ -1,47 +1,23 @@
 package mbr
 
-import (
-	point "github.com/intdxdt/simplex/geom/point"
-)
+import "math"
+
+type MBR [4]float64
 
 const (
-	x = iota
-	y
+	x1 = iota
+	y1
+    x2
+    y2
 )
 
-type MBR struct {
-	ll, ur point.Point
-}
 
-func New(ll, ur  point.Point) MBR {
-	x1, y1 := ll[x], ll[y]
-	x2, y2 := ur[x], ur[y]
-
-	var minx, maxx, miny, maxy float64
-
-	var self MBR
-
-	if x1 < x2 {
-		minx = x1
-		maxx = x2
-	}else {
-		minx = x2
-		maxx = x1
-	}
-
-	if y1 < y2 {
-		miny = y1
-		maxy = y2
-	}else {
-		miny = y2
-		maxy = y1
-	}
-	self.ll = point.Point{minx, miny}
-	self.ur = point.Point{maxx, maxy}
-
-	return self
+func New(minx, miny, maxx,  maxy float64) MBR {
+    minx, maxx = math.Min(minx, maxx), math.Max(minx, maxx)
+    miny, maxy = math.Min(miny, maxy), math.Max(miny, maxy)
+	return MBR{minx, miny, maxx, maxy}
 }
 
 func (self *MBR ) Clone() MBR {
-	return New(self.ll, self.ur)
+	return MBR{self[x1], self[y1], self[x2], self[y2]}
 }
