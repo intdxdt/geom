@@ -21,9 +21,7 @@ func New(array []float64) Point {
 
 //Clone point
 func (self *Point) Clone() Point {
-	var pt Point
-	pt[x], pt[y] = self[x], self[y]
-	return pt
+	return Point{self[x], self[y]}
 }
 
 //X gets the x coordinate of a point same as point[0]
@@ -38,7 +36,5 @@ func (self *Point) Y() float64 {
 
 //AsArray converts Point to [2]float64
 func (self *Point) AsArray() [2]float64 {
-	var pt  [2]float64
-	pt[x], pt[y] = self[x], self[y]
-	return pt
+	return [2]float64{self[x], self[y]}
 }

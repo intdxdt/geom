@@ -7,8 +7,8 @@ import (
 //Equals evaluates whether two points are the same
 func (pt *Point) Equals(point Point) bool {
     return (
-    util.Float_equal(pt[x], point[x]) &&
-    util.Float_equal(pt[y], point[y]))
+    util.FloatEqual(pt[x], point[x]) &&
+    util.FloatEqual(pt[y], point[y]))
 }
 
 //Intersects evaluates whether two points are the same

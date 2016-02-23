@@ -8,12 +8,15 @@ func (self *MBR) ExpandIncludeMBR(other MBR) *MBR {
 	if other[x1] < self[x1] {
 		self[x1] = other[x1]
 	}
+
 	if other[x2] > self[x2] {
 		self[x2] = other[x2]
 	}
+
 	if other[y1] < self[y1] {
 		self[y1] = other[y1]
 	}
+    
 	if other[y2] > self[y2] {
 		self[y2] = other[y2]
 	}

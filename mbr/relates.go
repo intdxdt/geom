@@ -8,10 +8,10 @@ import (
 
 func (self *MBR) Equals(other MBR) bool {
     return (
-    util.Float_equal(self[x1], other[x1]) &&
-    util.Float_equal(self[y1], other[y1]) &&
-    util.Float_equal(self[x2], other[x2]) &&
-    util.Float_equal(self[y2], other[y2]))
+    util.FloatEqual(self[x1], other[x1]) &&
+    util.FloatEqual(self[y1], other[y1]) &&
+    util.FloatEqual(self[x2], other[x2]) &&
+    util.FloatEqual(self[y2], other[y2]))
 }
 
 
