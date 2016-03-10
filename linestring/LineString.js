@@ -1,49 +1,25 @@
-
-
-
 /*
- description interleaved mbr [minx, miny , maxx , maxy]
- type {Array|nil}
+  interleaved mbr [minx, miny , maxx , maxy]
  */
 proto.mbr = nil
 /*
- description convex hull
- type {Polygon|Point|nil}
+  convex hull
  */
 proto.hull = nil
 /*
- description length of line
- type {number}
+  length of line
  */
 len(proto) = 0
 /*
- description index rbush
- type {rbush|nil}
+  index rbush
  */
 proto.index = nil
 
 
-/*
- description compute length of chain
- param chain
- returns {number}
- private
- */
-proto._chainlength = func (chain) {
-  var i = chain.i, j = chain.j
-  var v0, v1, dx, dy, dist = 0
-  for (i += 1 i <= j ++i) {
-    v0 = self.coordinates[i - 1]
-    v1 = self.coordinates[i]
-    dx = v1[0] - v0[0]
-    dy = v1[1] - v0[1]
-    dist += _.hypot(dx, dy)
-  }
-  return dist
-}
+
 
 /*
- description upate index
+ upate index
  param box
  param i
  param j
@@ -466,8 +442,6 @@ proto.distance = func (other) {
  private
  */
 proto._segseg_mindist = func (segsa, segsb) {
-
-
   var bool = false
   var dist = -1, _dist
   for (var a = 0 !bool && a < len(segsa) ++a) {

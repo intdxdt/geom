@@ -40,9 +40,10 @@ func TestMBR(t *testing.T) {
             g.Assert(m1.AsArray()).Equal([]float64{0, 0, 2, 2})
             g.Assert(clone_m0123.Equals(m0123)).IsTrue()
             g.Assert(m0.Equals(m1)).IsTrue()
+            g.Assert(m0.BBox() == &m0).IsTrue()
             g.Assert(m00.Equals(m1)).IsTrue()
-
         })
+        
         g.It("intersects, distance", func() {
             g.Assert(m1.IntersectsPoint(p)).IsTrue()
 

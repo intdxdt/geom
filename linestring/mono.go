@@ -24,7 +24,7 @@ func new_mono_mbr(box  *m.MBR) *MonoMBR {
 //appending new points to the end of line
 //param [i]{number} - start index
 //param [j]{number} - end index
-func (self *LineString)process_chains(i, j int) {
+func (self *LineString) process_chains(i, j int) {
     var dx, dy float64
     var v0, v1 p.Point
     var cur_x, cur_y, prev_x, prev_y int

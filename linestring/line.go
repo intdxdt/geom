@@ -48,3 +48,8 @@ func New(coordinates []p.Point) LineString {
     self.build_index()
     return self
 }
+
+//Clone linestring
+func (self *LineString) Clone() LineString{
+    return New(self.coordinates)
+}
