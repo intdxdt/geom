@@ -25,20 +25,14 @@ type LineString struct {
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
 func NewLineString(coordinates []*point.Point) *LineString {
+    if len(coordinates) < 2 {
+        panic("a linestring must have at least 2 coordinate")
+    }
     self := &LineString{}
     self.chains = make([]*MonoMBR, 0)
 
-    if len(coordinates) == 1 {
-        coordinates = append(coordinates, coordinates[0].Clone())
-    }
-
     self.coordinates = make([]*point.Point, len(coordinates))
     copy(self.coordinates, coordinates)
-
-    if len(coordinates) == 0 {
-        //at least a segment a ring p1----p2----p1
-        panic("a linestring must have at least 1 coordinate")
-    }
 
     //init
     self.monosize = int(math.Log2(float64(len(coordinates)) + 1.0))
@@ -50,7 +44,7 @@ func NewLineString(coordinates []*point.Point) *LineString {
     return self
 }
 
-//Clone linestring
+//clone linestring
 func (self *LineString) Clone() *LineString {
     return NewLineString(self.coordinates)
 
@@ -61,8 +55,11 @@ func (self *LineString) Envelope() string {
     return self.bbox.MBR.String()
 }
 
+//print chains
 func (self *LineString)  PrintChains() {
     for i := 0; i < len(self.chains); i++ {
-        fmt.Println(self.chains[i].String())
+        //fmt.Println(self.chains[i].String())
+        fmt.Printf("%p\n", self.chains[i])
     }
 }
+

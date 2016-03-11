@@ -4,7 +4,7 @@ import (
     p "github.com/intdxdt/simplex/geom/point"
 //"github.com/intdxdt/simplex/geom/mbr"
     "github.com/intdxdt/simplex/struct/rtree"
-//"math"
+    "fmt"
 )
 
 /*
@@ -35,14 +35,54 @@ func (self *LineString) Append(pnt *p.Point) *LineString {
     return self
 }
 
+
+//pop last coordinate
+func (self *LineString)  Pop() *LineString {
+
+    if len(self.coordinates) < 3 {
+        //at least a segment a ring p1----p2----p1
+        panic("a linestring must have at least 2 coordinate")
+    }
+
+    var chain *MonoMBR
+    //chain index
+    var idx = len(self.chains) - 1
+    chain, self.chains = pop_mono_mbr(self.chains)
+
+    //remove chain from index
+    node := self.find_chain(chain)
+    self.index.Remove(node)
+
+    //subtract length of newly poped chain
+    self.length -= self.chain_length(chain)
+
+    //pop coord
+    _, self.coordinates = pop_coords(self.coordinates)
+    var i = chain.i
+    var j = len(self.coordinates) - 1
+    if i < j {
+        //chain is empty , nothing to process i == j
+        self.process_chains(i, j)
+        //add newly pushed chains
+        for ; idx < len(self.chains); idx++ {
+            self.index.Insert(self.chains[idx])
+        }
+    }
+    self.update_rootmbr()
+    return self
+}
+
 func (self *LineString) find_chain(ch *MonoMBR) *rtree.Node {
     res := self.index.Search(ch.MBR)
+    fmt.Printf("%T\n", *res[0].GetItem())
+    fmt.Println(res[0].GetItem())
+
     var node *rtree.Node
-    bbox := &ch.MBR
     node = nil
     if len(res) >= 1 {
         for i := 0; i < len(res); i++ {
-            if res[i].BBox().Equals(bbox) {
+            //compare box identity
+            if is_bbox(res[i].BBox(), ch.MBR) {
                 node = res[i]
                 break
             }
@@ -58,6 +98,6 @@ func (self *LineString)  update_rootmbr() {
     self.bbox.i = 0
     self.bbox.j = len(self.coordinates) - 1
     for i := 1; i < len(self.chains); i++ {
-        self.bbox.MBR.ExpandIncludeMBR(&self.chains[i].MBR)
+        self.bbox.MBR.ExpandIncludeMBR(self.chains[i].MBR)
     }
 }

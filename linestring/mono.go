@@ -1,23 +1,26 @@
 package linestring
 
-import ()
 import (
-    m "github.com/intdxdt/simplex/geom/mbr"
-    p "github.com/intdxdt/simplex/geom/point"
+    "github.com/intdxdt/simplex/geom/mbr"
+    "github.com/intdxdt/simplex/geom/point"
     "math"
 )
 
 type MonoMBR struct {
-    m.MBR
+    *mbr.MBR
     i int
     j int
 }
 
 //clone  mono mbr
-func ( box *MonoMBR) Clone() *MonoMBR {
+func (box *MonoMBR) Clone() *MonoMBR {
     clone_mbr := box.MBR.Clone()
-    mono_mbr := &MonoMBR{*clone_mbr, box.i, box.j}
-    return mono_mbr
+    return  &MonoMBR{clone_mbr, box.i, box.j}
+}
+
+//clone  mono mbr
+func ( box *MonoMBR) BBox() *mbr.MBR {
+    return box.MBR
 }
 
 //update mono chain index
@@ -26,22 +29,9 @@ func ( box *MonoMBR) update_index(i, j int) {
     box.j = j
 }
 
-//pop chain from chainl list
-func pop_mono_mbr(a []*MonoMBR) (*MonoMBR, []*MonoMBR) {
-    var v *MonoMBR
-    var n int
-    if len(a) == 0 {
-        return nil, a
-    }
-    n = len(a) - 1
-    v, a[n] = a[n], nil
-    return v, a[:n]
-}
-
-
 //new monotone mbr
-func new_mono_mbr(box  *m.MBR) *MonoMBR {
-    return &MonoMBR{*box, null, null}
+func new_mono_mbr(box  *mbr.MBR) *MonoMBR {
+    return &MonoMBR{box, null, null}
 }
 
 
@@ -52,7 +42,7 @@ func new_mono_mbr(box  *m.MBR) *MonoMBR {
 //param [j]{number} - end index
 func (self *LineString) process_chains(i, j int) {
     var dx, dy float64
-    var v0, v1 *p.Point
+    var v0, v1 *point.Point
     var cur_x, cur_y, prev_x, prev_y int
     var mono *MonoMBR
 
@@ -64,7 +54,7 @@ func (self *LineString) process_chains(i, j int) {
     }
 
     v0 = self.coordinates[i]
-    box := m.NewMBR(v0[x], v0[y], v0[x], v0[y])
+    box := mbr.NewMBR(v0[x], v0[y], v0[x], v0[y])
 
     self.bbox = new_mono_mbr(box)
     box = box.Clone()
@@ -102,7 +92,7 @@ func (self *LineString) process_chains(i, j int) {
 
             prev_x, prev_y = cur_x, cur_y
             p0, p1 := self.coordinates[i - 1], self.coordinates[i]
-            box := m.NewMBR(p0[x], p0[y], p1[x], p1[y])
+            box := mbr.NewMBR(p0[x], p0[y], p1[x], p1[y])
 
             mono = new_mono_mbr(box)
             self.xy_monobox(mono, i - 1, i)
@@ -111,8 +101,6 @@ func (self *LineString) process_chains(i, j int) {
     }
 }
 
-
-
 //compute bbox of x or y mono chain
 func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
     if i != null {
@@ -120,14 +108,12 @@ func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
         if j == null {
             mono.j = i
         } else {
-            mono.i = i
-            mono.j = j
+            mono.i, mono.j = i, j
         }
 
-        self.bbox.ExpandIncludeMBR(&mono.MBR)
+        self.bbox.ExpandIncludeMBR(mono.MBR)
         if self.bbox.i == null {
-            self.bbox.i = mono.i
-            self.bbox.j = mono.j
+            self.bbox.i, self.bbox.j = mono.i, mono.j
         } else {
             if mono.j > self.bbox.j {
                 self.bbox.j = mono.j

@@ -5,7 +5,6 @@ import (
     . "github.com/franela/goblin"
     pt "github.com/intdxdt/simplex/geom/point"
     "github.com/intdxdt/simplex/util/math"
-    "fmt"
 )
 
 func TestLineStringEdit(t *testing.T) {
@@ -21,14 +20,17 @@ func TestLineStringEdit(t *testing.T) {
     g.Describe("Linestring", func() {
         g.It("should test length on append", func() {
             ln := NewLineString(pts)
-            fmt.Println(ln.bbox.MBR.String())
-            g.Assert(math.Round(ln.Length(), 10)).Equal(math.Round(9.62780549425, 10))
+            g.Assert(math.Round(ln.length, 10)).Equal(math.Round(9.62780549425, 10))
             g.Assert(len(ln.chains)).Equal(2)
 
             ln.Append(d)
-            fmt.Println(ln.bbox.MBR.String())
             g.Assert(math.Round(ln.Length(), 10)).Equal(math.Round(17.2939648978, 10))
             g.Assert(len(ln.chains)).Equal(3)
+
+            ln.Pop()
+            g.Assert(math.Round(ln.length, 10)).Equal(math.Round(9.62780549425, 10))
+            g.Assert(len(ln.chains)).Equal(2)
+
         })
     })
 }

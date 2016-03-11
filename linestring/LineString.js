@@ -1,35 +1,4 @@
 
-
-
-/*
- description pop last coordinate ,
- *  line must have at least 2 coords, pop  if coords length > 2
- */
-proto.pop = func () {
-  if self.len(coordinates) > 2 {
-    //chain index
-    var idx = self.len(chains) - 1
-    var chain = self.chains.pop()
-    //remove chain from index
-    self.index.remove(chain)
-    //subtract length of newly poped chain
-    len(self) -= self._chainlength(chain)
-    //pop coord
-    self.coordinates.pop()
-    var i = chain.i
-    var j = self.len(coordinates) - 1
-    if i < j { //chain is empty , nothing to process i == j
-      self._process(i, j)
-      //add newly pushed chains
-      for ( idx < self.len(chains) ++idx) {
-        self.index.insert(self.chains[idx])
-      }
-    }
-    self._update_rootmbr()
-  }
-  return self
-}
-
 /*
  description test intersects of self line string with other
  param other{LineString|Polygon|Point|Array} - geometry types and array as Point
@@ -135,129 +104,11 @@ proto._intersects = func (other) {
   return !!bool
 }
 
-/*
- description intersection of self linestring with other
- param other{LineString}
- returns {*}
- */
-proto.intersection = func (other) {
 
-  var ptlist = []
-  if !self.mbr.intersects(other.mbr) {
-    //disjoint
-    return ptlist
-  }
-  //if root mbrs intersect
-  var i, q, lnrange, ibox, qbox, qrng
-  var othersegs = [], selfsegs = []
-  var box = other.mbr
-  var query = self._searchbox(box)
-  var inrange = self.index.search(query)
-  for (i = 0 i < len(inrange) ++i) {
-    //cur self box
-    ibox = inrange[i]
 
-    //search ln using ibox
-    query = self._searchbox(ibox)
 
-    lnrange = other.index.search(query)
-    for (q = 0 q < len(lnrange) ++q) {
-      qbox = lnrange[q]
-      qrng = ibox.intersection(qbox)
-      self._segsinrange(selfsegs, qrng, ibox.i, ibox.j)
-      other._segsinrange(othersegs, qrng, qbox.i, qbox.j)
-      self._segseg_intersection(selfsegs, othersegs, ptlist, true)
-    }
-  }
-  return _.map(ptlist, func (pt) {
-    return Point(pt)
-  })
-}
-/*
- description make other args a line
- param other
- returns {*}
- private
- */
-proto._lineother = func (other) {
 
-  var list = []
 
-  if isline(other) {
-    list.append(other)
-  }
-  else if ispolygon(other) {
-    list.append(other.shell)
-    list.append.apply(list, other.holes)
-  }
-  else if ispoint(other) {
-    list.append(new LineString([other, other]))
-  }
-
-  return list
-}
-/*
- description line string coordinate array
- param array{Array}
- returns {Array}
- */
-proto._linestring = func _linestring(array) {
-
-  //[[[],[]]]
-  var shell = array
-  while _.is_array(shell &&
-         _.is_array(shell[0]) &&
-         _.is_array(shell[0][0])) {
-    shell = shell[0]
-  }
-  return shell
-}
-
-/*
- description index search bbox
- param box
- returns {*[]}
- private
- */
-proto._searchbox = func (box) {
-
-  return [box.minx, box.miny, box.maxx, box.maxy]
-}
-/*
- description pupulate in place
- *  seglist array using query box and indices
- param seglist{Array}
- param box{MBR}
- param i{number}
- param j{number}
- param [append]{boolean}
- param [xor]{boolean} - altenate segments if nothing is in range of box
- returns {Array}
- private
- */
-proto._segsinrange = func (seglist, box, i, j, append, xor) {
-
-  //append or refresh list
-  append = !!append
-  xor = !!xor
-  !(append) && (len(seglist) = 0)
-
-  var altsegs = [], bool, seg
-  for ( i < j ++i) {
-    bool = box.intersects(self.coordinates[i], self.coordinates[i + 1])
-    seg = [self.coordinates[i], self.coordinates[i + 1]]
-    if bool {
-      seglist.append(seg)
-    }
-    else {
-      altsegs.append(seg)
-    }
-  }
-  if xor && _.is_empty(seglist) {
-    seglist.append.apply(seglist, altsegs)
-  }
-  return seglist
-}
 /*
  description segment intersects test
  param segsa
@@ -310,8 +161,6 @@ proto._segseg_intersection = func (segsa, segsb, ptlist, append) {
  return {Number}
  */
 proto.distance = func (other) {
-
-
   var othersegs = [], selfsegs = []
   if ispolygon(other) {
     other = other.shell
@@ -428,18 +277,6 @@ proto.toString = proto.to_string = func () {
   return new WKTWriter().write(self)
 }
 
-/*
- description if line is ring
- returns {boolean}
- */
-proto.isring = func () {
-
-  var n = self.len(coordinates)
-  var x = 0, y = 1
-  var p0 = self.coordinates[0]
-  var pn = self.coordinates[n - 1]
-  return (n > 2) && (p0[x] == pn[x]) && (p0[y] == pn[y])
-}
 
 /*
  description clone

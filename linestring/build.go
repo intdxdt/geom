@@ -9,9 +9,9 @@ func (self *LineString)build_index() {
     if !self.index.IsEmpty() {
         self.index.Clear()
     }
-    data := make(rtree.Items, len(self.chains))
+    data := make([]rtree.Item, len(self.chains))
     for i := range self.chains {
-        data[i] = &self.chains[i].MBR
+        data[i] = self.chains[i]
     }
     self.index.Load(data)//bulkload
 }
