@@ -13,6 +13,32 @@ type MonoMBR struct {
     j int
 }
 
+//clone  mono mbr
+func ( box *MonoMBR) Clone() *MonoMBR {
+    clone_mbr := box.MBR.Clone()
+    mono_mbr := &MonoMBR{*clone_mbr, box.i, box.j}
+    return mono_mbr
+}
+
+//update mono chain index
+func ( box *MonoMBR) update_index(i, j int) {
+    box.i = i
+    box.j = j
+}
+
+//pop chain from chainl list
+func pop_mono_mbr(a []*MonoMBR) (*MonoMBR, []*MonoMBR) {
+    var v *MonoMBR
+    var n int
+    if len(a) == 0 {
+        return nil, a
+    }
+    n = len(a) - 1
+    v, a[n] = a[n], nil
+    return v, a[:n]
+}
+
+
 //new monotone mbr
 func new_mono_mbr(box  *m.MBR) *MonoMBR {
     return &MonoMBR{*box, null, null}
@@ -26,7 +52,7 @@ func new_mono_mbr(box  *m.MBR) *MonoMBR {
 //param [j]{number} - end index
 func (self *LineString) process_chains(i, j int) {
     var dx, dy float64
-    var v0, v1 p.Point
+    var v0, v1 *p.Point
     var cur_x, cur_y, prev_x, prev_y int
     var mono *MonoMBR
 
@@ -38,11 +64,11 @@ func (self *LineString) process_chains(i, j int) {
     }
 
     v0 = self.coordinates[i]
-    box := m.New(v0[x], v0[y], v0[x], v0[y])
+    box := m.NewMBR(v0[x], v0[y], v0[x], v0[y])
 
-    self.bbox = new_mono_mbr(&box)
+    self.bbox = new_mono_mbr(box)
     box = box.Clone()
-    mono = new_mono_mbr(&box)
+    mono = new_mono_mbr(box)
 
     self.xy_monobox(mono, i, i)
     self.chains = append(self.chains, mono)
@@ -76,9 +102,9 @@ func (self *LineString) process_chains(i, j int) {
 
             prev_x, prev_y = cur_x, cur_y
             p0, p1 := self.coordinates[i - 1], self.coordinates[i]
-            box := m.New(p0[x], p0[y], p1[x], p1[y])
+            box := m.NewMBR(p0[x], p0[y], p1[x], p1[y])
 
-            mono = new_mono_mbr(&box)
+            mono = new_mono_mbr(box)
             self.xy_monobox(mono, i - 1, i)
             self.chains = append(self.chains, mono)
         }
@@ -98,7 +124,7 @@ func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
             mono.j = j
         }
 
-        self.bbox.ExpandIncludeMBR(mono.MBR)
+        self.bbox.ExpandIncludeMBR(&mono.MBR)
         if self.bbox.i == null {
             self.bbox.i = mono.i
             self.bbox.j = mono.j
@@ -120,3 +146,5 @@ func xy_sign(v float64) int {
     }
     return i
 }
+
+

@@ -9,18 +9,22 @@ import (
 func TestLineString(t *testing.T) {
     g := Goblin(t)
 
-    pts := []pt.Point{
+    pts := []*pt.Point{
         {5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9},
         {6.6, 7.9}, {5.6, 7.9},
     }
-    pts_1   := []pt.Point{{5.6, 7.9}}
-    ln      := New(pts)
+    pts_1   := []*pt.Point{{5.6, 7.9}}
+    ln      := NewLineString(pts)
     cln     := ln.Clone()
-    ln_1    := New(pts_1)
+    ln_1    := NewLineString(pts_1)
 
     g.Describe("Linestring", func() {
         g.It("should test length", func() {
             g.Assert(ln.Length() == 4.0).IsTrue()
+            g.Assert(ln.len(len(ln.coordinates)-1, 0) == ln.Length()).IsTrue()
+            g.Assert(ln.chain_length(ln.chains[0]) == ln.chain_length(ln.chains[1])).IsTrue()
+            g.Assert(ln.chain_length(ln.chains[2]) == ln.chain_length(ln.chains[3]) ).IsTrue()
+
             g.Assert(cln.Length() == 4.0).IsTrue()
             g.Assert(ln_1.Length() == 0.0).IsTrue()
         })
@@ -35,8 +39,8 @@ func TestLineString(t *testing.T) {
                 }
                 done()
             }()
-            pts := make([]pt.Point, 0)
-            New(pts)
+            pts := make([]*pt.Point, 0)
+            NewLineString(pts)
         })
 
         g.It("should be array of points", func() {
@@ -45,7 +49,7 @@ func TestLineString(t *testing.T) {
             g.Assert(cln.ToArray()).Eql(pts)
             ln.build_index()
             g.Assert(ln.ToArray()).Eql(pts)
-            g.Assert(ln_1.ToArray()).Eql([]pt.Point{pts_1[0], pts_1[0]})
+            g.Assert(ln_1.ToArray()).Eql([]*pt.Point{pts_1[0], pts_1[0]})
         })
 
     })

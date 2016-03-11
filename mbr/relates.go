@@ -6,7 +6,7 @@ import (
     util "github.com/intdxdt/simplex/util/math"
 )
 
-func (self *MBR) Equals(other MBR) bool {
+func (self *MBR) Equals(other *MBR) bool {
     return (
     util.FloatEqual(self[x1], other[x1]) &&
     util.FloatEqual(self[y1], other[y1]) &&
@@ -15,7 +15,7 @@ func (self *MBR) Equals(other MBR) bool {
 }
 
 
-func (self *MBR) Intersection(other MBR) (MBR, bool) {
+func (self *MBR) Intersection(other *MBR) (*MBR, bool) {
 	nan := math.NaN()
 
 	minx, miny := nan, nan
@@ -50,10 +50,10 @@ func (self *MBR) Intersection(other MBR) (MBR, bool) {
 
 	}
 
-	return New(minx, miny, maxx, maxy), inters
+	return NewMBR(minx, miny, maxx, maxy), inters
 }
 
-func (self *MBR) Intersects(other MBR) bool {
+func (self *MBR) Intersects(other *MBR) bool {
 	//not disjoint
 	return ! (
 	other[x1] > self[x2] ||
@@ -62,11 +62,11 @@ func (self *MBR) Intersects(other MBR) bool {
 	other[y2] < self[y1])
 }
 
-func (self *MBR) IntersectsPoint(p point.Point) bool {
+func (self *MBR) IntersectsPoint(p *point.Point) bool {
 	return self.ContainsXY(p[x1], p[y1])
 }
 
-func (self *MBR) IntersectsBounds(q1, q2 point.Point) bool {
+func (self *MBR) IntersectsBounds(q1, q2 *point.Point) bool {
 
 	minq := math.Min(q1[x1], q2[x1])
 	maxq := math.Max(q1[x1], q2[x1])
@@ -82,7 +82,7 @@ func (self *MBR) IntersectsBounds(q1, q2 point.Point) bool {
 	return !(self[y1] > maxq || self[y2] < minq)
 }
 
-func (self *MBR)  Contains(other MBR) bool {
+func (self *MBR)  Contains(other *MBR) bool {
 	return (
 	(other[x1] >= self[x1]) &&
 	(other[x2] <= self[x2]) &&
@@ -108,7 +108,7 @@ func (self *MBR) CompletelyContainsXY(x, y float64) bool {
 }
 
 //CompletelyContainsMBR is true if mbr completely contains other
-func (self *MBR) CompletelyContainsMBR(other MBR) bool {
+func (self *MBR) CompletelyContainsMBR(other *MBR) bool {
 	return (
 	(other[x1] > self[x1]) &&
 	(other[x2] < self[x2]) &&
@@ -117,7 +117,7 @@ func (self *MBR) CompletelyContainsMBR(other MBR) bool {
 }
 
 //Disjoint of mbr do not intersect
-func (self *MBR) Disjoint(m MBR) bool {
+func (self *MBR) Disjoint(m *MBR) bool {
 	return !(self.Intersects(m))
 }
 

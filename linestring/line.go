@@ -1,9 +1,10 @@
 package linestring
 
 import (
-    p "github.com/intdxdt/simplex/geom/point"
+    "github.com/intdxdt/simplex/geom/point"
     "github.com/intdxdt/simplex/struct/rtree"
     "math"
+    "fmt"
 )
 
 const (
@@ -14,24 +15,24 @@ const (
 
 type LineString struct {
     chains      []*MonoMBR
-    coordinates []p.Point
+    coordinates []*point.Point
     monosize    int
     bucketsize  int
-    index       rtree.RTree
+    index       *rtree.RTree
     bbox        *MonoMBR
     length      float64
 }
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
-func New(coordinates []p.Point) LineString {
-    var self LineString
+func NewLineString(coordinates []*point.Point) *LineString {
+    self := &LineString{}
     self.chains = make([]*MonoMBR, 0)
 
     if len(coordinates) == 1 {
         coordinates = append(coordinates, coordinates[0].Clone())
     }
 
-    self.coordinates = make([]p.Point, len(coordinates))
+    self.coordinates = make([]*point.Point, len(coordinates))
     copy(self.coordinates, coordinates)
 
     if len(coordinates) == 0 {
@@ -50,6 +51,18 @@ func New(coordinates []p.Point) LineString {
 }
 
 //Clone linestring
-func (self *LineString) Clone() LineString{
-    return New(self.coordinates)
+func (self *LineString) Clone() *LineString {
+    return NewLineString(self.coordinates)
+
+}
+
+//envelope of linestring
+func (self *LineString) Envelope() string {
+    return self.bbox.MBR.String()
+}
+
+func (self *LineString)  PrintChains() {
+    for i := 0; i < len(self.chains); i++ {
+        fmt.Println(self.chains[i].String())
+    }
 }

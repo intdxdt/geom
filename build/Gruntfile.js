@@ -12,6 +12,7 @@ module.exports = function (grunt) {
     './mbr',
     './point',
     './linestring',
+    './wkt',
   ];
   test_dirs = _.map(test_dirs, function (curdir) {
     return path.resolve(path.join(root_dir, curdir))

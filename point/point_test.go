@@ -8,12 +8,12 @@ import (
 
 func TestPoint(t *testing.T) {
 	g := Goblin(t)
-	p1 := Point{4, 5}
-	p2 := Point{4.0, 5.0}
-	p3 := New([]float64{4, 5})
-	p4 := New([]float64{4, 5.01})
-	p5 := New([]float64{4})
-	p6 := Point{4.0, math.NaN()}
+	p1 := &Point{4, 5}
+	p2 := &Point{4.0, 5.0}
+	p3 := NewPoint([]float64{4, 5})
+	p4 := NewPoint([]float64{4, 5.01})
+	p5 := NewPoint([]float64{4})
+	p6 := &Point{4.0, math.NaN()}
 
 	g.Describe("geom.point", func() {
 
@@ -38,28 +38,28 @@ func TestPoint(t *testing.T) {
 
 	g.Describe("Point distance", func() {
 		g.It("sqrt(3**2,4**2) ", func() {
-			pt := Point{3., 0.}
-			g.Assert(pt.Distance(Point{0., 4.})).Equal(5.0)
-			g.Assert(pt.DistanceSquare(Point{0., 4.})).Equal(25.0)
+			pt := &Point{3., 0.}
+			g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
+			g.Assert(pt.DistanceSquare(&Point{0., 4.})).Equal(25.0)
 		})
 		g.It("sqrt(2)", func() {
-			pt := Point{3, 4}
-			g.Assert(pt.Distance(Point{4, 5})).Equal(math.Sqrt2)
-			g.Assert(pt.DistanceSquare(Point{4, 5})).Equal(2.0)
+			pt := &Point{3, 4}
+			g.Assert(pt.Distance(&Point{4, 5})).Equal(math.Sqrt2)
+			g.Assert(pt.DistanceSquare(&Point{4, 5})).Equal(2.0)
 		})
 	})
 
 	g.Describe("Point operators", func() {
 		g.It("add ", func() {
-			a, b := Point{3., 0.}, Point{0., 4.}
-			g.Assert(a.Add(b)).Equal(Point{3., 4.})
+			a, b := &Point{3., 0.}, &Point{0., 4.}
+			g.Assert(a.Add(b)).Equal(&Point{3., 4.})
 		})
 
 		g.It("sub & neg ", func() {
-			a, b := Point{3., 4.}, Point{4, 5}
+			a, b := &Point{3., 4.}, &Point{4, 5}
 			nb := b.Neg()
-			g.Assert(a.Sub(b)).Equal(Point{-1.0, -1.0})
-			g.Assert(nb).Equal(Point{-4, -5})
+			g.Assert(a.Sub(b)).Equal(&Point{-1.0, -1.0})
+			g.Assert(nb).Equal(&Point{-4, -5})
 		})
 	})
 
@@ -68,8 +68,8 @@ func TestPoint(t *testing.T) {
 			a := Point{3.87, 7.45}
 			g.Assert(a.String()).Equal("3.87 7.45")
 			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
-			g.Assert(a.Bbox()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}})
-			g.Assert(a.ConvexHull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
 	})
 
@@ -78,8 +78,8 @@ func TestPoint(t *testing.T) {
 			a := Point{3.87, 7.45}
 			g.Assert(a.String()).Equal("3.87 7.45")
 			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
-			g.Assert(a.Bbox()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}})
-			g.Assert(a.ConvexHull()).Equal([]Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
+			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
 	})
 

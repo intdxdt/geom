@@ -9,8 +9,8 @@ type Point [2]float64
 
 
 //New constructor of Point
-func New(array []float64) Point {
-	var pt Point
+func NewPoint(array []float64) *Point {
+	pt := new(Point)
 	if len(array) == 1 {
 		pt[x] = array[x]
 	}else if len(array) >= 2 {
@@ -20,8 +20,8 @@ func New(array []float64) Point {
 }
 
 //Clone point
-func (self *Point) Clone() Point {
-	return Point{self[x], self[y]}
+func (self *Point) Clone() *Point {
+	return &Point{self[x], self[y]}
 }
 
 //X gets the x coordinate of a point same as point[0]

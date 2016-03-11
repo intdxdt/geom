@@ -1,63 +1,6 @@
-/*
-  interleaved mbr [minx, miny , maxx , maxy]
- */
-proto.mbr = nil
-/*
-  convex hull
- */
-proto.hull = nil
-/*
-  length of line
- */
-len(proto) = 0
-/*
-  index rbush
- */
-proto.index = nil
 
 
 
-
-/*
- upate index
- param box
- param i
- param j
- private
- */
-proto._updateindex = func (box, i, j) {
-  box.i = i
-  box.j = j
-}
-
-
-/*
- description append coordinate, by extending line
- param pnt{Point}
- */
-proto.append = func (pnt) {
-  if ispoint(pnt) {
-    //chain index
-    var idx = self.len(chains) - 1
-    var chain = self.chains.pop()
-    //remove chain from index
-    self.index.remove(chain)
-    //subtract length of newly poped chain
-    len(self) -= self._chainlength(chain)
-    var coord = [pnt[0], pnt[1]]
-    //push coord
-    self.coordinates.append(coord)
-    var i = chain.i
-    var j = self.len(coordinates) - 1
-    self._process(i, j)
-    //add newly pushed chains to index
-    for ( idx < self.len(chains) ++idx) {
-      self.index.insert(self.chains[idx])
-    }
-    self._update_rootmbr()
-  }
-  return self
-}
 /*
  description pop last coordinate ,
  *  line must have at least 2 coords, pop  if coords length > 2
@@ -86,19 +29,7 @@ proto.pop = func () {
   }
   return self
 }
-/*
- description update root mbr
- private
- */
-proto._update_rootmbr = func () {
 
-  self.mbr = mbr(self.chains[0])
-  self.mbr.i = 0
-  self.mbr.j = self.len(coordinates) - 1
-  for (var i = 1 i < self.len(chains) ++i) {
-    self.mbr.expand(self.chains[i])
-  }
-}
 /*
  description test intersects of self line string with other
  param other{LineString|Polygon|Point|Array} - geometry types and array as Point

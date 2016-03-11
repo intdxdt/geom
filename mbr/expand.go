@@ -3,7 +3,7 @@ package mbr
 import "math"
 
 //Expand to include other mbr
-func (self *MBR) ExpandIncludeMBR(other MBR) *MBR {
+func (self *MBR) ExpandIncludeMBR(other *MBR) *MBR {
 
 	if other[x1] < self[x1] {
 		self[x1] = other[x1]
@@ -16,7 +16,7 @@ func (self *MBR) ExpandIncludeMBR(other MBR) *MBR {
 	if other[y1] < self[y1] {
 		self[y1] = other[y1]
 	}
-    
+
 	if other[y2] > self[y2] {
 		self[y2] = other[y2]
 	}

@@ -23,8 +23,8 @@ func (self *MBR) Area() float64 {
 
 
 //Translate mbr  by change in x and y
-func (self *MBR)Translate(dx, dy float64) MBR {
-	return New(
+func (self *MBR)Translate(dx, dy float64) *MBR {
+	return NewMBR(
 		self[x1] + dx, self[y1] + dy,
 		self[x2] + dx, self[y2] + dy)
 }

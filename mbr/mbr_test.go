@@ -11,39 +11,39 @@ import (
 func TestMBR(t *testing.T) {
     g := Goblin(t)
 
-    m00 := New(0, 0, 0, 0)
+    m00 := NewMBR(0, 0, 0, 0)
     m00.ExpandIncludeXY(2, 2)
 
-    n00 := New(0, 0, 0, 0)
+    n00 := NewMBR(0, 0, 0, 0)
     n00.ExpandIncludeXY(-2, -2)
 
-    m0 := New(1, 1, 1, 1)
+    m0 := NewMBR(1, 1, 1, 1)
     m0.ExpandByDelta(1, 1)
 
-    m1 := New(0, 0, 2, 2)
-    m2 := New(4, 5, 8, 9)
-    m3 := New(1.7, 1.5, 5, 9)
-    m4 := New(5, 0, 8, 2)
-    m5 := New(5, 11, 8, 9)
-    m6 := New(0, 0, 2, -2)
-    m7 := New(-2, 1, 4, -2)
-    m8 := New(-1, 0, 1, -1.5)
+    m1 := NewMBR(0, 0, 2, 2)
+    m2 := NewMBR(4, 5, 8, 9)
+    m3 := NewMBR(1.7, 1.5, 5, 9)
+    m4 := NewMBR(5, 0, 8, 2)
+    m5 := NewMBR(5, 11, 8, 9)
+    m6 := NewMBR(0, 0, 2, -2)
+    m7 := NewMBR(-2, 1, 4, -2)
+    m8 := NewMBR(-1, 0, 1, -1.5)
 
-    p := point.Point{1.7, 1.5}  // POINT(1.7 1.5)
+    p := &point.Point{1.7, 1.5}  // POINT(1.7 1.5)
 
     g.Describe("minimum bounding box", func() {
 
-        m0123 := New(0, 2, 1, 3)
+        m0123 := NewMBR(0, 2, 1, 3)
         clone_m0123 := m0123.Clone()
 
         g.It("equals ", func() {
             g.Assert(m1.AsArray()).Equal([]float64{0, 0, 2, 2})
             g.Assert(clone_m0123.Equals(m0123)).IsTrue()
             g.Assert(m0.Equals(m1)).IsTrue()
-            g.Assert(m0.BBox() == &m0).IsTrue()
+            g.Assert(m0.BBox() == m0).IsTrue()
             g.Assert(m00.Equals(m1)).IsTrue()
         })
-        
+
         g.It("intersects, distance", func() {
             g.Assert(m1.IntersectsPoint(p)).IsTrue()
 
@@ -96,40 +96,40 @@ func TestMBR(t *testing.T) {
             g.Assert(m1.Distance(m3)).Equal(0.0)
             g.Assert(m1.DistanceSquare(m3)).Equal(0.0)
 
-            a := New(
+            a := NewMBR(
                 -7.703505430214746, 3.0022503796012305,
                 -5.369812194018422, 5.231449888803689)
             g.Assert(m1.Distance(a)).Equal(math.Hypot(-5.369812194018422, 3.0022503796012305 - 2))
 
-            b := New(-4.742849832055231, -4.1033230559816065,
+            b := NewMBR(-4.742849832055231, -4.1033230559816065,
                 -1.9563504455521576, -2.292098454754609)
             g.Assert(m1.Distance(b)).Equal(math.Hypot(-1.9563504455521576, -2.292098454754609))
 
         })
 
         g.It("contains, disjoint , contains completely", func() {
-            p1 := [2]float64{-5.95, 9.28}
-            p2 := [2]float64{-0.11, 12.56}
-            p3 := [2]float64{3.58, 11.79}
-            p4 := [2]float64{-1.16, 14.71}
+            p1 := &point.Point{-5.95, 9.28}
+            p2 := &point.Point{-0.11, 12.56}
+            p3 := &point.Point{3.58, 11.79}
+            p4 := &point.Point{-1.16, 14.71}
 
-            mp12 := New(p1[x1], p1[y1], p2[x1], p2[y1])
-            mp34 := New(p3[x1], p3[y1], p4[x1], p4[y1])
+            mp12 := NewMBR(p1[x1], p1[y1], p2[x1], p2[y1])
+            mp34 := NewMBR(p3[x1], p3[y1], p4[x1], p4[y1])
 
             // intersects but segment are disjoint
             g.Assert(mp12.Intersects(mp34)).IsTrue()
             g.Assert(mp12.IntersectsBounds(p3, p4)).IsTrue()
             g.Assert(mp12.IntersectsBounds(
-                point.Point{m1[x1], m1[y1]},
-                point.Point{m1[x2], m1[y2]},
+                &point.Point{m1[x1], m1[y1]},
+                &point.Point{m1[x2], m1[y2]},
             )).IsFalse()
             g.Assert(mp12.IntersectsPoint(p3)).IsFalse()
             g.Assert(m1.ContainsXY(1, 1)).IsTrue()
 
-            mbr11 := New(1, 1, 1.5, 1.5)
-            mbr12 := New(1, 1, 2, 2)
-            mbr13 := New(1, 1, 2.000045, 2.00001)
-            mbr14 := New(2.000045, 2.00001, 4.000045, 4.00001)
+            mbr11 := NewMBR(1, 1, 1.5, 1.5)
+            mbr12 := NewMBR(1, 1, 2, 2)
+            mbr13 := NewMBR(1, 1, 2.000045, 2.00001)
+            mbr14 := NewMBR(2.000045, 2.00001, 4.000045, 4.00001)
 
             g.Assert(m1.Contains(mbr11)).IsTrue()
             g.Assert(m1.Contains(mbr12)).IsTrue()
@@ -150,9 +150,9 @@ func TestMBR(t *testing.T) {
 
         g.It("translate, expand by, area", func() {
 
-            ma := New(0, 0, 2, 2)
-            mb := New(-1, -1, 1.5, 1.9)
-            mc := New(1.7, 1.5, 5, 9)
+            ma := NewMBR(0, 0, 2, 2)
+            mb := NewMBR(-1, -1, 1.5, 1.9)
+            mc := NewMBR(1.7, 1.5, 5, 9)
             md := ma.Clone()
             ma.ExpandIncludeMBR(mc)
             md.ExpandIncludeMBR(mb)
@@ -171,8 +171,8 @@ func TestMBR(t *testing.T) {
             m1c := m1.Center()
             mtc := mt.Center()
 
-            g.Assert(m1c.Equals(point.Point{1, 1}))
-            g.Assert(mtc.Equals(point.Point{2, 2}))
+            g.Assert(m1c.Equals(&point.Point{1, 1}))
+            g.Assert(mtc.Equals(&point.Point{2, 2}))
             g.Assert(mt.AsArray()).Equal([]float64{1, 1, 3, 3})
             g.Assert(mby.AsArray()).Equal([]float64{-1, -1, 3, 3})
         })

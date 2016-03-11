@@ -21,22 +21,22 @@ func distance_dxdy(self *MBR, other *MBR) (float64, float64) {
 }
 
 //Distance computes the distance between two mbrs
-func (self *MBR) Distance(other MBR) float64 {
+func (self *MBR) Distance(other *MBR) float64 {
 
 	if self.Intersects(other) {
 		return 0.0
 	}
-	dx, dy := distance_dxdy(self, &other)
+	dx, dy := distance_dxdy(self, other)
 	return math.Hypot(dx, dy)
 }
 
 //DistanceSquare computes the distance squared between mbrs
-func (self *MBR) DistanceSquare(other MBR) float64 {
+func (self *MBR) DistanceSquare(other *MBR) float64 {
 
 	if self.Intersects(other) {
 		return 0.0
 	}
-	dx, dy := distance_dxdy(self, &other)
+	dx, dy := distance_dxdy(self, other)
 	return (dx * dx) + (dy * dy)
 }
 
