@@ -4,19 +4,20 @@ import (
     "regexp"
     "strings"
     "strconv"
-    p "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/point"
 )
 
 var re_typeStr = wktRegex{
     regexp.MustCompile(`^\s*(?P<type>[A-Za-z]+)\s*\(\s*(?P<coords>.*)\s*\)\s*$`),
 }
+
 var re_emptyTypeStr = wktRegex{
     regexp.MustCompile(`^\s*(?P<type>[A-Za-z]+)\s*EMPTY\s*$`),
 }
 
-var re_spaces = wktRegex{regexp.MustCompile(`\s+`)}
-var re_parenComma = wktRegex{regexp.MustCompile(`\)\s*,\s*\(`)}
-var re_trimParens = wktRegex{regexp.MustCompile(`^\s*\(?(.*?)\)?\s*$`)}
+var re_spaces       = wktRegex{regexp.MustCompile(`\s+`)}
+var re_parenComma   = wktRegex{regexp.MustCompile(`\)\s*,\s*\(`)}
+var re_trimParens   = wktRegex{regexp.MustCompile(`^\s*\(?(.*?)\)?\s*$`)}
 
 type wktRegex struct {
     *regexp.Regexp
@@ -26,10 +27,12 @@ const (
     x = iota
     y
 )
+type Shell []*Point
+type Holes []*Shell
 
 type WKTParserObj struct {
-    shell *[]p.Point
-    holes *[][]p.Point
+    shell *Shell
+    holes *Holes
     gtype string
 }
 
@@ -41,15 +44,15 @@ func Read(wkt string) *WKTParserObj {
 
     if *gtype == "polygon" {
         if coords != nil {
-            polygon(*coords, obj)
+            polygon(coords, obj)
         }
     } else if *gtype == "linestring" {
         if coords != nil {
-            linestring(*coords, obj)
+            linestring(coords, obj)
         }
     } else if *gtype == "point" {
         if coords != nil {
-            point(*coords, obj)
+            point(coords, obj)
         }
     }
     obj.gtype = *gtype
@@ -58,60 +61,61 @@ func Read(wkt string) *WKTParserObj {
 }
 
 //parse point
-func point(wkt_coords string, obj *WKTParserObj) {
+func point(wkt_coords *string, obj *WKTParserObj) {
     //var coords = str.trim().split(this.regExes.spaces)
-    var coords = strings.TrimSpace(wkt_coords)
+    var coords = strings.TrimSpace(*wkt_coords)
     var coord = re_spaces.Split(coords, -1)
-    pt := p.Point{
+    pt := &Point{
         parse_float(coord[x]),
         parse_float(coord[y]),
     }
-    var shell = []p.Point{pt}
-    obj.shell, obj.holes = &shell, nil
+    obj.shell, obj.holes = &Shell{pt}, nil
 }
 
 //parse linestring
-func linestring(wkt_coords string, obj *WKTParserObj) {
-    var coords = strings.TrimSpace(wkt_coords)
-    shell := string_coords(coords)
-    obj.shell, obj.holes = &shell, nil
+func linestring(wkt_coords *string, obj *WKTParserObj) {
+    var coords = strings.TrimSpace(*wkt_coords)
+    shell := string_coords(&coords)
+    obj.shell, obj.holes = shell, nil
 }
 
 //parse polygon
-func polygon(wkt_coords string, obj *WKTParserObj) {
-    var coords = strings.TrimSpace(wkt_coords)
+func polygon(wkt_coords *string, obj *WKTParserObj) {
+    var coords = strings.TrimSpace(*wkt_coords)
     var rings = re_parenComma.Split(coords, -1)
 
     var n = len(rings)
-    holes := make([][]p.Point, n - 1)
+    holes := make(Holes, n - 1)
 
-    var shell []p.Point
+    var shell *Shell
 
     for i := 0; i < n; i++ {
         ring := re_trimParens.ReplaceAllString(rings[i], "$1")
-        components := string_coords(ring)
+        comps := string_coords(&ring)
         if i == 0 {
-            shell = components
+            shell = comps
         };
         if i > 0 {
-            holes[i - 1] = components
+            holes[i - 1] = comps
         };
     }
-    obj.shell, obj.holes = &shell, &holes
+    obj.shell, obj.holes = shell, &holes
 }
 
 //string coords
-func string_coords(str string) []p.Point {
-    var points = strings.Split(strings.TrimSpace(str), ",")
+func string_coords(str *string) *Shell {
+    var points = strings.Split(strings.TrimSpace(*str), ",")
     var n = len(points)
-    var components = make([]p.Point, n)
+    var comps = make(Shell, n)
 
     for i := 0; i < n; i++ {
         coords := re_spaces.Split(strings.TrimSpace(points[i]), -1)
-        components[i][x] = parse_float(coords[x])
-        components[i][y] = parse_float(coords[y])
+        comps[i] = &Point{
+            parse_float(coords[x]),
+            parse_float(coords[y]),
+        }
     }
-    return components;
+    return &comps
 }
 
 //parse float
@@ -129,7 +133,7 @@ func (self *wktRegex) type_coords(wkt string) map[string]*string {
     captures := make(map[string]*string)
     captures["wkt"], captures["type"], captures["coords"] = nil, nil, nil
 
-    if (strings.Index(wkt, "EMPTY") != -1) {
+    if is_empty(wkt) {
         self = &re_emptyTypeStr
     }
     match := self.FindStringSubmatch(wkt)
@@ -151,4 +155,7 @@ func (self *wktRegex) type_coords(wkt string) map[string]*string {
     return captures
 }
 
+func is_empty(wkt string) bool{
+    return strings.Index(wkt, "EMPTY") != -1
+}
 

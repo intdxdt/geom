@@ -24,7 +24,7 @@ func (self *Point) String() string {
     return fmt.Sprintf("%v %v", self[x], self[y])
 }
 
-func (self *Point) Wkt() string {
+func (self *Point) WKT() string {
     return fmt.Sprintf("POINT (%s)", self.String())
 }
 

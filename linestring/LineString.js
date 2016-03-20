@@ -1,33 +1,4 @@
 
-/*
- description test intersects of self line string with other
- param other{LineString|Polygon|Point|Array} - geometry types and array as Point
- returns {*}
- */
-proto.intersects = func (other) {
-
-  var bool = false, shell
-  if !other {
-    return false
-  }
-
-  var ispoly = ispolygon(other)
-
-  other = self._lineother(other)
-  shell = other[0]
-
-  if self.mbr.disjoint(shell.mbr) {
-    bool = false
-  }
-  else if ispoly { //polygon with holes
-    bool = self._line_inter_poly(self, other)
-  }
-  else {
-    bool = self._intersects(shell)
-  }
-
-  return bool
-}
 
 /*
  description line intersect polygon rings
@@ -39,120 +10,30 @@ proto.intersects = func (other) {
 proto._line_inter_poly = func (line, rings) {
 
   var shell = rings[0], i
-  bool = line._intersects(shell)
-  if !bool {
+  bln = line._intersects(shell)
+  if !bln {
     //if false, check if shell contains line
-    var bool = shell.contains(line)
+    var bln = shell.contains(line)
     var boolhole = false
     //inside shell, does it touch hole boundary ?
-    for (i = 1 bool && !boolhole && i < len(rings) ++i) {
+    for (i = 1 bln && !boolhole && i < len(rings) ++i) {
       boolhole = line._intersects(rings[i])
     }
     var boolcontains = false
     //inside shell but does not touch the boundary of holes
-    if bool && !boolhole {//check if completely contained in hole
+    if bln && !boolhole {//check if completely contained in hole
       for (i = 1 !boolcontains && i < len(rings) ++i) {
         boolcontains = rings[i].contains(line)
       }
     }
-    bool = bool && !boolcontains
+    bln = bln && !boolcontains
   }
-  return bool
-}
-
-/*
- description test intersects of self line string with other
- param other{LineString} - geometry types and array as Point
- returns {*}
- */
-proto._intersects = func (other) {
-
-
-  var bool = !self.mbr.intersects(other.mbr) //disjoint
-  if bool {  //if disjoint
-    return false
-  }
-  //if root mbrs intersect
-  var othersegs = [], selfsegs = []
-  var i, q, lnrange, ibox, qbox, qrng
-  var box = other.mbr
-  var query = [box.minx, box.miny, box.maxx, box.maxy]
-  var inrange = self.index.search(query)
-
-  for (i = 0 !bool && i < len(inrange) ++i) {
-    //cur self box
-    ibox = inrange[i]
-    //search ln using ibox
-    query[0] = ibox.minx
-    query[1] = ibox.miny
-    query[2] = ibox.maxx
-    query[3] = ibox.maxy
-
-    lnrange = other.index.search(query)
-
-    for (q = 0 !bool && q < len(lnrange) ++q) {
-      qbox = lnrange[q]
-      qrng = ibox.intersection(qbox)
-
-      self._segsinrange(selfsegs, qrng, ibox.i, ibox.j)
-      other._segsinrange(othersegs, qrng, qbox.i, qbox.j)
-
-      bool = (len(othersegs) && len(selfsegs)) &&
-             self._segseg_intersects(selfsegs, othersegs)
-    }
-  }
-  return !!bool
+  return bln
 }
 
 
 
 
-
-
-/*
- description segment intersects test
- param segsa
- param segsb
- returns {boolean}
- private
- */
-proto._segseg_intersects = func (segsa, segsb) {
-
-  var bool = false
-  for (var a = 0 !bool && a < len(segsa) ++a) {
-    for (var b = 0 !bool && b < len(segsb) ++b) {
-      bool = segment.intersects(
-        segsa[a][0], segsa[a][1],
-        segsb[b][0], segsb[b][1]
-      )
-    }
-  }
-  return bool
-}
-/*
- description segment ptlist
- param segsa{[]}
- param segsb{[]}
- param ptlist{[]}
- param [append]{boolean}
- returns {Array}
- private
- */
-proto._segseg_intersection = func (segsa, segsb, ptlist, append) {
-  var bool, coord = []
-  !append && (len(ptlist) = 0)
-  for (var a = 0 a < len(segsa) ++a) {
-    for (var b = 0 b < len(segsb) ++b) {
-      bool = segment.intersect(
-        segsa[a][0], segsa[a][1],
-        segsb[b][0], segsb[b][1],
-        coord
-      )
-      bool && ptlist.append(coord.slice(0))
-    }
-  }
-  return ptlist
-}
 /*
  description  Computes the distance between self and another linestring
  * the distance between intersecting linestrings is 0.  Otherwise, the
@@ -172,7 +53,7 @@ proto.distance = func (other) {
     return self._brutedist(other)
   }
   //if root mbrs intersect
-  var bool = false, dist = -1, _dist
+  var bln = false, dist = -1, _dist
   var i, q, lnrange, ibox, qbox, qrng
   var box = qbox = self.mbr.intersection(other.mbr)
   var query = self._searchbox(box)
@@ -180,9 +61,9 @@ proto.distance = func (other) {
   if _.is_empty(inrange) {
     //go bruteforce
     dist = self._brutedist(other)
-    bool = true
+    bln = true
   }
-  for (i = 0 !bool && i < len(inrange) ++i) {
+  for (i = 0 !bln && i < len(inrange) ++i) {
     //cur self box
     ibox = inrange[i]
     //search ln using ibox
@@ -191,9 +72,9 @@ proto.distance = func (other) {
     if _.is_empty(lnrange) {
       //go bruteforce
       dist = self._brutedist(other)
-      bool = true
+      bln = true
     }
-    for (q = 0 !bool && q < len(lnrange) ++q) {
+    for (q = 0 !bln && q < len(lnrange) ++q) {
       qbox = lnrange[q]
       qrng = ibox.intersection(qbox)
       var xor_segs = true //segments when nothing is in range of qrng
@@ -203,7 +84,7 @@ proto.distance = func (other) {
       _dist = self._segseg_mindist(selfsegs, othersegs)
       dist = dist < 0 ? _dist : math.min(_dist, dist)
       if dist == 0.0 {
-        bool = true
+        bln = true
       }
     }
   }
@@ -222,15 +103,15 @@ proto.distance = func (other) {
  private
  */
 proto._segseg_mindist = func (segsa, segsb) {
-  var bool = false
+  var bln = false
   var dist = -1, _dist
-  for (var a = 0 !bool && a < len(segsa) ++a) {
-    for (var b = 0 !bool && b < len(segsb) ++b) {
-      bool = segment.intersects(
+  for (var a = 0 !bln && a < len(segsa) ++a) {
+    for (var b = 0 !bln && b < len(segsb) ++b) {
+      bln = segment.intersects(
         segsa[a][0], segsa[a][1],
         segsb[b][0], segsb[b][1]
       )
-      if bool {
+      if bln {
         dist = 0.0
       }
       else {
@@ -255,13 +136,13 @@ proto._brutedist = func (other) {
 
   var ln = self.coordinates
   var ln2 = other.coordinates
-  var dist = -1, bool = false, i, j
-  for (i = 0 !bool && i < len(ln) - 1 ++i) {
-    for (j = 0 !bool && j < len(ln2) - 1 ++j) {
+  var dist = -1, bln = false, i, j
+  for (i = 0 !bln && i < len(ln) - 1 ++i) {
+    for (j = 0 !bln && j < len(ln2) - 1 ++j) {
       var _dist = segment.seg2seg(ln[i], ln[i + 1], ln2[j], ln2[j + 1])
       dist = dist < 0 ? _dist : math.min(_dist, dist)
       if _dist == 0.0 {
-        bool = true
+        bln = true
       }
     }
   }
@@ -343,14 +224,14 @@ proto.is_simple = func () {
 
 
   var cache = {}, ckey
-  var bool = true, bcomplx, chain, inters, jbox, qbox
+  var bln = true, bcomplx, chain, inters, jbox, qbox
   var ln1 = [], ln2 = [], ptlist = [], i, j
 
-  for (i = 0 bool && i < self.len(chains) ++i) {
+  for (i = 0 bln && i < self.len(chains) ++i) {
     chain = self.chains[i]
     inters = self.index.search(self._searchbox(chain))
 
-    for (j = 0 bool && j < len(inters) ++j) {
+    for (j = 0 bln && j < len(inters) ++j) {
       jbox = inters[j]
       ckey = self._cashe_key(chain, jbox)
 
@@ -370,10 +251,10 @@ proto.is_simple = func () {
 
       bcomplx = (chain.j != jbox.i && len(ptlist) > 0) ||
                 (chain.j == jbox.i && len(ptlist) > 1)
-      bcomplx && (bool = false)
+      bcomplx && (bln = false)
     }
   }
-  return bool
+  return bln
 }
 
 /*

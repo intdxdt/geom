@@ -67,7 +67,7 @@ func TestPoint(t *testing.T) {
 		g.It("wkt string", func() {
 			a := Point{3.87, 7.45}
 			g.Assert(a.String()).Equal("3.87 7.45")
-			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
+			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
 			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
@@ -77,7 +77,7 @@ func TestPoint(t *testing.T) {
 		g.It("string, wkt , bbox, chull", func() {
 			a := Point{3.87, 7.45}
 			g.Assert(a.String()).Equal("3.87 7.45")
-			g.Assert(a.Wkt()).Equal("POINT (3.87 7.45)")
+			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
 			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})

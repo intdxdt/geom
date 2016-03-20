@@ -3,7 +3,7 @@ package wkt
 import (
     "testing"
     . "github.com/franela/goblin"
-    p "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/point"
 )
 
 func TestWKT(t *testing.T) {
@@ -19,13 +19,13 @@ func TestWKT(t *testing.T) {
     var cpoly = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))"
     var epoly = "POLYGON EMPTY"
 
-    g.Describe("Linestring", func() {
+    g.Describe("WKT Read", func() {
         g.It("test wkt parser", func() {
             obj := Read(pt)
             g.Assert(obj.gtype).Eql("point")
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(1)
-            g.Assert((*obj.shell)[0]).Eql(p.Point{30, 10})
+            g.Assert((*obj.shell)[0]).Eql(&Point{30, 10})
 
             obj = Read(ept)
             g.Assert(obj.gtype).Eql("point")
@@ -37,7 +37,7 @@ func TestWKT(t *testing.T) {
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(5)
             g.Assert(len(*obj.holes)).Eql(1)
-            g.Assert(len((*obj.holes)[0])).Eql(4)
+            g.Assert(len(*((*obj.holes)[0]))).Eql(4)
 
             obj = Read(poly)
             g.Assert(obj.gtype).Eql("polygon")
@@ -76,6 +76,19 @@ func TestWKT(t *testing.T) {
             Read(tln)
         })
 
+    })
+
+    g.Describe("WKT Write", func() {
+        g.It("tests wkt writer", func() {
+            g.Assert(Write(Read(pt))).Eql("POINT (30 10)")
+            g.Assert(Write(Read(ept))).Eql("POINT EMPTY")
+            g.Assert(Write(Read(ln))).Eql("LINESTRING (30 10, 10 30, 40 40)")
+            g.Assert(Write(Read(ln))).Eql("LINESTRING (30 10, 10 30, 40 40)")
+            g.Assert(Write(Read(eln))).Eql("LINESTRING EMPTY")
+            g.Assert(Write(Read(poly))).Eql("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
+            g.Assert(Write(Read(epoly))).Eql("POLYGON EMPTY")
+            g.Assert(Write(Read(cpoly))).Eql("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))")
+        })
     })
 }
 
