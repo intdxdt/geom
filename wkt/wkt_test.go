@@ -82,12 +82,13 @@ func TestWKT(t *testing.T) {
         g.It("tests wkt writer", func() {
             g.Assert(Write(Read(pt))).Eql("POINT (30 10)")
             g.Assert(Write(Read(ept))).Eql("POINT EMPTY")
-            g.Assert(Write(Read(ln))).Eql("LINESTRING (30 10, 10 30, 40 40)")
+
             g.Assert(Write(Read(ln))).Eql("LINESTRING (30 10, 10 30, 40 40)")
             g.Assert(Write(Read(eln))).Eql("LINESTRING EMPTY")
+
             g.Assert(Write(Read(poly))).Eql("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
-            g.Assert(Write(Read(epoly))).Eql("POLYGON EMPTY")
             g.Assert(Write(Read(cpoly))).Eql("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))")
+            g.Assert(Write(Read(epoly))).Eql("POLYGON EMPTY")
         })
     })
 }
