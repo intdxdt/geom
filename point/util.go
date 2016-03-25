@@ -1,7 +1,6 @@
 package point
 
 import (
-    "fmt"
     "math"
 )
 
@@ -17,15 +16,6 @@ func (self *Point) BBox() []*Point {
         {self[x], self[y]},
         {self[x], self[y]},
     }
-}
-
-//String creates a wkt string from point
-func (self *Point) String() string {
-    return fmt.Sprintf("%v %v", self[x], self[y])
-}
-
-func (self *Point) WKT() string {
-    return fmt.Sprintf("POINT (%s)", self.String())
 }
 
 func (self *Point) IsNull() bool {

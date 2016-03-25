@@ -1,7 +1,8 @@
 package linestring
 
 import (
-    "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/mbr"
     "github.com/intdxdt/simplex/struct/rtree"
     "math"
     "fmt"
@@ -15,7 +16,7 @@ const (
 
 type LineString struct {
     chains      []*MonoMBR
-    coordinates []*point.Point
+    coordinates []*Point
     monosize    int
     bucketsize  int
     index       *rtree.RTree
@@ -24,14 +25,14 @@ type LineString struct {
 }
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
-func NewLineString(coordinates []*point.Point) *LineString {
+func NewLineString(coordinates []*Point) *LineString {
     if len(coordinates) < 2 {
         panic("a linestring must have at least 2 coordinate")
     }
     self := &LineString{}
     self.chains = make([]*MonoMBR, 0)
 
-    self.coordinates = make([]*point.Point, len(coordinates))
+    self.coordinates = make([]*Point, len(coordinates))
     copy(self.coordinates, coordinates)
 
     //init
@@ -47,12 +48,11 @@ func NewLineString(coordinates []*point.Point) *LineString {
 //clone linestring
 func (self *LineString) Clone() *LineString {
     return NewLineString(self.coordinates)
-
 }
 
 //envelope of linestring
-func (self *LineString) Envelope() string {
-    return self.bbox.MBR.String()
+func (self *LineString) Envelope() *MBR {
+    return self.bbox.MBR
 }
 
 //print chains

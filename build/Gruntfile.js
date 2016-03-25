@@ -12,6 +12,7 @@ module.exports = function (grunt) {
     './mbr',
     './point',
     './linestring',
+    './polygon',
     './wkt',
   ];
   test_dirs = _.map(test_dirs, function (curdir) {

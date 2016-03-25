@@ -42,10 +42,10 @@ func TestLineString(t *testing.T) {
 
         g.It("should be array of points", func() {
             ln.build_index()
-            g.Assert(ln.ToArray()).Eql(pts)
-            g.Assert(cln.ToArray()).Eql(pts)
+            g.Assert(ln.Coordinates()).Eql(pts)
+            g.Assert(cln.Coordinates()).Eql(pts)
             ln.build_index()
-            g.Assert(ln.ToArray()).Eql(pts)
+            g.Assert(ln.Coordinates()).Eql(pts)
         })
 
     })

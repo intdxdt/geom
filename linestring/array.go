@@ -1,15 +1,11 @@
 package linestring
 
-import (
-    "github.com/intdxdt/simplex/geom/point"
-)
-
-//ToArray convert as slice
-func (self *LineString) ToArray() []*point.Point {
+//Coordinates returns a copy of linestring coordinates
+func (self *LineString) ToArray() [][2]float64 {
     n := len(self.coordinates)
-    clone := make([]*point.Point, n )
-    for i:=0 ; i < n ; i++{
-        clone[i] = self.coordinates[i].Clone()
+    clone := make([][2]float64, n)
+    for i := 0; i < n; i++ {
+        clone[i] = self.coordinates[i].ToArray()
     }
     return clone
 }

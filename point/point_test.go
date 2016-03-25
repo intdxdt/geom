@@ -31,7 +31,7 @@ func TestPoint(t *testing.T) {
 		})
 
 		g.It("as array", func() {
-			g.Assert(p1.AsArray()).Equal([2]float64{p1[x], p1[y]})
+			g.Assert(p1.ToArray()).Equal([2]float64{p1[x], p1[y]})
 		})
 
 	})
@@ -66,8 +66,7 @@ func TestPoint(t *testing.T) {
 	g.Describe("type conversion & util", func() {
 		g.It("wkt string", func() {
 			a := Point{3.87, 7.45}
-			g.Assert(a.String()).Equal("3.87 7.45")
-			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
+			g.Assert(a.String()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
 			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})
@@ -76,8 +75,7 @@ func TestPoint(t *testing.T) {
 	g.Describe("type conversion & util", func() {
 		g.It("string, wkt , bbox, chull", func() {
 			a := Point{3.87, 7.45}
-			g.Assert(a.String()).Equal("3.87 7.45")
-			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
+			g.Assert(a.String()).Equal("POINT (3.87 7.45)")
 			g.Assert(a.BBox()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}})
 			g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
 		})

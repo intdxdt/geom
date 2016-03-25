@@ -1,19 +1,17 @@
 package wkt
 
 import (
-    //"strconv"
-    . "github.com/intdxdt/simplex/geom/point"
     "fmt"
     "strings"
 )
 
 func Write(obj *WKTParserObj) string {
     var s string
-    if obj.gtype == "point" {
+    if obj.gtype == Point {
         s = fmt.Sprintf("POINT %s", str_point(obj.shell))
-    }else if obj.gtype == "linestring" {
+    }else if obj.gtype == LineString {
         s = fmt.Sprintf("LINESTRING %s", str_polyline(obj.shell))
-    }else if obj.gtype == "polygon" {
+    }else if obj.gtype == Polygon {
         wkt := str_polygon(obj)
         if is_empty(wkt) {
             s = fmt.Sprintf("POLYGON %s", wkt)
@@ -24,18 +22,21 @@ func Write(obj *WKTParserObj) string {
     return s
 }
 
-func coord(pt *Point) string {
-    return fmt.Sprintf("%v %v", pt.X(), pt.Y())
+func coord(pt *[2]float64) string {
+    return fmt.Sprintf("%v %v", pt[x], pt[y])
 }
 
+//str point
 func str_point(shell *Shell) string {
     var s string = "EMPTY"
     if shell != nil && len(*shell) > 0 {
-        s = fmt.Sprintf("(%s)", coord((*shell)[0]))
+        sh := *shell
+        s = fmt.Sprintf("(%s)", coord(&sh[0]))
     }
     return s
 }
 
+//str polyline
 func str_polyline(shell *Shell) string {
     var s string = "EMPTY"
     if shell == nil {
@@ -46,13 +47,13 @@ func str_polyline(shell *Shell) string {
     if n > 0 {
         lnstr := make([]string, n)
         for i := 0; i < n; i++ {
-            lnstr[i] = coord(sh[i])
+            lnstr[i] = coord(&sh[i])
         }
         s = fmt.Sprintf("(%s)", strings.Join(lnstr, ", "))
     }
     return s
 }
-
+//str polygon
 func str_polygon(obj *WKTParserObj) string {
     shell := str_polyline(obj.shell)
     var n int

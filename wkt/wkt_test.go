@@ -3,7 +3,6 @@ package wkt
 import (
     "testing"
     . "github.com/franela/goblin"
-    . "github.com/intdxdt/simplex/geom/point"
 )
 
 func TestWKT(t *testing.T) {
@@ -22,43 +21,43 @@ func TestWKT(t *testing.T) {
     g.Describe("WKT Read", func() {
         g.It("test wkt parser", func() {
             obj := Read(pt)
-            g.Assert(obj.gtype).Eql("point")
+            g.Assert(obj.gtype).Eql(Point)
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(1)
-            g.Assert((*obj.shell)[0]).Eql(&Point{30, 10})
+            g.Assert((*obj.shell)[0]).Eql([2]float64{30, 10})
 
             obj = Read(ept)
-            g.Assert(obj.gtype).Eql("point")
+            g.Assert(obj.gtype).Eql(Point)
             g.Assert(obj.shell == nil).Eql(true)
             g.Assert(obj.holes == nil).Eql(true)
 
             obj = Read(cpoly)
-            g.Assert(obj.gtype).Eql("polygon")
+            g.Assert(obj.gtype).Eql(Polygon)
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(5)
             g.Assert(len(*obj.holes)).Eql(1)
             g.Assert(len(*((*obj.holes)[0]))).Eql(4)
 
             obj = Read(poly)
-            g.Assert(obj.gtype).Eql("polygon")
+            g.Assert(obj.gtype).Eql(Polygon)
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(5)
             g.Assert(obj.holes == nil).Eql(false)
             g.Assert(len(*obj.holes)).Eql(0)
 
             obj = Read(epoly)
-            g.Assert(obj.gtype).Eql("polygon")
+            g.Assert(obj.gtype).Eql(Polygon)
             g.Assert(obj.shell == nil).Eql(true)
             g.Assert(obj.holes == nil).Eql(true)
 
             obj = Read(ln)
-            g.Assert(obj.gtype).Eql("linestring")
+            g.Assert(obj.gtype).Eql(LineString)
             g.Assert(obj.shell == nil).Eql(false)
             g.Assert(len(*obj.shell)).Eql(3)
             g.Assert(obj.holes == nil).Eql(true)
 
             obj = Read(eln)
-            g.Assert(obj.gtype).Eql("linestring")
+            g.Assert(obj.gtype).Eql(LineString)
             g.Assert(obj.shell == nil).Eql(true)
             g.Assert(obj.holes == nil).Eql(true)
         })
@@ -79,16 +78,26 @@ func TestWKT(t *testing.T) {
     })
 
     g.Describe("WKT Write", func() {
+
+        sh := [][2]float64{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}, }
+        h1 := [][2]float64{{20, 30}, {35, 35}, {30, 20}, {20, 30}, }
+        wkt_sh := "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10))"
+
+
         g.It("tests wkt writer", func() {
             g.Assert(Write(Read(pt))).Eql("POINT (30 10)")
-            g.Assert(Write(Read(ept))).Eql("POINT EMPTY")
+            ept := Read(ept)
+
+            g.Assert(Write(ept)).Eql("POINT EMPTY")
 
             g.Assert(Write(Read(ln))).Eql("LINESTRING (30 10, 10 30, 40 40)")
             g.Assert(Write(Read(eln))).Eql("LINESTRING EMPTY")
 
-            g.Assert(Write(Read(poly))).Eql("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
-            g.Assert(Write(Read(cpoly))).Eql("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))")
-            g.Assert(Write(Read(epoly))).Eql("POLYGON EMPTY")
+            g.Assert(Write(Read(poly))).Eql(poly)
+            g.Assert(Write(Read(cpoly))).Eql(cpoly)
+            g.Assert(Write(NewWKTParserObj(Polygon, sh))).Eql(wkt_sh)
+            g.Assert(Write(NewWKTParserObj(Polygon, sh, h1))).Eql(cpoly)
+            g.Assert(Write(Read(epoly))).Eql(epoly)
         })
     })
 }

@@ -16,8 +16,8 @@ func (self *LineString) Intersection(other *LineString) []*Point {
 
     //if root mbrs intersect
     //var i, q, lnrange, ibox, qbox, qrng
-    var othersegs = make([]*Segment, 0)
-    var selfsegs = make([]*Segment, 0)
+    var othersegs   = make([]*Segment, 0)
+    var selfsegs    = make([]*Segment, 0)
 
     var query = other.bbox
     var inrange = self.index.Search(query.MBR)
@@ -46,12 +46,20 @@ func (self *LineString) Intersection(other *LineString) []*Point {
 //test intersects of self line string with other
 // param other{LineString|Polygon|Point|Array} - geometry types and array as Point
 func (self *LineString) Intersects(other *LineString) bool {
-    var bln = false
     if other == nil {
-        return bln
+        return false
     }
-    bln = self._intersects(other)
-    return bln
+    return self._intersects(other)
+}
+
+//test intersects of self line string with point
+func (self *LineString) IntersectsPoint(other *Point) bool {
+    if other == nil {
+        return false
+    }
+    var coords = make([]*Point, 2)
+    coords[0], coords[1] = other.Clone(), other.Clone()
+    return self._intersects(NewLineString(coords) )
 }
 
 

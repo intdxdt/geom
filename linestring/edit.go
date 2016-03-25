@@ -4,7 +4,6 @@ import (
     p "github.com/intdxdt/simplex/geom/point"
 //"github.com/intdxdt/simplex/geom/mbr"
     "github.com/intdxdt/simplex/struct/rtree"
-    "fmt"
 )
 
 /*
@@ -72,10 +71,9 @@ func (self *LineString)  Pop() *LineString {
     return self
 }
 
+//find chain
 func (self *LineString) find_chain(ch *MonoMBR) *rtree.Node {
     res := self.index.Search(ch.MBR)
-    fmt.Printf("%T\n", *res[0].GetItem())
-    fmt.Println(res[0].GetItem())
 
     var node *rtree.Node
     node = nil

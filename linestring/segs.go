@@ -31,7 +31,7 @@ func (self *LineString) segs_inrange(seglist []*Segment, box *MBR, i, j int, ext
 }
 
 /*
- description segment ptlist
+ segment ptlist
  param segsa{[]}
  param segsb{[]}
  param ptlist{[]}

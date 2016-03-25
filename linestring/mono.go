@@ -1,13 +1,13 @@
 package linestring
 
 import (
-    "github.com/intdxdt/simplex/geom/mbr"
+    . "github.com/intdxdt/simplex/geom/mbr"
     "github.com/intdxdt/simplex/geom/point"
     "math"
 )
 
 type MonoMBR struct {
-    *mbr.MBR
+    *MBR
     i int
     j int
 }
@@ -19,7 +19,7 @@ func (box *MonoMBR) Clone() *MonoMBR {
 }
 
 //clone  mono mbr
-func ( box *MonoMBR) BBox() *mbr.MBR {
+func ( box *MonoMBR) BBox() *MBR {
     return box.MBR
 }
 
@@ -30,7 +30,7 @@ func ( box *MonoMBR) update_index(i, j int) {
 }
 
 //new monotone mbr
-func new_mono_mbr(box  *mbr.MBR) *MonoMBR {
+func new_mono_mbr(box  *MBR) *MonoMBR {
     return &MonoMBR{box, null, null}
 }
 
@@ -54,7 +54,7 @@ func (self *LineString) process_chains(i, j int) {
     }
 
     v0 = self.coordinates[i]
-    box := mbr.NewMBR(v0[x], v0[y], v0[x], v0[y])
+    box := NewMBR(v0[x], v0[y], v0[x], v0[y])
 
     self.bbox = new_mono_mbr(box)
     box = box.Clone()
@@ -92,7 +92,7 @@ func (self *LineString) process_chains(i, j int) {
 
             prev_x, prev_y = cur_x, cur_y
             p0, p1 := self.coordinates[i - 1], self.coordinates[i]
-            box := mbr.NewMBR(p0[x], p0[y], p1[x], p1[y])
+            box := NewMBR(p0[x], p0[y], p1[x], p1[y])
 
             mono = new_mono_mbr(box)
             self.xy_monobox(mono, i - 1, i)

@@ -34,7 +34,7 @@ func (self *Point) Y() float64 {
 	return self[y]
 }
 
-//AsArray converts Point to [2]float64
-func (self *Point) AsArray() [2]float64 {
+//ToArray converts Point to [2]float64
+func (self *Point) ToArray() [2]float64 {
 	return [2]float64{self[x], self[y]}
 }

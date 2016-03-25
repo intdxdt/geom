@@ -5,7 +5,7 @@ import (
 )
 
 //builds rtree index of chains
-func (self *LineString)build_index() {
+func (self *LineString) build_index() {
     if !self.index.IsEmpty() {
         self.index.Clear()
     }
