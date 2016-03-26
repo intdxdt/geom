@@ -5,7 +5,6 @@ import (
     . "github.com/intdxdt/simplex/geom/mbr"
     "github.com/intdxdt/simplex/struct/rtree"
     "math"
-    "fmt"
 )
 
 const (
@@ -55,11 +54,4 @@ func (self *LineString) Envelope() *MBR {
     return self.bbox.MBR
 }
 
-//print chains
-func (self *LineString)  PrintChains() {
-    for i := 0; i < len(self.chains); i++ {
-        //fmt.Println(self.chains[i].String())
-        fmt.Printf("%p\n", self.chains[i])
-    }
-}
 
