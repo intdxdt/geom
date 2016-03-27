@@ -3,13 +3,14 @@ package point
 import (
 	"testing"
 	. "github.com/franela/goblin"
+	. "github.com/intdxdt/simplex/util/math"
 	"math"
 )
 
 func TestPoint(t *testing.T) {
 	g := Goblin(t)
-	p1 := &Point{4, 5}
-	p2 := &Point{4.0, 5.0}
+	p1 := NewPointXY(4, 5)
+	p2 := NewPointXY(4.0, 5.0)
 	p3 := NewPoint([]float64{4, 5})
 	p4 := NewPoint([]float64{4, 5.01})
 	p5 := NewPoint([]float64{4})
@@ -40,12 +41,12 @@ func TestPoint(t *testing.T) {
 		g.It("sqrt(3**2,4**2) ", func() {
 			pt := &Point{3., 0.}
 			g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
-			g.Assert(pt.DistanceSquare(&Point{0., 4.})).Equal(25.0)
+			g.Assert(pt.SquareDistance(&Point{0., 4.})).Equal(25.0)
 		})
 		g.It("sqrt(2)", func() {
 			pt := &Point{3, 4}
 			g.Assert(pt.Distance(&Point{4, 5})).Equal(math.Sqrt2)
-			g.Assert(pt.DistanceSquare(&Point{4, 5})).Equal(2.0)
+			g.Assert(pt.SquareDistance(&Point{4, 5})).Equal(2.0)
 		})
 	})
 
@@ -90,5 +91,71 @@ func TestPoint(t *testing.T) {
 			g.Assert(p6.IsNull()).IsTrue()
 		})
 	})
+
+}
+
+
+func TestMagDist(t *testing.T) {
+    g := Goblin(t)
+    g.Describe("Point - Vector Magnitude", func() {
+        g.It("should test vector magnitude and distance", func() {
+            a := &Point{0, 0 }
+            b := &Point{3, 4 }
+
+            g.Assert(NewPointXY(1, 1).Magnitude()).Equal(math.Sqrt2)
+            g.Assert(Round(NewPointXY(-3, 2).Magnitude(), 8)).Equal(
+                Round(3.605551275463989, 8),
+            )
+
+            g.Assert(NewPointXY(3, 4).Magnitude()).Equal(5.0)
+            g.Assert(a.Distance( b)).Equal(5.0)
+
+            g.Assert(NewPointXY(3, 4).SquareMagnitude()).Equal(25.0)
+            g.Assert(a.SquareDistance( b)).Equal(25.0)
+
+            g.Assert(NewPointXY(4.587, 0.).Magnitude()).Equal(4.587)
+        })
+    })
+
+}
+
+func TestDotProduct(t *testing.T) {
+    g := Goblin(t)
+    g.Describe("Point - Vector Dot Product", func() {
+        g.It("should test dot product", func() {
+            dot_prod := NewPointXY(1.2, -4.2).DotProduct(NewPointXY(1.2, -4.2))
+            g.Assert(19.08).Equal(Round(dot_prod, 8))
+        })
+    })
+
+}
+
+func TestUnit(t *testing.T) {
+    g := Goblin(t)
+    g.Describe("Point -  Unit Vector", func() {
+        g.It("should test unit vector", func() {
+            v := &Point{-3, 2}
+            unit_v := v.UnitVector()
+            for i, v := range *unit_v {
+                (*unit_v)[i] = Round(v, 6)
+            }
+            g.Assert(unit_v).Equal(&Point{-0.83205, 0.5547})
+        })
+    })
+
+}
+
+
+func TestAngleAtPnt(t *testing.T) {
+    g := Goblin(t)
+    g.Describe("Point - Angle at Point", func() {
+        g.It("should test angle formed at point by vector", func() {
+            a := &Point{-1.28, 0.74}
+            b := &Point{1.9, 4.2}
+            c := &Point{3.16, -0.84}
+            g.Assert(Round(a.AngleAtPoint( b, c), 8)).Equal(Round(1.1694239325184717, 8), )
+            g.Assert(Round(b.AngleAtPoint(a, c), 8)).Equal(Round(0.9882331199311394, 8), )
+        })
+    })
 
 }

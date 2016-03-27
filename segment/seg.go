@@ -16,6 +16,9 @@ type Segment struct {
     B *Point
 }
 
+func NewSegment(a, b *Point) *Segment{
+    return &Segment{a, b}
+}
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1, lnb0, lnb1
 func (self *Segment) Intersects(other *Segment, extln bool) bool {
@@ -91,7 +94,7 @@ func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
     return coords, bln
 }
 
-func seg_intersect_abdxy(self, other *Segment) ( float64, float64, float64,
+func seg_intersect_abdxy(self, other *Segment) (float64, float64, float64,
 float64, float64, float64, float64,
 float64, float64, float64, float64) {
 

@@ -4,13 +4,22 @@ import "math"
 
 //Distance computes distance between two points
 func (self *Point ) Distance(pt *Point) float64 {
-	return math.Hypot(self[x] - pt[x], self[y] - pt[y])
+    return self.Sub(pt).Magnitude();
 }
 
 //DistanceSquare computes distance squared between two points
-func (self *Point ) DistanceSquare(pt *Point) float64 {
-	dx := self[x] - pt[x]
-	dy := self[y] - pt[y]
-	//posible overflow
-	return (dx * dx) + (dy * dy)
+//Has possible overflow with squared x, y components
+func (self *Point ) SquareDistance(pt *Point) float64 {
+    return self.Sub(pt).SquareMagnitude()
+}
+
+//Computes vector magnitude of pt as vector: x , y as components
+func (self *Point) Magnitude() float64{
+    return math.Hypot(self[x], self[y])
+}
+
+//Computes the square vector magnitude of pt as vector: x , y as components
+//This has a potential overflow problem based on coordinates of pt x^2 + y^2
+func (self *Point)  SquareMagnitude() float64{
+    return (self[x] * self[x]) + (self[y] * self[y])
 }

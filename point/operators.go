@@ -15,6 +15,18 @@ func (self *Point) KProduct(k float64) *Point {
 	return &Point{k * self[x], k * self[y]}
 }
 
+//Dot Product of two points as vectors
+func (self *Point) DotProduct(other *Point) float64 {
+    return (self[x] * other[x]) + (self[y] * other[y])
+}
+
+//Unit vector of point
+func (self *Point) UnitVector () *Point {
+    m := self.Magnitude()
+    return NewPointXY(self[x] / m, self[y] / m)
+}
+
+
 //Neg create new point by finding the negation of point
 func (self *Point) Neg() *Point {
 	return self.KProduct(-1)

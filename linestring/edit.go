@@ -23,8 +23,10 @@ func (self *LineString) Append(pnt *p.Point) *LineString {
     var coord = pnt.Clone()
     //push coord
     self.coordinates = append(self.coordinates, coord)
+
     i := chain.i
     j := len(self.coordinates) - 1
+
     self.process_chains(i, j)
     //add newly pushed chains to index
     for ; idx < len(self.chains); idx++ {
@@ -35,12 +37,11 @@ func (self *LineString) Append(pnt *p.Point) *LineString {
 }
 
 
-//pop last coordinate
+//Pop last coordinate till LineString becomes a segment
 func (self *LineString)  Pop() *LineString {
 
-    if len(self.coordinates) < 3 {
-        //at least a segment a ring p1----p2----p1
-        panic("a linestring must have at least 2 coordinate")
+    if len(self.coordinates) == 2 {
+        return self
     }
 
     var chain *MonoMBR

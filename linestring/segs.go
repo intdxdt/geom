@@ -8,7 +8,9 @@ import (
 
 //segments in range
 //xor - altenate segments if nothing is in range of box
-func (self *LineString) segs_inrange(seglist []*Segment, box *MBR, i, j int, extend, xor bool) []*Segment {
+func (self *LineString) segs_inrange(seglist []*Segment,
+box *MBR, i, j int, extend, xor bool) []*Segment {
+
     //extend or refresh list
     if !extend {
         seglist = make([]*Segment, 0)
@@ -39,7 +41,8 @@ func (self *LineString) segs_inrange(seglist []*Segment, box *MBR, i, j int, ext
  returns {Array}
  private
  */
-func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptlist []*Point, extend bool) []*Point {
+func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
+ptlist []*Point, extend bool) []*Point {
 
     if !extend {
         ptlist = make([]*Point, 0)
@@ -71,5 +74,3 @@ func contains_point(coords []*Point, pt *Point) bool {
     }
     return bln
 }
-
-

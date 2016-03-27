@@ -15,7 +15,7 @@ type MonoMBR struct {
 //clone  mono mbr
 func (box *MonoMBR) Clone() *MonoMBR {
     clone_mbr := box.MBR.Clone()
-    return  &MonoMBR{clone_mbr, box.i, box.j}
+    return &MonoMBR{clone_mbr, box.i, box.j}
 }
 
 //clone  mono mbr
@@ -63,8 +63,8 @@ func (self *LineString) process_chains(i, j int) {
     self.xy_monobox(mono, i, i)
     self.chains = append(self.chains, mono)
 
-    var mono_size = 1
-    for i := i + 1; i <= j; i += 1 {
+    var mono_size = 0
+    for i = i + 1; i <= j; i += 1 {
         v0 = self.coordinates[i - 1]
         v1 = self.coordinates[i]
         dx = v1[x] - v0[x]
@@ -84,9 +84,9 @@ func (self *LineString) process_chains(i, j int) {
         }
 
         //((cur_x + prev_x > 0) && (prev_y + cur_y > 0))
+        mono_size += 1
         if prev_x == cur_x && prev_y == cur_y && mono_size <= mono_limit {
             self.xy_monobox(mono, i, null)
-            mono_size += 1
         } else {
             mono_size = 1
 

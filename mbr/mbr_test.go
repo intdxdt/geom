@@ -186,13 +186,13 @@ func TestMBR(t *testing.T) {
                 {6.6, 7.9}, {5.6, 7.9},
             }
 
-            mbr := NewMBROfPoints(pts...)
+            mbr := NewMBRFromPoints(pts...)
             g.Assert(mbr).Equal(NewMBR(5.6, 7.9, 6.6, 8.9))
 
-            mbr = NewMBROfPoints(pts[0])
+            mbr = NewMBRFromPoints(pts[0])
             g.Assert(mbr).Equal(NewMBR(5.6, 7.9, 5.6, 7.9))
 
-            mbr = NewMBROfPoints()
+            mbr = NewMBRFromPoints()
             g.Assert(mbr).Equal(NewMBR(0, 0, 0, 0))
         })
 

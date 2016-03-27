@@ -1,8 +1,8 @@
 package linestring
 
 import (
-    "github.com/intdxdt/simplex/geom/point"
-    "github.com/intdxdt/simplex/geom/mbr"
+    . "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/mbr"
 )
 
 //pop chain from chainl list
@@ -19,8 +19,8 @@ func pop_mono_mbr(a []*MonoMBR) (*MonoMBR, []*MonoMBR) {
 
 
 //pop chain from chainl list
-func pop_coords(a []*point.Point) (*point.Point, []*point.Point) {
-    var v *point.Point
+func pop_coords(a []*Point) (*Point, []*Point) {
+    var v *Point
     var n int
     if len(a) == 0 {
         return nil, a
@@ -32,22 +32,14 @@ func pop_coords(a []*point.Point) (*point.Point, []*point.Point) {
 
 
 //compare bbox, ptr
-func is_bbox(a *mbr.MBR, b *mbr.MBR) bool {
+func is_bbox(a *MBR, b *MBR) bool {
     return a == b
 }
 
-//convert point to line
-func (self *LineString) conv_pt_linestring(other *point.Point) []*LineString {
-    coords, lines := make([]*point.Point, 2), make([]*LineString, 1)
-    coords[0], coords[1] = other.Clone(), other.Clone()
-    lines[0] = NewLineString(coords)
-    return lines
-}
 
- //line is ring
-func (self *LineString) is_ring() bool{
-  var n  = len(self.coordinates)
-  var p0 = self.coordinates[0]
-  var pn = self.coordinates[n - 1]
-  return (n > 2) && (p0[x] == pn[x]) && (p0[y] == pn[y])
+//line is ring
+func (self *LineString) is_ring() bool {
+    return self.coordinates[0].Equals(
+        self.coordinates[len(self.coordinates) - 1],
+    )
 }

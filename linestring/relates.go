@@ -3,21 +3,22 @@ package linestring
 import (
     . "github.com/intdxdt/simplex/geom/point"
     . "github.com/intdxdt/simplex/geom/segment"
-//"github.com/intdxdt/simplex/geom/mbr"
+    //"github.com/intdxdt/simplex/geom/mbr"
+    "github.com/intdxdt/simplex/geom/linearring"
 )
 
 //intersection of self linestring with other
 func (self *LineString) Intersection(other *LineString) []*Point {
     var ptlist = make([]*Point, 0)
 
-    if !self.bbox.Intersects(other.bbox.MBR) {
+    if self.bbox.Disjoint(other.bbox.MBR) {
         return ptlist //disjoint
     }
 
     //if root mbrs intersect
     //var i, q, lnrange, ibox, qbox, qrng
-    var othersegs   = make([]*Segment, 0)
-    var selfsegs    = make([]*Segment, 0)
+    var othersegs = make([]*Segment, 0)
+    var selfsegs = make([]*Segment, 0)
 
     var query = other.bbox
     var inrange = self.index.Search(query.MBR)
@@ -41,8 +42,6 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     return ptlist  //debug
 }
 
-
-
 //test intersects of self line string with other
 // param other{LineString|Polygon|Point|Array} - geometry types and array as Point
 func (self *LineString) Intersects(other *LineString) bool {
@@ -59,21 +58,22 @@ func (self *LineString) IntersectsPoint(other *Point) bool {
     }
     var coords = make([]*Point, 2)
     coords[0], coords[1] = other.Clone(), other.Clone()
-    return self._intersects(NewLineString(coords) )
+    return self._intersects(NewLineString(coords))
 }
 
 
 //test intersects of self line string with other
 //other{LineString} - geometry types and array as Point
 func (self *LineString) _intersects(other *LineString) bool {
+    //if disjoint
     if self.bbox.Disjoint(other.bbox.MBR) {
-        //if disjoint
         return false
     }
     var bln = false
     //if root mbrs intersect
     var othersegs = make([]*Segment, 0)
     var selfsegs = make([]*Segment, 0)
+
     var query = other.bbox.MBR
     var inrange = self.index.Search(query)
 
@@ -85,21 +85,19 @@ func (self *LineString) _intersects(other *LineString) bool {
 
         for q := 0; !bln && q < len(lnrange); q++ {
             qbox := (*lnrange[q].GetItem()).(*MonoMBR)
-            qrng, ok := ibox.Intersection(qbox.MBR)
-            if !ok {
-                continue
-            }
+            qrng, _ := ibox.Intersection(qbox.MBR)
             selfsegs = self.segs_inrange(selfsegs, qrng, ibox.i, ibox.j, false, false)
             othersegs = other.segs_inrange(othersegs, qrng, qbox.i, qbox.j, false, false)
-
-            bln = (len(othersegs) > 0 && len(selfsegs) > 0) && self.segseg_intersects(selfsegs, othersegs)
+            if len(othersegs) > 0 && len(selfsegs) > 0 {
+                bln = self.segseg_intersects(selfsegs, othersegs)
+            }
         }
     }
     return bln
 }
 
-//tests whether a collection of segments from line a and line b intersects
-//TODO:Improve from O(n2) - although expects few number of segs from index selection
+// Tests whether a collection of segments from line a and line b intersects
+// TODO:Improve from O(n2) - although expects few number of segs from index selection
 func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
     var bln = false
     for a := 0; !bln && a < len(segsa); a++ {
@@ -110,6 +108,30 @@ func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) boo
     return bln
 }
 
+// description line intersect polygon rings
+//func (self *LineString) line_inter_poly(rings []*linearring.LinearRing) {
+//
+//  var shell = rings[0], i
+//  bln = line._intersects(shell)
+//  if !bln {
+//    //if false, check if shell contains line
+//    var bln = shell.contains(line)
+//    var boolhole = false
+//    //inside shell, does it touch hole boundary ?
+//    for (i = 1 bln && !boolhole && i < len(rings) ++i) {
+//      boolhole = line._intersects(rings[i])
+//    }
+//    var boolcontains = false
+//    //inside shell but does not touch the boundary of holes
+//    if bln && !boolhole {//check if completely contained in hole
+//      for (i = 1 !boolcontains && i < len(rings) ++i) {
+//        boolcontains = rings[i].contains(line)
+//      }
+//    }
+//    bln = bln && !boolcontains
+//  }
+//  return bln
+//}
 
 
 

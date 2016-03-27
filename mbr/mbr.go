@@ -21,7 +21,7 @@ func NewMBR(minx, miny, maxx, maxy float64) *MBR {
 }
 
 //ExpandXY expands mbr to include x and y
-func NewMBROfPoints(pts ...*Point) *MBR {
+func NewMBRFromPoints(pts ...*Point) *MBR {
     if len(pts) == 0 {
         return NewMBR(0, 0, 0, 0)
     }

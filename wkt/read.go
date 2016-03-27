@@ -36,6 +36,25 @@ type WKTParserObj struct {
     gtype int
 }
 
+func (self *WKTParserObj) GeometryType() int {
+    return self.gtype
+}
+
+//To array of coodinates of wkt string
+func (self *WKTParserObj) ToArray() [][][2]float64 {
+    coords := make([][][2]float64, 0)
+    sh := self.shell
+    if self.gtype == Point || self.gtype == LineString {
+        coords = append(coords, *sh)
+    } else if (self.gtype == Polygon) {
+        coords = append(coords, *sh)
+        for _, sh = range *self.holes {
+            coords = append(coords, *sh)
+        }
+    }
+    return coords
+}
+
 const (
     Unkown = iota - 1
     Point

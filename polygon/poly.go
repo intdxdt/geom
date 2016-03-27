@@ -3,7 +3,6 @@ package polygon
 import (
     . "github.com/intdxdt/simplex/geom/point"
     . "github.com/intdxdt/simplex/geom/linearring"
-
 )
 
 type Polygon struct {
@@ -24,6 +23,16 @@ func NewPolygon(coordinates ...[]*Point) *Polygon {
     return &Polygon{shell, holes}
 }
 
+//As line strings
+//func (self *Polygon) AsLineStrings(){
+//    var sh := self.Shell.LineString
+//    var rings = make([]*LinearRing, n)
+//    for i := 0; i < n; i++ {
+//        rings[i] = NewLinearRing(coords[i])
+//    }
+//    return rings
+//}
+
 //polygon shells
 func shells(coords [][]*Point) []*LinearRing {
     var n = len(coords)
@@ -33,5 +42,6 @@ func shells(coords [][]*Point) []*LinearRing {
     }
     return rings
 }
+
 
 
