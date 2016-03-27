@@ -1,4 +1,4 @@
-package segment
+package geom
 
 import (
     . "github.com/intdxdt/simplex/util/math"

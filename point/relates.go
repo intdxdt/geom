@@ -1,4 +1,4 @@
-package point
+package geom
 
 import (
     util "github.com/intdxdt/simplex/util/math"

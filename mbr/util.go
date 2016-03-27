@@ -1,7 +1,7 @@
-package mbr
+package geom
 
 import (
-	"github.com/intdxdt/simplex/geom/point"
+	. "github.com/intdxdt/simplex/geom/point"
 )
 
 func (self *MBR) AsArray() []float64 {
@@ -29,8 +29,8 @@ func (self *MBR)Translate(dx, dy float64) *MBR {
 		self[x2] + dx, self[y2] + dy)
 }
 
-func (self *MBR) Center() point.Point {
-	return point.Point{
+func (self *MBR) Center() Point {
+	return Point{
 		(self[x1] + self[x2]) / 2.0,
 		(self[y1] + self[y2]) / 2.0}
 }

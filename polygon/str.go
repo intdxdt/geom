@@ -1,6 +1,7 @@
-package polygon
+package geom
 
-import "github.com/intdxdt/simplex/geom/wkt"
+import . "github.com/intdxdt/simplex/geom/wkt"
+
 
 //polygon as  string
 func (self *Polygon) String() string {
@@ -13,7 +14,7 @@ func (self *Polygon) String() string {
         rings[i + 1] = self_holes[i].ToArray()
     }
 
-    return wkt.Write(
-        wkt.NewWKTParserObj(wkt.Polygon, rings...),
+    return WriteWKT(
+        NewWKTParserObj (GeoType_Polygon, rings...),
     )
 }

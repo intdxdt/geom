@@ -1,11 +1,11 @@
-package linestring
+package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/point"
     . "github.com/intdxdt/simplex/geom/mbr"
+    . "github.com/intdxdt/simplex/geom/wkt"
     "github.com/intdxdt/simplex/struct/rtree"
     "math"
-    "github.com/intdxdt/simplex/geom/wkt"
 )
 
 const (
@@ -62,7 +62,7 @@ func NewLineStringFromArray(array [][2]float64) *LineString {
 //empty wkt are not allowed
 func NewLineStringFromWKT(wkt_geom string) *LineString {
     return NewLineStringFromArray(
-        wkt.Read(wkt_geom).ToArray()[0],
+        ReadWKT(wkt_geom).ToArray()[0],
     )
 }
 

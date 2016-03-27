@@ -1,4 +1,4 @@
-package point
+package geom
 
 const (
     x = iota

@@ -1,4 +1,4 @@
-package mbr
+package geom
 
 import (
 	"math"
@@ -62,11 +62,11 @@ func (self *MBR) Intersects(other *MBR) bool {
 	other[y2] < self[y1])
 }
 
-func (self *MBR) IntersectsPoint(p *point.Point) bool {
+func (self *MBR) IntersectsPoint(p *geom.Point) bool {
 	return self.ContainsXY(p[x1], p[y1])
 }
 
-func (self *MBR) IntersectsBounds(q1, q2 *point.Point) bool {
+func (self *MBR) IntersectsBounds(q1, q2 *geom.Point) bool {
 
 	minq := math.Min(q1[x1], q2[x1])
 	maxq := math.Max(q1[x1], q2[x1])

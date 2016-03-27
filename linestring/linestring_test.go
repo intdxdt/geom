@@ -1,4 +1,4 @@
-package linestring
+package geom
 
 import (
     "testing"
@@ -73,7 +73,7 @@ func TestLineString(t *testing.T) {
         })
 
         g.It("should test envelope", func() {
-            g.Assert(ln.Envelope()).Eql(mbr.NewMBRFromPoints(pts...))
+            g.Assert(ln.Envelope()).Eql(geom.NewMBRFromPoints(pts...))
         })
 
     })

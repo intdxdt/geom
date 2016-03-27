@@ -1,8 +1,8 @@
-package linestring
+package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/mbr"
-    "github.com/intdxdt/simplex/geom/point"
+    . "github.com/intdxdt/simplex/geom/point"
     "math"
 )
 
@@ -42,7 +42,7 @@ func new_mono_mbr(box  *MBR) *MonoMBR {
 //param [j]{number} - end index
 func (self *LineString) process_chains(i, j int) {
     var dx, dy float64
-    var v0, v1 *point.Point
+    var v0, v1 *Point
     var cur_x, cur_y, prev_x, prev_y int
     var mono *MonoMBR
 

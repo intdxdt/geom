@@ -1,4 +1,4 @@
-package linearring
+package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/point"

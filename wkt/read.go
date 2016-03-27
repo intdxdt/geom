@@ -1,4 +1,4 @@
-package wkt
+package geom
 
 import (
     "regexp"
@@ -44,9 +44,9 @@ func (self *WKTParserObj) GeometryType() int {
 func (self *WKTParserObj) ToArray() [][][2]float64 {
     coords := make([][][2]float64, 0)
     sh := self.shell
-    if self.gtype == Point || self.gtype == LineString {
+    if self.gtype == GeoType_Point || self.gtype == GeoType_LineString {
         coords = append(coords, *sh)
-    } else if (self.gtype == Polygon) {
+    } else if (self.gtype == GeoType_Polygon) {
         coords = append(coords, *sh)
         for _, sh = range *self.holes {
             coords = append(coords, *sh)
@@ -55,12 +55,6 @@ func (self *WKTParserObj) ToArray() [][][2]float64 {
     return coords
 }
 
-const (
-    Unkown = iota - 1
-    Point
-    LineString
-    Polygon
-)
 
 func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
     shells := make([]*Shell, len(coords))
@@ -76,19 +70,19 @@ func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
     return &WKTParserObj{shells[0], &holes, gtype}
 }
 
-func Read(wkt string) *WKTParserObj {
+func ReadWKT(wkt string) *WKTParserObj {
     var parser func(*string, *WKTParserObj)
-    matches := re_typeStr.type_coords(wkt);
+    matches := re_typeStr.wkt_type_coords(wkt);
     obj := &WKTParserObj{nil, nil, Unkown}
 
     mtype, coords := *matches["type"], matches["coords"]
 
     if mtype == "polygon" {
-        obj.gtype, parser = Polygon, polygon
+        obj.gtype, parser = GeoType_Polygon, wkt_polygon_parser
     } else if mtype == "linestring" {
-        obj.gtype, parser = LineString, linestring
+        obj.gtype, parser = GeoType_LineString, wkt_linestring_parser
     } else if mtype == "point" {
-        obj.gtype, parser = Point, point
+        obj.gtype, parser = GeoType_Point, wkt_point_parser
     }
 
     if coords != nil  && obj.gtype != Unkown {
@@ -98,26 +92,26 @@ func Read(wkt string) *WKTParserObj {
 }
 
 //parse point
-func point(wkt_coords *string, obj *WKTParserObj) {
+func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
     //var coords = str.trim().split(this.regExes.spaces)
     var coords = strings.TrimSpace(*wkt_coords)
     var coord = re_spaces.Split(coords, -1)
     pt := [2]float64{
-        parse_float(coord[x]),
-        parse_float(coord[y]),
+        wkt_parse_float(coord[x]),
+        wkt_parse_float(coord[y]),
     }
     obj.shell, obj.holes = &Shell{pt}, nil
 }
 
 //parse linestring
-func linestring(wkt_coords *string, obj *WKTParserObj) {
+func wkt_linestring_parser(wkt_coords *string, obj *WKTParserObj) {
     var coords = strings.TrimSpace(*wkt_coords)
-    shell := string_coords(&coords)
+    shell := wkt_string_coords(&coords)
     obj.shell, obj.holes = shell, nil
 }
 
 //parse polygon
-func polygon(wkt_coords *string, obj *WKTParserObj) {
+func wkt_polygon_parser(wkt_coords *string, obj *WKTParserObj) {
     var coords = strings.TrimSpace(*wkt_coords)
     var rings = re_parenComma.Split(coords, -1)
 
@@ -128,7 +122,7 @@ func polygon(wkt_coords *string, obj *WKTParserObj) {
 
     for i := 0; i < n; i++ {
         ring := re_trimParens.ReplaceAllString(rings[i], "$1")
-        comps := string_coords(&ring)
+        comps := wkt_string_coords(&ring)
         if i == 0 {
             shell = comps
         };
@@ -140,7 +134,7 @@ func polygon(wkt_coords *string, obj *WKTParserObj) {
 }
 
 //string coords
-func string_coords(str *string) *Shell {
+func wkt_string_coords(str *string) *Shell {
     var points = strings.Split(strings.TrimSpace(*str), ",")
     var n = len(points)
     var comps = make(Shell, n)
@@ -148,8 +142,8 @@ func string_coords(str *string) *Shell {
     for i := 0; i < n; i++ {
         coords := re_spaces.Split(strings.TrimSpace(points[i]), -1)
         pt := [2]float64{
-            parse_float(coords[x]),
-            parse_float(coords[y]),
+            wkt_parse_float(coords[x]),
+            wkt_parse_float(coords[y]),
         }
         comps[i] = pt
     }
@@ -157,7 +151,7 @@ func string_coords(str *string) *Shell {
 }
 
 //parse float
-func parse_float(str string) float64 {
+func wkt_parse_float(str string) float64 {
     x, err := strconv.ParseFloat(str, 64)
     if err != nil {
         panic("unable to convert to float")
@@ -166,12 +160,12 @@ func parse_float(str string) float64 {
 }
 
 //wkt type and coordiantes
-func (self *wktRegex) type_coords(wkt string) map[string]*string {
+func (self *wktRegex) wkt_type_coords(wkt string) map[string]*string {
     wkt = strings.TrimSpace(wkt)
     captures := make(map[string]*string)
     captures["wkt"], captures["type"], captures["coords"] = nil, nil, nil
 
-    if is_empty(wkt) {
+    if is_empty_wkt(wkt) {
         self = &re_emptyTypeStr
     }
     match := self.FindStringSubmatch(wkt)
@@ -194,7 +188,7 @@ func (self *wktRegex) type_coords(wkt string) map[string]*string {
 }
 
 //checks for the emptiness of wkt string
-func is_empty(wkt string) bool {
+func is_empty_wkt(wkt string) bool {
     return strings.Index(wkt, "EMPTY") != -1
 }
 

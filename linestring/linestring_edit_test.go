@@ -1,11 +1,10 @@
-package linestring
+package geom
 
 import (
     "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/geom/point"
     "github.com/intdxdt/simplex/util/math"
-    "fmt"
 )
 
 func TestLineStringEdit(t *testing.T) {
@@ -37,14 +36,12 @@ func TestLineStringEdit(t *testing.T) {
             g.Assert(len(ln.chains)).Equal(3)
 
             ln.Pop()
-            fmt.Println("number of coords:", len(ln.coordinates))
             g.Assert(math.Round(ln.length, 10)).Equal(
                 math.Round(9.62780549425, 10),
             )
             g.Assert(len(ln.chains)).Equal(2)
 
             ln.Pop()
-            fmt.Println("number of coords:", len(ln.coordinates))
             g.Assert(math.Round(ln.length, 10)).Equal(
                 math.Round(4.242640687119285, 10),
             )
@@ -85,7 +82,7 @@ func TestLineStringEdit(t *testing.T) {
 
             v, pts = pop_coords(pts)
             g.Assert(len(pts)).Equal(0)
-            g.Assert(v==nil).IsTrue()
+            g.Assert(v == nil).IsTrue()
         })
         g.It("should test intersection", func() {
             a := &Point{-4.975454545454546, 0.2551515151515151, }
@@ -97,15 +94,11 @@ func TestLineStringEdit(t *testing.T) {
             h := &Point{0.484154648492778, -0.645539531323704}
             i := &Point{0.925118053504632, -1.233490738006176}
             var ln_e *LineString
-             var pt_e *Point
+            var pt_e *Point
             ln_ab := NewLineString([]*Point{a, b})
             ln_cd := NewLineString([]*Point{c, d})
-            fmt.Println(ln_cd)
-            fmt.Println(ln_ab)
 
             ln_hi := NewLineString([]*Point{h, i})
-
-
 
             ok := ln_cd.Intersects(ln_ab)
             g.Assert(ok).IsFalse()

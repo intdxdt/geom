@@ -1,19 +1,19 @@
-package wkt
+package geom
 
 import (
     "fmt"
     "strings"
 )
 
-func Write(obj *WKTParserObj) string {
+func WriteWKT(obj *WKTParserObj) string {
     var s string
-    if obj.gtype == Point {
+    if obj.gtype == GeoType_Point {
         s = fmt.Sprintf("POINT %s", str_point(obj.shell))
-    }else if obj.gtype == LineString {
+    }else if obj.gtype == GeoType_LineString {
         s = fmt.Sprintf("LINESTRING %s", str_polyline(obj.shell))
-    }else if obj.gtype == Polygon {
+    }else if obj.gtype == GeoType_Polygon {
         wkt := str_polygon(obj)
-        if is_empty(wkt) {
+        if is_empty_wkt(wkt) {
             s = fmt.Sprintf("POLYGON %s", wkt)
         } else {
             s = fmt.Sprintf("POLYGON (%s)", wkt)

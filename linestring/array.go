@@ -1,4 +1,4 @@
-package linestring
+package geom
 
 //Coordinates returns a copy of linestring coordinates
 func (self *LineString) ToArray() [][2]float64 {

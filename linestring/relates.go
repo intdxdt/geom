@@ -1,10 +1,9 @@
-package linestring
+package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/point"
     . "github.com/intdxdt/simplex/geom/segment"
-    //"github.com/intdxdt/simplex/geom/mbr"
-    "github.com/intdxdt/simplex/geom/linearring"
+    //. "github.com/intdxdt/simplex/geom/linearring"
 )
 
 //intersection of self linestring with other
@@ -109,7 +108,7 @@ func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) boo
 }
 
 // description line intersect polygon rings
-//func (self *LineString) line_inter_poly(rings []*linearring.LinearRing) {
+//func (self *LineString) line_inter_poly(rings []*LinearRing) {
 //
 //  var shell = rings[0], i
 //  bln = line._intersects(shell)

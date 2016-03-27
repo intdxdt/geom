@@ -1,4 +1,4 @@
-package point
+package geom
 
 //Add creates a new point by adding to other point
 func (self *Point) Add(pt *Point) *Point {

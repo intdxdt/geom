@@ -1,4 +1,4 @@
-package linestring
+package geom
 
 import (
     "testing"

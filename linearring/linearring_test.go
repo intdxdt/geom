@@ -1,11 +1,10 @@
-package linearring
+package geom
 
 import (
     "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/geom/point"
     . "github.com/intdxdt/simplex/util/math"
-    "fmt"
 )
 
 func TestLinearRing(t *testing.T) {
@@ -64,7 +63,6 @@ func TestLinearRingArea(t *testing.T) {
     rng0 := NewLinearRing([]*Point{
         {2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7},
     })
-    fmt.Println(rng0)
 
     rng1 := NewLinearRing([]*Point{{3, 1.6}, {3, 2}, {2.4, 2.8}});
 

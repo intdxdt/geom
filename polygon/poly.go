@@ -1,4 +1,4 @@
-package polygon
+package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/point"
