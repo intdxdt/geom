@@ -1,9 +1,8 @@
-package geom
+package mbr
 
 import (
     "testing"
     "math"
-    . "github.com/intdxdt/simplex/geom/point"
     . "github.com/franela/goblin"
     util "github.com/intdxdt/simplex/util/math"
 )
@@ -29,7 +28,8 @@ func TestMBR(t *testing.T) {
     m7 := NewMBR(-2, 1, 4, -2)
     m8 := NewMBR(-1, 0, 1, -1.5)
 
-    p := &Point{1.7, 1.5}  // POINT(1.7 1.5)
+    p := []float64{1.7, 1.5, 3.4}  // POINT(1.7 1.5, 3.4)
+    p0 := []float64{1.7}  // POINT(1.7 1.5)
 
     g.Describe("minimum bounding box", func() {
 
@@ -46,6 +46,7 @@ func TestMBR(t *testing.T) {
 
         g.It("intersects, distance", func() {
             g.Assert(m1.IntersectsPoint(p)).IsTrue()
+            g.Assert(m1.IntersectsPoint(p0)).IsFalse()
 
             g.Assert(m00.Intersects(n00)).IsTrue()
             nm00, success := m00.Intersection(n00)
@@ -108,10 +109,11 @@ func TestMBR(t *testing.T) {
         })
 
         g.It("contains, disjoint , contains completely", func() {
-            p1 := &Point{-5.95, 9.28}
-            p2 := &Point{-0.11, 12.56}
-            p3 := &Point{3.58, 11.79}
-            p4 := &Point{-1.16, 14.71}
+            p1 := []float64{-5.95, 9.28}
+            p2 := []float64{-0.11, 12.56}
+            p3 := []float64{3.58, 11.79}
+            p4 := []float64{-1.16, 14.71}
+            p4x := []float64{-1.16}
 
             mp12 := NewMBR(p1[x1], p1[y1], p2[x1], p2[y1])
             mp34 := NewMBR(p3[x1], p3[y1], p4[x1], p4[y1])
@@ -119,9 +121,10 @@ func TestMBR(t *testing.T) {
             // intersects but segment are disjoint
             g.Assert(mp12.Intersects(mp34)).IsTrue()
             g.Assert(mp12.IntersectsBounds(p3, p4)).IsTrue()
+            g.Assert(mp12.IntersectsBounds(p3, p4x)).IsFalse()
             g.Assert(mp12.IntersectsBounds(
-                &Point{m1[x1], m1[y1]},
-                &Point{m1[x2], m1[y2]},
+                []float64{m1[x1], m1[y1]},
+                []float64{m1[x2], m1[y2]},
             )).IsFalse()
             g.Assert(mp12.IntersectsPoint(p3)).IsFalse()
             g.Assert(m1.ContainsXY(1, 1)).IsTrue()
@@ -171,8 +174,8 @@ func TestMBR(t *testing.T) {
             m1c := m1.Center()
             mtc := mt.Center()
 
-            g.Assert(m1c.Equals(&Point{1, 1}))
-            g.Assert(mtc.Equals(&Point{2, 2}))
+            g.Assert(m1c).Eql([]float64{1, 1})
+            g.Assert(mtc).Eql([]float64{2, 2})
             g.Assert(mt.AsArray()).Equal([]float64{1, 1, 3, 3})
             g.Assert(mby.AsArray()).Equal([]float64{-1, -1, 3, 3})
         })
@@ -180,21 +183,7 @@ func TestMBR(t *testing.T) {
         g.It("is string", func() {
             g.Assert(m1.String()).Equal("POLYGON ((0 0, 0 2, 2 2, 2 0, 0 0))")
         })
-        g.It("is should test mbr by slice of points", func() {
-            pts := []*Point{
-                {5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9},
-                {6.6, 7.9}, {5.6, 7.9},
-            }
 
-            mbr := NewMBRFromPoints(pts...)
-            g.Assert(mbr).Equal(NewMBR(5.6, 7.9, 6.6, 8.9))
-
-            mbr = NewMBRFromPoints(pts[0])
-            g.Assert(mbr).Equal(NewMBR(5.6, 7.9, 5.6, 7.9))
-
-            mbr = NewMBRFromPoints()
-            g.Assert(mbr).Equal(NewMBR(0, 0, 0, 0))
-        })
 
     })
 

@@ -10,10 +10,7 @@ module.exports = function (grunt) {
   var root_dir = path.resolve(__dirname + '/..');
   var test_dirs = [
     './mbr',
-    './point',
-    './linestring',
-    './polygon',
-    './wkt',
+    './',
   ];
   test_dirs = _.map(test_dirs, function (curdir) {
     return path.resolve(path.join(root_dir, curdir))
