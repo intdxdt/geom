@@ -1,29 +1,25 @@
 package geom
 
 import (
-    "fmt"
     "strings"
 )
 
+//write wkt
 func WriteWKT(obj *WKTParserObj) string {
     var s string
     if obj.gtype == GeoType_Point {
-        s = fmt.Sprintf("POINT %s", str_point(obj.shell))
-    }else if obj.gtype == GeoType_LineString {
-        s = fmt.Sprintf("LINESTRING %s", str_polyline(obj.shell))
-    }else if obj.gtype == GeoType_Polygon {
+        s = "POINT " + str_point(obj.shell)
+    } else if obj.gtype == GeoType_LineString {
+        s = "LINESTRING " + str_polyline(obj.shell)
+    } else if obj.gtype == GeoType_Polygon {
         wkt := str_polygon(obj)
         if is_empty_wkt(wkt) {
-            s = fmt.Sprintf("POLYGON %s", wkt)
+            s = "POLYGON " + wkt
         } else {
-            s = fmt.Sprintf("POLYGON (%s)", wkt)
+            s = "POLYGON (" + wkt + ")"
         }
     }
     return s
-}
-
-func coord(pt *[2]float64) string {
-    return fmt.Sprintf("%v %v", pt[x], pt[y])
 }
 
 //str point
@@ -31,7 +27,7 @@ func str_point(shell *Shell) string {
     var s string = "EMPTY"
     if shell != nil && len(*shell) > 0 {
         sh := *shell
-        s = fmt.Sprintf("(%s)", coord(&sh[0]))
+        s = "(" + coord_str(&sh[0]) + ")"
     }
     return s
 }
@@ -47,12 +43,13 @@ func str_polyline(shell *Shell) string {
     if n > 0 {
         lnstr := make([]string, n)
         for i := 0; i < n; i++ {
-            lnstr[i] = coord(&sh[i])
+            lnstr[i] = coord_str(&sh[i])
         }
-        s = fmt.Sprintf("(%s)", strings.Join(lnstr, ", "))
+        s = "(" +  strings.Join(lnstr, ", ") + ")"
     }
     return s
 }
+
 //str polygon
 func str_polygon(obj *WKTParserObj) string {
     shell := str_polyline(obj.shell)

@@ -51,7 +51,7 @@ func (self *WKTParserObj) ToArray() [][][2]float64 {
     return coords
 }
 
-
+//New WKT parser object
 func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
     shells := make([]*Shell, len(coords))
     for i := 0; i < len(coords); i++ {
@@ -66,6 +66,7 @@ func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
     return &WKTParserObj{shells[0], &holes, gtype}
 }
 
+//Read wkt string
 func ReadWKT(wkt string) *WKTParserObj {
     var parser func(*string, *WKTParserObj)
     matches := re_typeStr.wkt_type_coords(wkt);
@@ -87,7 +88,7 @@ func ReadWKT(wkt string) *WKTParserObj {
     return obj
 }
 
-//parse point
+//Parse point
 func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
     //var coords = str.trim().split(this.regExes.spaces)
     var coords = strings.TrimSpace(*wkt_coords)

@@ -23,7 +23,7 @@ func TestLineString(t *testing.T) {
         g.It("should test length", func() {
             g.Assert(ln.Length() == 4.0).IsTrue()
             g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
-            g.Assert(ln.is_ring()).IsTrue()
+            g.Assert(ln.IsRing()).IsTrue()
             g.Assert(ln.len(len(ln.coordinates) - 1, 0) == ln.Length()).IsTrue()
             g.Assert(ln.chain_length(ln.chains[0])).Equal(ln.chain_length(ln.chains[1]))
             g.Assert(ln.chain_length(ln.chains[2])).Equal(ln.chain_length(ln.chains[3]))

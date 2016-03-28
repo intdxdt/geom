@@ -4,10 +4,7 @@ import (
     "github.com/intdxdt/simplex/struct/rtree"
 )
 
-/*
- description append coordinate, by extending line
- param pnt{Point}
- */
+//Extends line by appending coordinate
 func (self *LineString) Append(pnt *Point) *LineString {
     //chain index
     var idx = len(self.chains) - 1
@@ -33,7 +30,6 @@ func (self *LineString) Append(pnt *Point) *LineString {
     self.update_rootmbr()
     return self
 }
-
 
 //Pop last coordinate till LineString becomes a segment
 func (self *LineString)  Pop() *LineString {
@@ -87,7 +83,6 @@ func (self *LineString) find_chain(ch *MonoMBR) *rtree.Node {
     }
     return node
 }
-
 
 // update root mbr
 func (self *LineString)  update_rootmbr() {

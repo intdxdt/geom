@@ -10,14 +10,7 @@ func (self *Point ) ConvexHull() []*Point {
     return []*Point{{x, y}, {x, y}, {x, y}, {x, y}}
 }
 
-//Bbox bounding box
-func (self *Point) BBox() []*Point {
-    return []*Point{
-        {self[x], self[y]},
-        {self[x], self[y]},
-    }
-}
-
+//is null
 func (self *Point) IsNull() bool {
     return math.IsNaN(self[x]) || math.IsNaN(self[y])
 }

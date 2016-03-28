@@ -1,8 +1,10 @@
 package geom
 
 import (
-    //. "github.com/intdxdt/simplex/geom/linearring"
+//. "github.com/intdxdt/simplex/geom/linearring"
 )
+
+
 
 //intersection of self linestring with other
 func (self *LineString) Intersection(other *LineString) []*Point {
@@ -39,29 +41,13 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     return ptlist  //debug
 }
 
-//test intersects of self line string with other
-// param other{LineString|Polygon|Point|Array} - geometry types and array as Point
-func (self *LineString) Intersects(other *LineString) bool {
-    if other == nil {
-        return false
-    }
-    return self._intersects(other)
-}
 
-//test intersects of self line string with point
-func (self *LineString) IntersectsPoint(other *Point) bool {
-    if other == nil {
-        return false
-    }
-    var coords = make([]*Point, 2)
-    coords[0], coords[1] = other.Clone(), other.Clone()
-    return self._intersects(NewLineString(coords))
-}
-
-
-//test intersects of self line string with other
+//Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
-func (self *LineString) _intersects(other *LineString) bool {
+func (self *LineString) intersects_linestring(other *LineString) bool {
+    if other == nil {
+        return false
+    }
     //if disjoint
     if self.bbox.Disjoint(other.bbox.MBR) {
         return false
@@ -93,6 +79,48 @@ func (self *LineString) _intersects(other *LineString) bool {
     return bln
 }
 
+
+//line intersect polygon rings
+func (self *LineString) intersects_polygon(lns []*LineString) bool {
+    var bln , intersects_hole, in_hole bool
+    var rings = make([]*LinearRing, len(lns))
+    for i, ln := range lns {
+        rings[i] = &LinearRing{ln}
+    }
+    var shell = rings[0]
+    bln = self.Intersects(shell.LineString)
+    //if false, check if shell contains line
+    if !bln {
+
+        bln = shell.contains_line(self)
+        //inside shell, does it touch hole boundary ?
+        for i := 1; bln && !intersects_hole && i < len(rings); i++ {
+            intersects_hole = self.Intersects(rings[i].LineString)
+        }
+        //inside shell but does not touch the boundary of holes
+        if bln && !intersects_hole {
+            //check if completely contained in hole
+            for i := 1; !in_hole && i < len(rings); i++ {
+                in_hole = rings[i].contains_line(self)
+            }
+        }
+        bln = bln && !in_hole
+    }
+    return bln
+}
+
+
+//test intersects of self line string with point
+func (self *LineString) IntersectsPoint(other *Point) bool {
+    if other == nil {
+        return false
+    }
+    var coords = make([]*Point, 2)
+    coords[0], coords[1] = other.Clone(), other.Clone()
+    return self.Intersects(NewLineString(coords))
+}
+
+
 // Tests whether a collection of segments from line a and line b intersects
 // TODO:Improve from O(n2) - although expects few number of segs from index selection
 func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
@@ -105,30 +133,6 @@ func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) boo
     return bln
 }
 
-// description line intersect polygon rings
-//func (self *LineString) line_inter_poly(rings []*LinearRing) {
-//
-//  var shell = rings[0], i
-//  bln = line._intersects(shell)
-//  if !bln {
-//    //if false, check if shell contains line
-//    var bln = shell.contains(line)
-//    var boolhole = false
-//    //inside shell, does it touch hole boundary ?
-//    for (i = 1 bln && !boolhole && i < len(rings) ++i) {
-//      boolhole = line._intersects(rings[i])
-//    }
-//    var boolcontains = false
-//    //inside shell but does not touch the boundary of holes
-//    if bln && !boolhole {//check if completely contained in hole
-//      for (i = 1 !boolcontains && i < len(rings) ++i) {
-//        boolcontains = rings[i].contains(line)
-//      }
-//    }
-//    bln = bln && !boolcontains
-//  }
-//  return bln
-//}
 
 
 

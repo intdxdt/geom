@@ -2,10 +2,8 @@ package geom
 
 import (
     "github.com/intdxdt/simplex/struct/rtree"
-    . "github.com/intdxdt/simplex/geom/mbr"
     "math"
 )
-
 
 type LineString struct {
     chains      []*MonoMBR
@@ -25,12 +23,8 @@ func NewLineString(coordinates []*Point) *LineString {
     self := &LineString{}
     self.chains = make([]*MonoMBR, 0)
 
-    self.coordinates = make([]*Point, len(coordinates))
     //copy coordinates
-    for i := range coordinates{
-        self.coordinates[i] = coordinates[i].Clone()
-    }
-
+    self.coordinates = CloneCoordinates(coordinates)
 
     //init
     self.monosize = int(math.Log2(float64(len(coordinates)) + 1.0))
@@ -42,13 +36,9 @@ func NewLineString(coordinates []*Point) *LineString {
     return self
 }
 
-//New line  string from array
+//New line string from array
 func NewLineStringFromArray(array [][2]float64) *LineString {
-    var coords = make([]*Point, len(array))
-    for i := range array {
-        coords[i] = NewPoint(array[i][:])
-    }
-    return NewLineString(coords)
+    return NewLineString(AsPointArray(array))
 }
 
 //create a new linestring from wkt string
@@ -64,20 +54,10 @@ func NewLineStringFromPoint(pt *Point) *LineString {
     return NewLineString([]*Point{pt.Clone(), pt.Clone()})
 }
 
-//clone linestring
-func (self *LineString) Clone() *LineString {
-    return NewLineString(self.coordinates)
-}
-
-//envelope of linestring
-func (self *LineString) Envelope() *MBR {
-    return self.bbox.MBR
-}
-
 //get copy of chains of linestring
-func (self  *LineString) MonoChains () []*MonoMBR{
+func (self  *LineString) MonoChains() []*MonoMBR {
     chains := make([]*MonoMBR, len(self.chains))
-    for i := range self.chains{
+    for i := range self.chains {
         chains[i] = self.chains[i].Clone()
     }
     return chains

@@ -4,6 +4,7 @@ import (
     . "github.com/intdxdt/simplex/util/math"
 )
 
+//point completely in ring
 func (self *LinearRing) PointCompletelyInRing(pnt *Point) bool {
     return (
     self.Envelope().IntersectsPoint(pnt[:]) &&

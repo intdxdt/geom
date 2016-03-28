@@ -82,7 +82,7 @@ func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
         // instersection point is within range of lna && lnb ||  by extension
         bln = true
         pt := &Point{x1 + ua * (x2 - x1), y1 + ua * (y2 - y1)}
-        if !is_point_inlist(coords, pt) {
+        if !InCoordinates(coords, pt) {
             coords = append(coords, pt)
         }
     }
@@ -128,10 +128,10 @@ x1, y1, x2, y2 float64, coords *[]*Point) {
         b = &Point{x2, y2}
     }
 
-    if a != nil && !is_point_inlist(*coords, a) {
+    if a != nil && !InCoordinates(*coords, a) {
         *coords = append(*coords, a)//a
     }
-    if b != nil && !is_point_inlist(*coords, b) {
+    if b != nil && !InCoordinates(*coords, b) {
         *coords = append(*coords, b)//b
     }
 }

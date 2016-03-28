@@ -1,7 +1,5 @@
 package geom
 
-
-
 //polygon as  string
 func (self *Polygon) String() string {
     //NewWKTParserObj

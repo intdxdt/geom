@@ -52,7 +52,7 @@ ptlist []*Point, extend bool) []*Point {
                 continue
             }
             for _, pt := range coord {
-                if !is_point_inlist(ptlist, pt) {
+                if !InCoordinates(ptlist, pt) {
                     ptlist = append(ptlist, coord...)
                 }
             }

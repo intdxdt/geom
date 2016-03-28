@@ -9,6 +9,17 @@ type LinearRing struct {
     *LineString
 }
 
+//new linear ring
+func NewLinearRing(coordinates []*Point) *LinearRing {
+    coords := CloneCoordinates(coordinates)
+    if len(coordinates) > 1 {
+        if !IsRing(coordinates) {
+            coords = append(coords, coordinates[0].Clone())
+        }
+    }
+    return &LinearRing{NewLineString(coords)}
+}
+
 //area of linear ring
 func (self *LinearRing) Area() float64 {
     var n = self.LenVertices()
@@ -23,27 +34,3 @@ func (self *LinearRing) Area() float64 {
     return math.Abs(area * 0.5)
 }
 
-
-
-//new linear ring
-func NewLinearRing(coordinates []*Point) *LinearRing {
-    n := len(coordinates)
-    var coords = make([]*Point, n)
-    coords = clone_coords(coords, coordinates)
-    if len(coordinates) > 1 {
-        pt_0 := coordinates[0]
-        pt_n := coordinates[n - 1]
-        if !pt_0.Equals(pt_n) {
-            coords = append(coords, pt_0.Clone())
-        }
-    }
-    return &LinearRing{NewLineString(coords)}
-}
-
-//clone coordinates
-func clone_coords(dst, src []*Point) []*Point {
-    for i := range src {
-        dst[i] = src[i].Clone()
-    }
-    return dst
-}

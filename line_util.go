@@ -34,11 +34,3 @@ func pop_coords(a []*Point) (*Point, []*Point) {
 func is_bbox(a *MBR, b *MBR) bool {
     return a == b
 }
-
-
-//line is ring
-func (self *LineString) is_ring() bool {
-    return self.coordinates[0].Equals(
-        self.coordinates[len(self.coordinates) - 1],
-    )
-}

@@ -10,13 +10,3 @@ func (self *LineString) LenVertices() int {
 func (self *LineString) VertexAt(i int) *Point{
     return self.coordinates[i]
 }
-
-//Coordinates returns a copy of linestring coordinates
-func (self *LineString) Coordinates() []*Point {
-    n := len(self.coordinates)
-    clone := make([]*Point, n)
-    for i := 0; i < n; i++ {
-        clone[i] = self.coordinates[i].Clone()
-    }
-    return clone
-}

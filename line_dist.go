@@ -30,8 +30,7 @@ func (self *LineString) len(i, j int) float64 {
 //description  Computes the distance between self and another linestring
 //the distance between intersecting linestrings is 0.  Otherwise, the
 //distance is the Euclidean distance between the closest points.
-//param other{LineString}
-func (self *LineString) Distance(other *LineString) float64{
+func (self *LineString) Distance(other *LineString) float64 {
     var othersegs = make([]*Segment, 0)
     var selfsegs = make([]*Segment, 0)
 
@@ -54,7 +53,7 @@ func (self *LineString) Distance(other *LineString) float64{
         //search ln using ibox
         query = ibox.MBR
         lnrange := other.index.Search(query)
-        if len(lnrange) == 0  {
+        if len(lnrange) == 0 {
             //go bruteforce
             dist = self.mindist_bruteforce(other)
             bln = true
@@ -88,7 +87,7 @@ func (self *LineString) Distance(other *LineString) float64{
 }
 
 
-// bruteforce dist,
+// brute force distance
 func (self *LineString) mindist_bruteforce(other *LineString) float64 {
     var bln = false
     var ln = self.coordinates
@@ -113,14 +112,8 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 }
 
 
-/*
- description minimum distance
- param segsa
- param segsb
- returns {number}
- private
- */
-func segseg_mindist(segsa,  segsb []*Segment) float64 {
+//minimum distance
+func segseg_mindist(segsa, segsb []*Segment) float64 {
     var bln = false
     var dist = -1.0
     var _dist float64
