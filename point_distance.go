@@ -2,10 +2,6 @@ package geom
 
 import "math"
 
-//Distance computes distance between two points
-func (self *Point ) Distance(pt *Point) float64 {
-    return self.Sub(pt).Magnitude();
-}
 
 //DistanceSquare computes distance squared between two points
 //Has possible overflow with squared x, y components

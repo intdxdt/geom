@@ -5,7 +5,7 @@ type Polygon struct {
     Holes []*LinearRing
 }
 
-// description Polygon geometry
+//New polygon geometry
 // param [opts]{Object} - {monosize : 1, bucketsize}
 func NewPolygon(coordinates ...[]*Point) *Polygon {
     var shell *LinearRing
@@ -17,8 +17,8 @@ func NewPolygon(coordinates ...[]*Point) *Polygon {
     }
     return &Polygon{shell, holes}
 }
-// description Polygon geometry
-// param [opts]{Object} - {monosize : 1, bucketsize}
+//Polygon geometry
+//param [opts]{Object} - {monosize : 1, bucketsize}
 func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
     var shell *LinearRing
     var holes = make([]*LinearRing, 0)

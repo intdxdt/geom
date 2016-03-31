@@ -46,8 +46,6 @@ func (self *Point) Y() float64 {
     return self[y]
 }
 
-
-
 //As line strings
 func (self *Point) AsLineStrings() []*LineString {
     var coords = []*Point{self.Clone(), self.Clone()}

@@ -15,6 +15,12 @@ type Segment struct {
 func NewSegment(a, b *Point) *Segment{
     return &Segment{a, b}
 }
+
+//Side of pt to segement
+func (self *Segment)SideOf(pt *Point) *Orient{
+    return pt.SideOf(self.A, self.B)
+}
+
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1, lnb0, lnb1
 func (self *Segment) Intersects(other *Segment, extln bool) bool {

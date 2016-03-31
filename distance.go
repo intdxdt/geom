@@ -4,27 +4,50 @@ import (
     "math"
 )
 
-//length of line
-func (self *LineString) Length() float64 {
-    return self.len(0, len(self.coordinates) - 1)
+//Distance computes distance between two points
+func (self *Point ) Distance(other Geometry) float64 {
+    var dist = math.NaN()
+    if IsNullGeometry(other) {
+        return dist
+    }
+    pt, ispoint := IsPoint(other)
+    ln, isline := IsLineString(other)
+    poly, ispolygon := IsPolygon(other)
+    if ispoint {
+        dist = self.Sub(pt).Magnitude()
+    } else if isline {
+        lnear := self.AsLinear()[0]
+        dist = ln.Distance(lnear)
+    }  else if ispolygon {
+        lnear := self.AsLinear()[0]
+        dist = lnear.Distance(poly.Shell.LineString)
+    }
+    return dist
 }
 
-//compute length of chain
-func (self *LineString) chain_length(chain *MonoMBR) float64 {
-    return self.len(chain.i, chain.j)
+// Computes the distance between self and another linestring
+// the distance between intersecting linestrings is 0.  Otherwise, the
+// distance is the Euclidean distance between the closest points.
+func (self *Polygon) Distance(other Geometry) float64 {
+    var dist = math.NaN()
+    if IsNullGeometry(other) {
+        return dist
+    }
+    _, isline := IsLineString(other)
+    _, ispoint := IsPoint(other)
+    poly, ispolygon := IsPolygon(other)
+    //reverse intersect line inter poly
+    if isline || ispoint {
+        other_lns := other.AsLinear()
+        if len(other_lns) > 0 {
+            dist = self.Shell.Distance(other_lns[0])
+        }
+    } else if ispolygon {
+        dist = self.Shell.Distance(poly.Shell.LineString)
+    }
+    return dist
 }
 
-//length of line from index i to j
-func (self *LineString) len(i, j int) float64 {
-    var dist float64
-    if j < i {
-        i, j = j, i
-    }
-    for ; i < j; i++ {
-        dist += self.coordinates[i].Distance(self.coordinates[i + 1])
-    }
-    return dist;
-}
 
 
 //description  Computes the distance between self and another linestring
@@ -81,7 +104,7 @@ func (self *LineString) Distance(other *LineString) float64 {
     }
 
     if dist < 0 {
-        panic("invalid distance")
+        dist = math.NaN()
     }
     return dist
 }

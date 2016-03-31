@@ -1,6 +1,8 @@
 package geom
 
-import . "github.com/intdxdt/simplex/geom/mbr"
+import (
+    . "github.com/intdxdt/simplex/geom/mbr"
+)
 
 const (
     x = iota
@@ -20,3 +22,4 @@ type Geometry interface {
     AsLinear() []*LineString
     Intersects(Geometry) bool
 }
+
