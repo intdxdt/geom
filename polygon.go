@@ -5,20 +5,13 @@ type Polygon struct {
     Holes []*LinearRing
 }
 
-//New polygon geometry
-// param [opts]{Object} - {monosize : 1, bucketsize}
+//New polygon from points
 func NewPolygon(coordinates ...[]*Point) *Polygon {
-    var shell *LinearRing
     var rings = shells(coordinates)
-    var holes = make([]*LinearRing, 0)
-    shell = rings[0]
-    if len(rings) > 1 {
-        holes = rings[1:]
-    }
-    return &Polygon{shell, holes}
+    return NewPolygonFromRings(rings...)
 }
-//Polygon geometry
-//param [opts]{Object} - {monosize : 1, bucketsize}
+
+//New Polygon from rings
 func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
     var shell *LinearRing
     var holes = make([]*LinearRing, 0)

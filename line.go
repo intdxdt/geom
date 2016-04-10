@@ -62,4 +62,3 @@ func (self  *LineString) MonoChains() []*MonoMBR {
     }
     return chains
 }
-

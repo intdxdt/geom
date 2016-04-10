@@ -2,7 +2,7 @@ package geom
 
 //Point as line strings
 func (self *Point) AsLinear() []*LineString {
-    return []*LineString{NewLineStringFromPoint(self)}
+    return self.AsLineStrings()
 }
 
 //Linestring as line strings

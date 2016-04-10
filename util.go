@@ -29,3 +29,25 @@ func IsLineString(g Geometry) (*LineString, bool) {
     ln, ok := g.(*LineString)
     return ln, ok
 }
+
+//Is linearing
+func IsLinearRing(g Geometry) (*LinearRing, bool) {
+    ln, ok := g.(*LinearRing)
+    return ln, ok
+}
+
+//Type Values
+type values []float64
+
+func (s values) Len() int {
+    return len(s)
+}
+
+func (s values) Swap(i, j int) {
+    s[i], s[j] = s[j], s[i]
+}
+
+func (s values) Less(i, j int) bool {
+    return s[i] < s[j]
+}
+

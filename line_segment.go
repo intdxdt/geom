@@ -30,15 +30,7 @@ box *MBR, i, j int, extend, xor bool) []*Segment {
     return seglist
 }
 
-/*
- segment ptlist
- param segsa{[]}
- param segsb{[]}
- param ptlist{[]}
- param [append]{boolean}
- returns {Array}
- private
- */
+//Segment - Segment intersection of slice of arrays
 func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
 ptlist []*Point, extend bool) []*Point {
 

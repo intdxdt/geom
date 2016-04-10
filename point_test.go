@@ -6,10 +6,12 @@ import (
     . "github.com/intdxdt/simplex/util/math"
     . "github.com/intdxdt/simplex/geom/mbr"
     "math"
+    "fmt"
 )
 
 func TestPoint(t *testing.T) {
     g := Goblin(t)
+    p0 := NewPointXY(0.0, 0.0)
     p1 := NewPointXY(4, 5)
     p2 := NewPointXY(4.0, 5.0)
     p3 := NewPoint([]float64{4, 5})
@@ -24,6 +26,8 @@ func TestPoint(t *testing.T) {
         })
 
         g.It("x, y access", func() {
+            g.Assert(p0.IsZero()).IsTrue()
+            g.Assert(p1.IsZero()).IsFalse()
             g.Assert(p1.Equals(p2)).IsTrue()
             g.Assert(p5.X()).Equal(4.0)
             g.Assert(p5.Y()).Equal(0.0)
@@ -44,9 +48,18 @@ func TestPoint(t *testing.T) {
 
     g.Describe("Point distance", func() {
         g.It("sqrt(3**2,4**2) ", func() {
+
             pt := &Point{3., 0.}
             g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
             g.Assert(pt.SquareDistance(&Point{0., 4.})).Equal(25.0)
+            pt1_out  := NewPointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
+            pt2_out  := NewPointFromWKT("POINT (  26.70508112717612 29.46609249326697 )")
+            pnt3_in  := NewPointFromWKT("POINT ( 27.439276564111122 38.76590136111034 )")
+            poly := NewPolygonFromWKT("POLYGON (( 35 10, 45 45, 15 40, 10 20, 35 10 ), ( 20 30, 35 35, 30 20, 20 30 ))")
+            fmt.Println(pt1_out.Distance(poly))
+            fmt.Println(pt2_out.Distance(poly))
+            fmt.Println(pnt3_in.Distance(poly))
+
         })
         g.It("sqrt(2)", func() {
             pt := &Point{3, 4}
@@ -158,6 +171,45 @@ func TestAngleAtPnt(t *testing.T) {
             c := &Point{3.16, -0.84}
             g.Assert(Round(a.AngleAtPoint(b, c), 8)).Equal(Round(1.1694239325184717, 8), )
             g.Assert(Round(b.AngleAtPoint(a, c), 8)).Equal(Round(0.9882331199311394, 8), )
+        })
+    })
+
+}
+
+func TestSideOf(t *testing.T) {
+    g := Goblin(t)
+    /*
+        237 289,
+        354.47839239412275 333.38072601555746,
+        462 374
+     */
+    a := NewPointXY(237, 289)
+    b := NewPointXY(354.47839239412275, 333.38072601555746)
+    c := NewPointXY(462, 374)
+
+    d := NewPointXY(297.13043478260863, 339.30434782608694)
+    e := NewPointXY(445.8260869565217, 350.17391304347825)
+
+    g.Describe("side of point", func() {
+        g.It("side of line a, c", func() {
+            g.Assert(b.SideOf(a, c).IsOn()).IsTrue()
+            g.Assert(b.SideOf(a, c).IsOnOrLeft()).IsTrue()
+            g.Assert(b.SideOf(a, c).IsOnOrRight()).IsTrue()
+
+            g.Assert(d.SideOf(a, c).IsLeft()).IsTrue()
+            g.Assert(d.SideOf(a, c).IsOnOrLeft()).IsTrue()
+            g.Assert(d.SideOf(a, c).IsOnOrRight()).IsFalse()
+
+            g.Assert(e.SideOf(a, c).IsRight()).IsTrue()
+            g.Assert(e.SideOf(a, c).IsOnOrRight()).IsTrue()
+            g.Assert(e.SideOf(a, c).IsOnOrLeft()).IsFalse()
+
+            var s = NewSide()
+            g.Assert(s.AsOn().IsOn()).IsTrue()
+            g.Assert(s.AsLeft().IsLeft()).IsTrue()
+            g.Assert(s.IsOn()).IsFalse()
+            g.Assert(s.AsRight().IsRight()).IsTrue()
+            g.Assert(s.IsOn()).IsFalse()
         })
     })
 

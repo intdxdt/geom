@@ -96,11 +96,13 @@ func TestLineStringEdit(t *testing.T) {
             var pt_e *Point
             ln_ab := NewLineString([]*Point{a, b})
             ln_cd := NewLineString([]*Point{c, d})
+            ln_cd_clone := ln_cd.Clone()
 
             ln_hi := NewLineString([]*Point{h, i})
 
             ok := ln_cd.Intersects(ln_ab)
             g.Assert(ok).IsFalse()
+            g.Assert(ln_cd_clone.Intersects(ln_ab)).IsFalse()
 
             ok = ln_cd.Intersects(ln_e)
             g.Assert(ok).IsFalse()
@@ -114,9 +116,9 @@ func TestLineStringEdit(t *testing.T) {
             pts = ln_cd.Intersection(ln_ab)
             g.Assert(len(pts)).Equal(0) //disjoint
 
-            g.Assert(ln_cd.IntersectsPoint(pt_e)).IsFalse()
-            g.Assert(ln_cd.IntersectsPoint(h)).IsTrue() //at h
-            g.Assert(ln_cd.IntersectsPoint(h_prime)).IsFalse() //disjoint
+            g.Assert(ln_cd.Intersects(pt_e)).IsFalse()
+            g.Assert(ln_cd.Intersects(h)).IsTrue() //at h
+            g.Assert(ln_cd.Intersects(h_prime)).IsFalse() //disjoint
 
         })
     })

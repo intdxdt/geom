@@ -5,7 +5,7 @@ import (
     "math"
 )
 //Distance betwen two segments
-func (self *Segment) Distance(other *Segment) float64{
+func (self *Segment) Distance(other *Segment) float64 {
     var x1, y1 = (*self.A)[x], (*self.A)[y]
     var x2, y2 = (*self.B)[x], (*self.B)[y]
 
@@ -18,13 +18,11 @@ func (self *Segment) Distance(other *Segment) float64{
     var dx, dy *float64
     var pta, ptb *Point
 
-    var eps = 1e-10
-
     denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
     numera = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)
     numerb = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)
 
-    if math.Abs(denom) < eps {
+    if math.Abs(denom) < Eps {
         /* are the lines parallel */
         aminx, amaxx = math.Min(x1, x2), math.Max(x1, x2)
         aminy, amaxy = math.Min(y1, y2), math.Max(y1, y2)
@@ -43,13 +41,13 @@ func (self *Segment) Distance(other *Segment) float64{
         if amaxy < bminy {
             vy := bminy - amaxy
             dy = &vy
-        }  else if aminy > bmaxy {
+        } else if aminy > bmaxy {
             vy := aminy - bmaxy
             dy = &vy
         }
 
         if dx == nil && dy == nil {
-            /*calculate the perpendicular distance*/
+            //calculate the perpendicular distance
             var m = (y2 - y1) / (x2 - x1)
             var dc = (y1 - m * x1) - (y3 - m * x3)
 
@@ -82,11 +80,11 @@ func (self *Segment) Distance(other *Segment) float64{
             dist = math.Hypot(_dx, _dy)
         }
     } else {
-        /* the is intersection along the the segments */
         mua = numera / denom
         mub = numerb / denom
 
         if mua < 0 || mua > 1 || mub < 0 || mub > 1 {
+            //the is intersection along the the segments
             if mua < 0 {
                 pta = self.A
             } else if mua > 1 {
@@ -109,7 +107,8 @@ func (self *Segment) Distance(other *Segment) float64{
             } else {
                 dist = self.DistanceToPoint(ptb)
             }
-        }  else {
+        } else {
+            //lines intersect
             dist = 0.0
         }
     }
@@ -140,4 +139,3 @@ func (self *Segment) DistanceToPoint(pt *Point) float64 {
     }
     return pt.Distance(cPt)
 }
-

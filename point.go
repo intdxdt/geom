@@ -47,11 +47,13 @@ func (self *Point) Y() float64 {
 }
 
 //As line strings
+func (self *Point) AsLineString() *LineString {
+    return  NewLineString([]*Point{self.Clone(), self.Clone()})
+}
+
+//As line strings
 func (self *Point) AsLineStrings() []*LineString {
-    var coords = []*Point{self.Clone(), self.Clone()}
-    var sh = NewLineString(coords)
-    var rings = []*LineString{sh}
-    return rings
+    return []*LineString{self.AsLineString()}
 }
 
 //coordinate string

@@ -5,19 +5,17 @@ import (
     . "github.com/intdxdt/simplex/geom/mbr"
 )
 
-
-
 type Segment struct {
     A *Point
     B *Point
 }
 
-func NewSegment(a, b *Point) *Segment{
+func NewSegment(a, b *Point) *Segment {
     return &Segment{a, b}
 }
 
 //Side of pt to segement
-func (self *Segment)SideOf(pt *Point) *Orient{
+func (self *Segment)SideOf(pt *Point) *Side {
     return pt.SideOf(self.A, self.B)
 }
 
