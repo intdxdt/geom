@@ -4,6 +4,7 @@ import (
     . "github.com/intdxdt/simplex/util/math"
     "math"
 )
+
 //Distance betwen two segments
 func (self *Segment) Distance(other *Segment) float64 {
     var x1, y1 = (*self.A)[x], (*self.A)[y]
@@ -14,8 +15,7 @@ func (self *Segment) Distance(other *Segment) float64 {
 
     var dist, mua, mub float64
     var denom, numera, numerb float64
-    var aminx, amaxx, aminy, amaxy, bminx, bmaxx, bminy, bmaxy float64
-    var dx, dy *float64
+    var is_aspt_a, is_aspt_b bool
     var pta, ptb *Point
 
     denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1)
@@ -23,62 +23,34 @@ func (self *Segment) Distance(other *Segment) float64 {
     numerb = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)
 
     if math.Abs(denom) < Eps {
-        /* are the lines parallel */
-        aminx, amaxx = math.Min(x1, x2), math.Max(x1, x2)
-        aminy, amaxy = math.Min(y1, y2), math.Max(y1, y2)
+        is_aspt_a = self.A.Equals(self.B)
+        is_aspt_b = other.A.Equals(other.B)
 
-        bminx, bmaxx = math.Min(x3, x4), math.Max(x3, x4)
-        bminy, bmaxy = math.Min(y3, y4), math.Max(y3, y4)
-
-        if amaxx < bminx {
-            vx := bminx - amaxx
-            dx = &vx
-        } else if aminx > bmaxx {
-            vx := aminx - bmaxx
-            dx = &vx
-        }
-
-        if amaxy < bminy {
-            vy := bminy - amaxy
-            dy = &vy
-        } else if aminy > bmaxy {
-            vy := aminy - bmaxy
-            dy = &vy
-        }
-
-        if dx == nil && dy == nil {
-            //calculate the perpendicular distance
-            var m = (y2 - y1) / (x2 - x1)
-            var dc = (y1 - m * x1) - (y3 - m * x3)
-
-            if dc == 0.0 {
-                dist = 0.0
-            } else {
-                dist = math.Abs(dc) / math.Sqrt(m * m + 1)
-            }
-        } else if (aminx == amaxx && aminy == amaxy) || (bminx == bmaxx && bminy == bmaxy) {
-            var isa = (aminx == amaxx && aminy == amaxy)
-            var isb = (bminx == bmaxx && bminy == bmaxy)
+        if is_aspt_a && is_aspt_b {
+            dist = self.A.Sub(other.B).Magnitude()
+        } else if is_aspt_a || is_aspt_b {
             var ln *Segment
 
-            if isa {
+            if is_aspt_a {
                 pta = self.A
                 ln = other
-            } else if isb {
+            } else if is_aspt_b {
                 pta = other.A
                 ln = self
             }
-            dist = ln.DistanceToPoint(pta)
+            dist = ln.segpt_mindist(pta)
         } else {
-            var _dx, _dy = 0.0, 0.0
-            if (dx != nil) {
-                _dx = *dx
-            }
-            if (dy != nil) {
-                _dy = *dy
-            }
-            dist = math.Hypot(_dx, _dy)
+            dist1 := math.Min(
+                other.segpt_mindist(self.A),
+                other.segpt_mindist(self.B),
+            )
+            dist2 := math.Min(
+                self.segpt_mindist(other.A),
+                self.segpt_mindist(other.B),
+            )
+            dist = math.Min(dist1, dist2)
         }
+
     } else {
         mua = numera / denom
         mub = numerb / denom
@@ -99,13 +71,13 @@ func (self *Segment) Distance(other *Segment) float64 {
 
             if pta != nil  && ptb != nil {
                 dist = math.Min(
-                    other.DistanceToPoint(pta),
-                    self.DistanceToPoint(ptb),
+                    other.segpt_mindist(pta),
+                    self.segpt_mindist(ptb),
                 )
             } else if pta != nil {
-                dist = other.DistanceToPoint(pta)
+                dist = other.segpt_mindist(pta)
             } else {
-                dist = self.DistanceToPoint(ptb)
+                dist = self.segpt_mindist(ptb)
             }
         } else {
             //lines intersect
@@ -118,24 +90,27 @@ func (self *Segment) Distance(other *Segment) float64 {
 
 
 //Minimum distance from segement to point
-func (self *Segment) DistanceToPoint(pt *Point) float64 {
-
+func (self *Segment) segpt_mindist(pt *Point) float64 {
+    var dist = math.NaN()
     var cPt *Point
-    var dPt = self.B.Sub(self.A)
-    var dx, dy = (*dPt)[x], (*dPt)[y]
+    var dln = self.B.Sub(self.A)
+    var dx, dy = dln[x], dln[y]
 
-    if FloatEqual(dx, 0.0) &&  FloatEqual(dy, 0.0) {
+    if dln.IsZero() {
         //line with zero length
-        return pt.Distance(self.A)
-    }
-    var u = pt.Sub(self.A).DotProduct(dPt) / dPt.SquareMagnitude()
-
-    if u < 0 {
-        cPt = self.A
-    } else if u > 1 {
-        cPt = self.B
+        dist = pt.Sub(self.A).Magnitude()
     } else {
-        cPt = NewPointXY((*self.A)[x] + u * dx, (*self.A)[y] + u * dy)
+        var u = pt.Sub(self.A).DotProduct(dln) / dln.SquareMagnitude()
+
+        if u < 0 {
+            cPt = self.A
+        } else if u > 1 {
+            cPt = self.B
+        } else {
+            cPt = NewPointXY(self.A[x] + u * dx, self.A[y] + u * dy)
+        }
+        dist = pt.Sub(cPt).Magnitude()
     }
-    return pt.Distance(cPt)
+
+    return dist
 }

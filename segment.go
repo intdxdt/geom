@@ -9,7 +9,7 @@ type Segment struct {
     A *Point
     B *Point
 }
-
+//New Segment constructor
 func NewSegment(a, b *Point) *Segment {
     return &Segment{a, b}
 }

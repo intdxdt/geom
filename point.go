@@ -32,7 +32,7 @@ func NewPointFromWKT(wkt_geom string) *Point {
 
 //Is point zero - origin
 func (self *Point) IsZero() bool {
-    return self.Equals(&Point{0, 0})
+    return FloatEqual(self[x], 0.0) && FloatEqual(self[y], 0.0)
 }
 
 
@@ -48,7 +48,7 @@ func (self *Point) Y() float64 {
 
 //As line strings
 func (self *Point) AsLineString() *LineString {
-    return  NewLineString([]*Point{self.Clone(), self.Clone()})
+    return NewLineString([]*Point{self.Clone(), self.Clone()})
 }
 
 //As line strings
