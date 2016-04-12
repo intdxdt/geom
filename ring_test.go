@@ -41,7 +41,13 @@ func TestLinearRing(t *testing.T) {
     pt3 := &Point{2.908711515786465, 4.440556719843803 } //inside
 
     g.Describe("LinearRing", func() {
-        g.It("should test length", func() {
+        g.It("should test ring", func() {
+            g.Assert(pt0.IsRing()).IsTrue()
+            g.Assert(IsRing([]*Point{pt0})).IsFalse()
+            g.Assert(IsRing([]*Point{pt0,pt0})).IsTrue()
+            g.Assert(ln1.LineString.IsRing()).IsTrue()
+            g.Assert(ply0.IsRing()).IsTrue()
+
             g.Assert(ln1.Length() == 4.0).IsTrue()
             g.Assert(ln2.Length() == 4.0).IsTrue()
         })

@@ -6,7 +6,7 @@ import (
 
 //Distance computes distance between two points
 func (self *Point) Distance(other Geometry) float64 {
-    var dist = -1.0
+    var dist = math.NaN()
     if IsNullGeometry(other) {
         return dist
     }
@@ -17,20 +17,7 @@ func (self *Point) Distance(other Geometry) float64 {
     } else if ispoint {
         dist = self.Sub(pt).Magnitude()
     } else {
-        var bln = false
-        var lns1 = self.AsLinear()
-        var lns2 = other.AsLinear()
-
-        for i := 0; !bln && i < len(lns1); i++ {
-            for j := 0; !bln && j < len(lns2); j++ {
-                d := lns1[i].Distance(lns2[j])
-                if dist < 0 {
-                    dist = d
-                } else {
-                    dist = math.Min(d, dist)
-                }
-            }
-        }
+        dist = dist_as_lines(self, other)
     }
     return dist
 }
@@ -39,7 +26,7 @@ func (self *Point) Distance(other Geometry) float64 {
 // the distance between intersecting linestrings is 0.  Otherwise, the
 // distance is the Euclidean distance between the closest points.
 func (self *Polygon) Distance(other Geometry) float64 {
-    var dist = -1.0
+    var dist = math.NaN()
     if IsNullGeometry(other) {
         return dist
     }
@@ -47,42 +34,38 @@ func (self *Polygon) Distance(other Geometry) float64 {
     if self.Intersects(other) {
         dist = 0.0
     } else {
-        var bln = false
-        var lns1 = self.AsLinear()
-        var lns2 = other.AsLinear()
-
-        for i := 0; !bln && i < len(lns1); i++ {
-            for j := 0; !bln && j < len(lns2); j++ {
-                d := lns1[i].Distance(lns2[j])
-                if dist < 0 {
-                    dist = d
-                } else {
-                    dist = math.Min(d, dist)
-                }
-            }
-        }
+        dist = dist_as_lines(self, other)
     }
     return dist
 }
 
-//description  Computes the distance between self and another linestring
-//the distance between intersecting linestrings is 0.  Otherwise, the
-//distance is the Euclidean distance between the closest points.
-func (self *LineString) Distance(other *LineString) float64 {
-    var dist = -1.0
+//Computes the distance between self and another linestring
+func (self *LineString) Distance(other Geometry) float64 {
+    var dist = math.NaN()
+    if IsNullGeometry(other) {
+        return dist
+    }
     if self.Intersects(other) {
         dist = 0.0
     } else {
-        //TODO(titus):this could be improved KNN in Rtree
-        // go bruteforce dist(seg , seg)
-        dist = self.mindist_bruteforce(other)
+        dist = dist_as_lines(self, other)
     }
     return dist
+}
+
+
+//Computes the distance between self and another linestring
+//the distance between intersecting linestrings is 0.  Otherwise, the
+//distance is the Euclidean distance between the closest points.
+func (self *LineString) line_line_dist(other *LineString) float64 {
+    //TODO(titus):this could be improved KNN in Rtree
+    // go bruteforce dist(seg , seg)
+    return self.mindist_bruteforce(other)
 }
 
 // brute force distance
 func (self *LineString) mindist_bruteforce(other *LineString) float64 {
-    var dist = -1.0
+    var dist = math.NaN()
     var bln = false
     var ln = self.coordinates
     var ln2 = other.coordinates
@@ -94,7 +77,7 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 
             d := segA.Distance(segB)
 
-            if dist < 0 {
+            if math.IsNaN(dist) {
                 dist = d
             } else {
                 dist = math.Min(d, dist)
@@ -106,3 +89,24 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
     return dist
 }
 
+
+
+//Computes the distance between self and another linestring
+func dist_as_lines(self, other Geometry) float64 {
+    var dist = math.NaN()
+    var bln = false
+    var lns1 = self.AsLinear()
+    var lns2 = other.AsLinear()
+
+    for i := 0; !bln && i < len(lns1); i++ {
+        for j := 0; !bln && j < len(lns2); j++ {
+            d := lns1[i].line_line_dist(lns2[j])
+            if math.IsNaN(dist) {
+                dist = d
+            } else {
+                dist = math.Min(d, dist)
+            }
+        }
+    }
+    return dist
+}

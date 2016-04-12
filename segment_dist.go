@@ -7,13 +7,13 @@ import (
 
 //Distance betwen two segments
 func (self *Segment) Distance(other *Segment) float64 {
-    var x1, y1 = (*self.A)[x], (*self.A)[y]
-    var x2, y2 = (*self.B)[x], (*self.B)[y]
+    var dist = math.NaN()
+    var x1, y1 = self.A[x], self.A[y]
+    var x2, y2 = self.B[x], self.B[y]
 
-    var x3, y3 = (*other.A)[x], (*other.A)[y]
-    var x4, y4 = (*other.B)[x], (*other.B)[y]
-
-    var dist, mua, mub float64
+    var x3, y3 = other.A[x], other.A[y]
+    var x4, y4 = other.B[x], other.B[y]
+    var mua, mub float64
     var denom, numera, numerb float64
     var is_aspt_a, is_aspt_b bool
     var pta, ptb *Point
@@ -40,15 +40,14 @@ func (self *Segment) Distance(other *Segment) float64 {
             }
             dist = ln.segpt_mindist(pta)
         } else {
-            dist1 := math.Min(
-                other.segpt_mindist(self.A),
-                other.segpt_mindist(self.B),
-            )
-            dist2 := math.Min(
-                self.segpt_mindist(other.A),
-                self.segpt_mindist(other.B),
-            )
-            dist = math.Min(dist1, dist2)
+            dist = math.Min(
+                math.Min(
+                    other.segpt_mindist(self.A),
+                    other.segpt_mindist(self.B)),
+                math.Min(
+                    self.segpt_mindist(other.A),
+                    self.segpt_mindist(other.B),
+                ))
         }
 
     } else {

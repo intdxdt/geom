@@ -36,18 +36,4 @@ func IsLinearRing(g Geometry) (*LinearRing, bool) {
     return ln, ok
 }
 
-//Type Values
-type values []float64
-
-func (s values) Len() int {
-    return len(s)
-}
-
-func (s values) Swap(i, j int) {
-    s[i], s[j] = s[j], s[i]
-}
-
-func (s values) Less(i, j int) bool {
-    return s[i] < s[j]
-}
 

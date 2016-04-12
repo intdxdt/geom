@@ -5,6 +5,7 @@ import (
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/util/math"
     "fmt"
+    "math"
 )
 
 func TestSegment(t *testing.T) {
@@ -98,6 +99,8 @@ func TestSegDist(t *testing.T) {
             seg_ba := NewSegment(b, a)
             seg_cd := NewSegment(c, d)
             seg_dc := NewSegment(d, c)
+            seg_dd := NewSegment(d, d)
+            seg_ff := NewSegment(f, f)
             seg_ef := NewSegment(e, f)
             seg_fg := NewSegment(f, gi)
             seg_jk := NewSegment(j, k)
@@ -114,6 +117,7 @@ func TestSegDist(t *testing.T) {
             g.Assert(Round(seg_cd.Distance(seg_ab), 12)).Equal(expects)
 
             g.Assert(Round(seg_dc.Distance(seg_ef), 12)).Equal(0.0)
+            g.Assert(seg_dd.Distance(seg_ff)).Equal(d.Distance(f))
             g.Assert(Round(seg_dc.Distance(seg_fg), 12)).Equal(
                 Round(2.496150883013531, 12),
             )
@@ -171,6 +175,35 @@ func TestSegDist(t *testing.T) {
             for i, tp := range tpoints {
                 dists[i] = tvect.segpt_mindist(tp)
             }
+
+            pt1_out := NewPointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
+            pt2_out := NewPointFromWKT("POINT (  26.70508112717612 29.46609249326697 )")
+            pnt3_in := NewPointFromWKT("POINT ( 27.439276564111122 38.76590136111034 )")
+            poly := NewPolygonFromWKT("POLYGON (( 35 10, 45 45, 15 40, 10 20, 35 10 ), ( 20 30, 35 35, 30 20, 20 30 ))")
+            var pt_online = NewPointXY(45.00000 , 45.000000000000000000000000001)
+            ln := poly.Shell.AsLinear()[0]
+
+            g.Assert(Round(ln.Distance(poly), 12)).Equal(Round(0, 12))
+            g.Assert(Round(ln.Distance(pt_online), 12)).Equal(Round(0, 12))
+            g.Assert(Round(pt1_out.Distance(ln), 12)).Equal(Round(6.380786425247758, 12))
+            g.Assert(Round(ln.Distance(pt1_out), 12)).Equal(Round(6.380786425247758, 12))
+            g.Assert(Round(pt1_out.Distance(poly), 12)).Equal(Round(6.380786425247758, 12))
+            g.Assert(Round(poly.Distance(pt1_out), 12)).Equal(Round(6.380786425247758, 12))
+            g.Assert(Round(pt2_out.Distance(poly), 12)).Equal(Round(2.626841960149983, 12))
+            g.Assert(Round(poly.Distance(pt2_out), 12)).Equal(Round(2.626841960149983, 12))
+            g.Assert(Round(pnt3_in.Distance(poly), 12)).Equal(Round(0.0, 12))
+            g.Assert(Round(poly.Distance(pnt3_in), 12)).Equal(Round(0.0, 12))
+
+            var null_pt *Point
+            var null_poly *Polygon
+            var null_ln *LineString
+            g.Assert(math.IsNaN(poly.Distance(null_pt))).IsTrue()
+            g.Assert(math.IsNaN(pt2_out.Distance(null_pt))).IsTrue()
+            g.Assert(math.IsNaN(ln.Distance(null_pt))).IsTrue()
+            g.Assert(math.IsNaN(pt2_out.Distance(null_poly))).IsTrue()
+            g.Assert(math.IsNaN(poly.Distance(null_poly))).IsTrue()
+            g.Assert(math.IsNaN(poly.Distance(null_ln))).IsTrue()
+
 
             var seg_aa = NewSegment(a, a)
             g.Assert(seg_aa.segpt_mindist(a)).Equal(0.0)

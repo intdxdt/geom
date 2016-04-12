@@ -6,7 +6,6 @@ import (
     . "github.com/intdxdt/simplex/util/math"
     . "github.com/intdxdt/simplex/geom/mbr"
     "math"
-    "fmt"
 )
 
 func TestPoint(t *testing.T) {
@@ -21,6 +20,7 @@ func TestPoint(t *testing.T) {
 
     g.Describe("geom.point", func() {
         g.It("loads wkt as point", func() {
+            g.Assert(p1.Envelope().Area()).Equal(0.0)
             g.Assert(NewPointFromWKT(p1.String())).Eql(p1)
             g.Assert(NewPointFromWKT(p4.String())).Eql(p4)
         })
@@ -46,19 +46,13 @@ func TestPoint(t *testing.T) {
 
     })
 
-    g.Describe("Point distance", func() {
+    g.Describe("Point distance and to polygon ", func() {
         g.It("sqrt(3**2,4**2) ", func() {
 
             pt := &Point{3., 0.}
             g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
             g.Assert(pt.SquareDistance(&Point{0., 4.})).Equal(25.0)
-            pt1_out  := NewPointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
-            pt2_out  := NewPointFromWKT("POINT (  26.70508112717612 29.46609249326697 )")
-            pnt3_in  := NewPointFromWKT("POINT ( 27.439276564111122 38.76590136111034 )")
-            poly := NewPolygonFromWKT("POLYGON (( 35 10, 45 45, 15 40, 10 20, 35 10 ), ( 20 30, 35 35, 30 20, 20 30 ))")
-            fmt.Println(pt1_out.Distance(poly))
-            fmt.Println(pt2_out.Distance(poly))
-            fmt.Println(pnt3_in.Distance(poly))
+
 
         })
         g.It("sqrt(2)", func() {
@@ -102,8 +96,10 @@ func TestPoint(t *testing.T) {
 
     g.Describe("point relates", func() {
         g.It("intersect , equals, isnull ", func() {
+            var p0 *Point
             g.Assert(p3.Equals(p1)).IsTrue()
             g.Assert(p3.Intersects(p1)).IsTrue()
+            g.Assert(p3.Intersects(p0)).IsFalse()
             g.Assert(p3.Disjoint(p1)).IsFalse()
             g.Assert(p3.Disjoint(p4)).IsTrue()
             g.Assert(p6.IsNull()).IsTrue()
