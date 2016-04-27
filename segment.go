@@ -120,8 +120,8 @@ func snap_to_zero(v *float64) {
 }
 
 //updates coords that are in bounds
-func update_coords_inbounds(bounds *MBR,
-x1, y1, x2, y2 float64, coords *[]*Point) {
+func update_coords_inbounds(bounds *MBR, x1, y1, x2, y2 float64,
+        coords *[]*Point) {
 
     var a, b *Point
 

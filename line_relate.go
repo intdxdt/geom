@@ -11,7 +11,7 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     //if root mbrs intersect
     //var i, q, lnrange, ibox, qbox, qrng
     var othersegs = make([]*Segment, 0)
-    var selfsegs = make([]*Segment, 0)
+    var selfsegs  = make([]*Segment, 0)
 
     var query = other.bbox
     var inrange = self.index.Search(query.MBR)
@@ -26,9 +26,15 @@ func (self *LineString) Intersection(other *LineString) []*Point {
             qrng, ok := ibox.BBox().Intersection(qbox.BBox())
 
             if ok {
-                selfsegs = self.segs_inrange(selfsegs, qrng, ibox.i, ibox.j, false, false)
-                othersegs = other.segs_inrange(othersegs, qrng, qbox.i, qbox.j, false, false)
-                ptlist = self.segseg_intersection(selfsegs, othersegs, ptlist, true)
+                selfsegs = self.segs_inrange(
+                    selfsegs, qrng, ibox.i, ibox.j, false, false,
+                )
+                othersegs = other.segs_inrange(
+                    othersegs, qrng, qbox.i, qbox.j, false, false,
+                )
+                ptlist = self.segseg_intersection(
+                    selfsegs, othersegs, ptlist, true,
+                )
             }
         }
     }
@@ -43,7 +49,7 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
     var bln = false
     //if root mbrs intersect
     var othersegs = make([]*Segment, 0)
-    var selfsegs = make([]*Segment, 0)
+    var selfsegs  = make([]*Segment, 0)
 
     var query = other.bbox.MBR
     var inrange = self.index.Search(query)
@@ -55,14 +61,18 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
         lnrange := other.index.Search(query)
 
         for q := 0; !bln && q < len(lnrange); q++ {
+
             qbox := (*lnrange[q].GetItem()).(*MonoMBR)
             qrng, _ := ibox.Intersection(qbox.MBR)
+
             selfsegs = self.segs_inrange(
                 selfsegs, qrng, ibox.i, ibox.j, false, false,
             )
+
             othersegs = other.segs_inrange(
                 othersegs, qrng, qbox.i, qbox.j, false, false,
             )
+
             if len(othersegs) > 0 && len(selfsegs) > 0 {
                 bln = self.segseg_intersects(selfsegs, othersegs)
             }
@@ -80,6 +90,7 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
         rings[i] = &LinearRing{ln}
     }
     var shell = rings[0]
+
     bln = self.Intersects(shell.LineString)
     //if false, check if shell contains line
     if !bln {
@@ -122,56 +133,6 @@ func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) boo
     }
     return bln
 }
-
-//
-///*
-// description list of self intersection coordinates
-// */
-//func (self *LineString)self_intersection () {
-//
-//  var cache map[string]string
-//    var ckey string
-//  var bcomplx, chain, inters, jbox, qbox
-//  var ln1 = [], ln2 = [], ptlist = [], i, j
-//  var cmp = func (a, b) {
-//    return a[0] - b[0] || a[1] - b[1]
-//  }
-//  var selfinters = struct.sset(cmp)
-//
-//  for (i = 0 i < self.len(chains) ++i) {
-//    chain = self.chains[i]
-//    inters = self.index.search(self._searchbox(chain))
-//
-//    for (j = 0 j < len(inters) ++j) {
-//      jbox = inters[j]
-//      ckey = self._cashe_key(chain, jbox)
-//
-//      if cache[ckey] || jbox.equals(chain) {
-//        continue//already checked || already monotone
-//      }
-//
-//      self._cashe_ij(cache, chain, jbox, true)
-//      qbox = chain.intersection(jbox)
-//      if qbox.isnil() && chain.j == jbox.i {
-//        continue//non overlapping && contiguous
-//      }
-//      self._segsinrange(ln1, qbox, chain.i, chain.j)
-//      self._segsinrange(ln2, qbox, jbox.i, jbox.j)
-//      self._segseg_intersection(ln1, ln2, ptlist)
-//
-//      bcomplx = (chain.j != jbox.i && len(ptlist) > 0) ||
-//                (chain.j == jbox.i && len(ptlist) > 1)
-//      if bcomplx {
-//        _.each(ptlist, func (pt) {
-//          selfinters.append(Point(pt))
-//        })
-//      }
-//    }
-//  }
-//  return selfinters.slice(0)
-//}
-//
-
 
 
 

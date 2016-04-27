@@ -6,8 +6,8 @@ import (
 
 //segments in range
 //xor - altenate segments if nothing is in range of box
-func (self *LineString) segs_inrange(seglist []*Segment,
-box *MBR, i, j int, extend, xor bool) []*Segment {
+func (self *LineString) segs_inrange (seglist []*Segment,
+        box *MBR, i, j int, extend, xor bool) []*Segment {
 
     //extend or refresh list
     if !extend {
@@ -16,8 +16,14 @@ box *MBR, i, j int, extend, xor bool) []*Segment {
 
     altsegs := make([]*Segment, 0)//, bool, seg
     for ; i < j; i++ {
-        inters := box.IntersectsBounds(self.coordinates[i][:], self.coordinates[i + 1][:])
-        var seg = &Segment{self.coordinates[i], self.coordinates[i + 1]}
+        inters := box.IntersectsBounds(
+            self.coordinates[i][:],
+            self.coordinates[i + 1][:],
+        )
+        var seg = &Segment{
+            self.coordinates[i],
+            self.coordinates[i + 1],
+        }
         if inters {
             seglist = append(seglist, seg)
         } else {

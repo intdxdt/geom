@@ -2,13 +2,14 @@ package geom
 
 import (
     . "github.com/intdxdt/simplex/util/math"
+    . "github.com/intdxdt/simplex/struct/item"
 )
 
 //Equals evaluates whether two points are the same
 func (pt *Point) Equals(point *Point) bool {
     return (
-    FloatEqual(pt[x], point[x]) &&
-    FloatEqual(pt[y], point[y]))
+        FloatEqual(pt[x], point[x]) &&
+            FloatEqual(pt[y], point[y]))
 }
 
 
@@ -38,6 +39,23 @@ func (pt *Point) SideOf(a, b *Point) *Side {
     return o
 }
 
-
+//compare points as items
+func (self *Point) Compare(o Item) int {
+    pt := o.(*Point)
+    d := self[x] - pt[x]
+    if d > 0 {
+        return 1
+    } else if d < 0 {
+        return -1
+    } else {
+        d := self[y] - pt[y]
+        if d > 0 {
+            return 1
+        } else if d < 0 {
+            return -1
+        }
+    }
+    return 0 //equal
+}
 
 

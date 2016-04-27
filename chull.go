@@ -53,20 +53,6 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
     return hb
 }
 
-/*
- orient boundary
- param array
- param pnt
- returns {*}
- */
-func orient(array Coordinates, pnt *Point) float64 {
-    var n = len(array)
-    return pnt.CrossProduct(array[n - 2], array[n - 1])
-}
-
-
-
-
 // simpleHull_2D(): Melkman's 2D simple polyline O(n) convex hull algorithm
 //    Input:  coords[] = array of 2D vertex points for a simple polyline
 //            n   = the number of points in V[]
