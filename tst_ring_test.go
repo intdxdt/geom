@@ -1,9 +1,9 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/util/math"
+    "testing"
     "fmt"
 )
 

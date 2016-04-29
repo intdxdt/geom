@@ -1,9 +1,10 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/geom/mbr"
+    . "github.com/intdxdt/simplex/util/math"
+    "testing"
     "fmt"
 )
 
@@ -16,7 +17,14 @@ func TestLineString(t *testing.T) {
         {5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9},
     }
 
+    pts_closed := []*Point{{5.538, 8.467}, {5.498, 8.559}, {5.858, 8.987}, {6.654, 8.638}, {6.549, 8.024}, {5.765, 8.082}, {5.538, 8.467}}
+    pts_open := []*Point{{5.538, 8.467}, {5.498, 8.559}, {5.858, 8.987}, {6.654, 8.638}, {6.549, 8.024}, {5.765, 8.082}}
+
     ln := NewLineString(pts)
+    ln2 := NewLineString(pts_closed)
+    ln3 := NewLineString(pts_open)
+    ply := NewPolygon(pts_closed)
+
     cln := ln.Clone()
     pt_lnstr := NewLineStringFromPoint(pts[0])
 
@@ -25,10 +33,15 @@ func TestLineString(t *testing.T) {
             g.Assert(ln.Length() == 4.0).IsTrue()
             g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
             g.Assert(ln.IsRing()).IsTrue()
+            g.Assert(Round(ln.Area(), 5)).Equal(1.0)
             g.Assert(ln.len(len(ln.coordinates) - 1, 0) == ln.Length()).IsTrue()
             g.Assert(ln.chain_length(ln.chains[0])).Equal(ln.chain_length(ln.chains[1]))
             g.Assert(ln.chain_length(ln.chains[2])).Equal(ln.chain_length(ln.chains[3]))
             g.Assert(cln.Length() == 4.0).IsTrue()
+
+            g.Assert(ln3.Area()).Equal(0.0)
+            g.Assert(ln2.Area()).Equal(ply.Area())
+
         })
 
         g.It("should throw if empty coordinates", func(done Done) {
@@ -150,8 +163,6 @@ func TestLineStringRelate(t *testing.T) {
 
             g.Assert(plye.Intersects(plyg)).IsFalse()
             g.Assert(plyg.Intersects(plye)).IsFalse()
-
-
 
             g.Assert(lna.Intersects(plyb)).IsFalse()
             g.Assert(lna.Intersects(plye)).IsTrue()

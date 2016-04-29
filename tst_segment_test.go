@@ -1,11 +1,11 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/util/math"
     "fmt"
     "math"
+    "testing"
 )
 
 func TestSegment(t *testing.T) {

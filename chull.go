@@ -1,16 +1,63 @@
 package geom
 
+
+/**
+ * @param points An array of [X, Y] coordinates
+ */
+//func convexHull(points []*Point) []*Point {
+//    //trivial case 0 or 1 point
+//    if len(points) < 3 {
+//        return make([]*Point, 0)
+//    }
+//    //copy points into mutable container
+//    points = CloneCoordinates(points)
+//    var N = len(points)
+//
+//    XYCoordinates{points}.Sort()
+//
+//    cross_next := func(h Coordinates, i int) bool {
+//        o, a, b := h[len(h) - 2], h[len(h) - 1], points[i]
+//        return (a[x] - o[x]) * (b[y] - o[y]) - (a[y] - o[y]) * (b[x] - o[x]) <= 0
+//    }
+//
+//    var lower = make(Coordinates, 0)
+//    for i := 0; i < N; i++ {
+//        for (len(lower) >= 2 && cross_next(lower, i)) {
+//            _, lower = lower.Pop()
+//        }
+//        lower = append(lower, points[i])
+//    }
+//
+//    var upper = make(Coordinates, 0)
+//    for i := N - 1; i >= 0; i-- {
+//        for (len(upper) >= 2 && cross_next(upper, i)) {
+//            _, upper = upper.Pop()
+//        }
+//        upper = append(upper, points[i])
+//    }
+//
+//    _, upper = upper.Pop()
+//    _, lower = lower.Pop()
+//
+//    for _, pt := range upper {
+//        lower = append(lower, pt)
+//    }
+//    return lower
+//}
+
+
 // description computes the convex hull of a point set.
 // param points An array of [X, Y] coordinates
 
 func ConvexHull(points []*Point) []*Point {
+    //trivial case less than three coordinates
+    if len(points) < 3 {
+        return make([]*Point, 0)
+    }
     //copy points into mutable container
     pnts := CloneCoordinates(points)
     var N = len(pnts)
-    //trivial case 0 or 1 point
-    if len(pnts) < 2 {
-        return pnts
-    }
+
     XYCoordinates{pnts}.Sort()
 
     var lower = make(Coordinates, 0)
@@ -20,20 +67,11 @@ func ConvexHull(points []*Point) []*Point {
     _, upper = upper.Pop()
     _, lower = lower.Pop()
 
-    //two reapeated pnts
-    if len(upper) == 1 && len(lower) == 1 {
-        if (upper[0][x] == lower[0][x]) &&  (upper[0][y] == lower[0][y]) {
-            _, upper = upper.Pop()
-        }
+    for _, v := range upper {
+        lower = append(lower, v)
     }
 
-    var hull = append(lower, upper...)
-    //close ring
-    if len(hull) > 1 {
-        hull = append(hull, hull[0])
-    }
-
-    return hull
+    return lower
 }
 
 //build boundary
@@ -43,8 +81,8 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
     for i != stop {
         pnt = points[i]
         //pnt.CrossProduct(boundary[n - 2], boundary[n - 1])
-        for n := len(hb);
-        n >= 2 && pnt.SideOf(hb[n - 2], hb[n - 1]).IsOnOrRight(); n =len(hb) {
+        for n := len(hb); n >= 2 &&
+            pnt.SideOf(hb[n - 2], hb[n - 1]).IsOnOrRight(); n = len(hb) {
             _, hb = hb.Pop()
         }
         hb = append(hb, pnt)
@@ -53,14 +91,20 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
     return hb
 }
 
-// simpleHull_2D(): Melkman's 2D simple polyline O(n) convex hull algorithm
-//    Input:  coords[] = array of 2D vertex points for a simple polyline
-//            n   = the number of points in V[]
-//    Output: H[] = output convex hull array of vertices (max is n)
-//    Return: h   = the number of points in H[]
+//SimpleHull(): Melkman's 2D simple polyline O(n) convex hull algorithm
+//Input:  coords[] = array of 2D vertex points for a simple polyline
+//             n   = the number of points in V[]
+//Output: H[] = output convex hull array of vertices (max is n)
+//Return: h   = the number of points in H[]
 //http://geomalgorithms.com/a12-_hull-3.html
 
 func SimpleHull(coords []*Point) []*Point {
+    //trivial case less than three coordinates
+    if len(coords) < 3 {
+        return make([]*Point, 0)
+    }
+
+    coords = CloneCoordinates(coords)
     var n = len(coords)
     // initialize a deque dQ[] from bottom to top so that the
     // 1st three vertices of coords[] are a ccw triangle
@@ -68,6 +112,7 @@ func SimpleHull(coords []*Point) []*Point {
     var bot = n - 2
     var top = bot + 3    // initial bottom and top deque indices
     dQ[bot], dQ[top] = coords[2], coords[2]; // 3rd vertex is at both bot and top
+
     if coords[2].SideOf(coords[0], coords[1]).IsLeft() {
         dQ[bot + 1] = coords[0];
         dQ[bot + 2] = coords[1]; // ccw vertices are: 2,0,1,2
@@ -81,8 +126,8 @@ func SimpleHull(coords []*Point) []*Point {
         // process the rest of vertices
         // test if next vertex is inside the deque hull
         if (//is left
-        coords[i].SideOf(dQ[bot], dQ[bot + 1]).IsLeft() &&
-        coords[i].SideOf(dQ[top - 1], dQ[top]).IsLeft()) {
+            coords[i].SideOf(dQ[bot], dQ[bot + 1]).IsLeft() &&
+                coords[i].SideOf(dQ[top - 1], dQ[top]).IsLeft()) {
             continue; // skip an interior vertex
         }
 

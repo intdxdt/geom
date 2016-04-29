@@ -1,10 +1,10 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
     . "github.com/intdxdt/simplex/util/math"
     . "github.com/intdxdt/simplex/geom/mbr"
+    "testing"
     "math"
 )
 
@@ -17,10 +17,13 @@ func TestPoint(t *testing.T) {
     p4 := NewPoint([]float64{4, 5.01})
     p5 := NewPoint([]float64{4})
     p6 := &Point{4.0, math.NaN()}
+    p7 := NewPointXY(4.0, 4.9)
+    p8 := NewPointXY(3.9, 4.9)
 
     g.Describe("geom.point", func() {
         g.It("loads wkt as point", func() {
             g.Assert(p1.Envelope().Area()).Equal(0.0)
+            g.Assert(p1.Area()).Equal(0.0)
             g.Assert(NewPointFromWKT(p1.String())).Eql(p1)
             g.Assert(NewPointFromWKT(p4.String())).Eql(p4)
         })
@@ -35,9 +38,19 @@ func TestPoint(t *testing.T) {
             g.Assert(p3.Y()).Equal(p1.Y())
         })
 
-        g.It("clone equals", func() {
+        g.It("point relate", func() {
             pc := p1.Clone()
+
             g.Assert(p1.Equals(pc)).IsTrue()
+            g.Assert(p1.Compare(pc)).Equal(0)
+            g.Assert(p1.Compare(p2)).Equal(0)
+            g.Assert(p1.Compare(p4)).Equal(-1)
+            g.Assert(p1.Compare(p0)).Equal(1)
+            g.Assert(p1.Compare(p8)).Equal(1)
+            g.Assert(p8.Compare(p1)).Equal(-1)
+            g.Assert(p1.Compare(p7)).Equal(1)
+            g.Assert(p7.Compare(p1)).Equal(-1)
+
         })
 
         g.It("as array", func() {
@@ -52,7 +65,6 @@ func TestPoint(t *testing.T) {
             pt := &Point{3., 0.}
             g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
             g.Assert(pt.SquareDistance(&Point{0., 4.})).Equal(25.0)
-
 
         })
         g.It("sqrt(2)", func() {

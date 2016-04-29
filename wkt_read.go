@@ -35,6 +35,12 @@ type WKTParserObj struct {
 func (self *WKTParserObj) GeometryType() int {
     return self.gtype
 }
+func (self *WKTParserObj) Shell() *Shell {
+    return self.shell
+}
+func (self *WKTParserObj) Holes() *Holes {
+    return  self.holes
+}
 
 //To array of coodinates of wkt string
 func (self *WKTParserObj) ToArray() [][][2]float64 {

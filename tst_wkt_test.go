@@ -1,8 +1,8 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
+    "testing"
 )
 
 func TestWKT(t *testing.T) {
@@ -23,23 +23,23 @@ func TestWKT(t *testing.T) {
             obj := ReadWKT(pt)
             g.Assert(obj.gtype).Eql(GeoType_Point)
             g.Assert(obj.GeometryType()).Eql(GeoType_Point)
-            g.Assert(obj.shell == nil).Eql(false)
-            g.Assert(len(*obj.shell)).Eql(1)
+            g.Assert(obj.Shell() == nil).IsFalse()
+            g.Assert(len(*obj.Shell())).Eql(1)
             g.Assert((*obj.shell)[0]).Eql([2]float64{30, 10})
 
             obj = ReadWKT(ept)
             g.Assert(obj.gtype).Eql(GeoType_Point)
             g.Assert(obj.GeometryType()).Eql(GeoType_Point)
-            g.Assert(obj.shell == nil).Eql(true)
-            g.Assert(obj.holes == nil).Eql(true)
+            g.Assert(obj.Shell() == nil).IsTrue()
+            g.Assert(obj.Holes() == nil).IsTrue()
 
             obj = ReadWKT(cpoly)
             g.Assert(obj.gtype).Eql(GeoType_Polygon)
             g.Assert(obj.GeometryType()).Eql(GeoType_Polygon)
-            g.Assert(obj.shell == nil).Eql(false)
-            g.Assert(len(*obj.shell)).Eql(5)
-            g.Assert(len(*obj.holes)).Eql(1)
-            g.Assert(len(*((*obj.holes)[0]))).Eql(4)
+            g.Assert(obj.Shell() == nil).Eql(false)
+            g.Assert(len(*obj.Shell())).Eql(5)
+            g.Assert(len(*obj.Holes())).Eql(1)
+            g.Assert(len(*((*obj.Holes())[0]))).Eql(4)
 
             obj = ReadWKT(poly)
             g.Assert(obj.gtype).Eql(GeoType_Polygon)

@@ -7,6 +7,10 @@ import (
     "strconv"
 )
 
+func (self *LineString) IsComplex() bool{
+    return !self.IsSimple()
+}
+
 //computes whether linestring is simple
 func (self *LineString) IsSimple() bool{
     var cache   = make(map[string]bool)
@@ -14,7 +18,7 @@ func (self *LineString) IsSimple() bool{
     var ln1     = make([]*Segment, 0)
     var ln2     = make([]*Segment, 0)
     var ptlist  = make([]*Point, 0)
-    var query *MBR
+    var query   *MBR
 
     for i := 0; bln && i < len(self.chains); i++ {
         chain := self.chains[i]
@@ -58,8 +62,6 @@ func (self *LineString) IsSimple() bool{
     return bln
 }
 
-
-
 //cache box ij keys
 func (self *LineString) cashe_ij(cashe map[string]bool, box1, box2 *MonoMBR, rev bool) {
     var a = strconv.Itoa(box1.i) + "_" + strconv.Itoa(box1.j)
@@ -71,7 +73,6 @@ func (self *LineString) cashe_ij(cashe map[string]bool, box1, box2 *MonoMBR, rev
     }
 }
 
-
 //cache key
 func (self *LineString)  cashe_key(box1, box2 *MonoMBR) string {
     var a = strconv.Itoa(box1.i) + "_" + strconv.Itoa(box1.j)
@@ -79,7 +80,6 @@ func (self *LineString)  cashe_key(box1, box2 *MonoMBR) string {
 
     return a + "-" + b
 }
-
 
 // self intersection coordinates
 func (self *LineString) SelfIntersection() []*Point {

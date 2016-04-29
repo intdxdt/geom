@@ -1,8 +1,8 @@
 package geom
 
 import (
-    "testing"
     . "github.com/franela/goblin"
+    "testing"
 )
 
 func TestGeom(t *testing.T) {
@@ -22,10 +22,10 @@ func TestGeom(t *testing.T) {
             g.Assert(IsNullGeometry(ply)).IsTrue()
             g.Assert(IsNullGeometry(line)).IsTrue()
 
-            ring , ok := IsLinearRing(rng)
+            ring, ok := IsLinearRing(rng)
             g.Assert(ok).IsTrue()
             g.Assert(ring).Eql(rng)
-            
+
             g.Assert(IsNullGeometry(rng)).IsTrue()
         })
     })
