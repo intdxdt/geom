@@ -3,6 +3,8 @@ package geom
 import (
     . "github.com/intdxdt/simplex/util/math"
     . "github.com/intdxdt/simplex/geom/mbr"
+    "github.com/intdxdt/simplex/struct/sset"
+    "github.com/intdxdt/simplex/struct/item"
 )
 
 type Segment struct {
@@ -52,6 +54,7 @@ func (self *Segment) Intersects(other *Segment, extln bool) bool {
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
 func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
+    var set = sset.NewSSet()
     var coords = make([]*Point, 0)
     var bln = false
     var a, b, d,
@@ -69,10 +72,13 @@ func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
             abox := NewMBR(x1, y1, x2, y2)
             bbox := NewMBR(x3, y3, x4, y4)
             if abox.Intersects(bbox) {
-                update_coords_inbounds(abox, x3, y3, x4, y4, &coords)
-                update_coords_inbounds(bbox, x1, y1, x2, y2, &coords)
+                update_coords_inbounds(abox, x3, y3, x4, y4, set)
+                update_coords_inbounds(bbox, x1, y1, x2, y2, set)
             }
         }
+        set.Each(func(o item.Item) {
+            coords = append(coords, o.(*Point))
+        })
         bln = (len(coords) > 0)
         return coords, bln
     }
@@ -120,23 +126,12 @@ func snap_to_zero(v *float64) {
 }
 
 //updates coords that are in bounds
-func update_coords_inbounds(bounds *MBR, x1, y1, x2, y2 float64,
-        coords *[]*Point) {
-
-    var a, b *Point
-
+func update_coords_inbounds(bounds *MBR, x1, y1, x2, y2 float64, set *sset.SSet) {
     if bounds.ContainsXY(x1, y1) {
-        a = &Point{x1, y1}
+        set.Add(&Point{x1, y1})
     }
     if bounds.ContainsXY(x2, y2) {
-        b = &Point{x2, y2}
-    }
-
-    if a != nil && !InCoordinates(*coords, a) {
-        *coords = append(*coords, a)//a
-    }
-    if b != nil && !InCoordinates(*coords, b) {
-        *coords = append(*coords, b)//b
+        set.Add(&Point{x2, y2})
     }
 }
 

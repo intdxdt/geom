@@ -39,23 +39,54 @@ func (pt *Point) SideOf(a, b *Point) *Side {
     return o
 }
 
-//compare points as items
+//compare points as items - x | y ordering
 func (self *Point) Compare(o Item) int {
     pt := o.(*Point)
     d := self[x] - pt[x]
-    if d > 0 {
-        return 1
+    if FloatEqual(d, 0.0) {
+        //x's are close enougth to each other
+        d = self[y] - pt[y]
+    }
+
+    if FloatEqual(d, 0.0) {
+        //check if close enougth ot zero
+        return 0
     } else if d < 0 {
         return -1
-    } else {
-        d := self[y] - pt[y]
-        if d > 0 {
-            return 1
-        } else if d < 0 {
-            return -1
-        }
     }
-    return 0 //equal
+    return 1
 }
+
+
+//compare points as items - x & y ordering
+//func (self *Point) Compare(o Item) int {
+//    pt := o.(*Point)
+//    dx := self[x] - pt[x]
+//    dy := self[y] - pt[y]
+//
+//    //check if close enougth ot zero
+//    if FloatEqual(dx, 0.0) && FloatEqual(dy, 0.0) {
+//        return 0
+//    } else if dx < 0 && dy < 0 {
+//        return -1
+//    } else if dy > 0 && dy > 0 {
+//        return 1
+//    }
+//    //check lexical
+//    d := self[x] - pt[x]
+//    if FloatEqual(self[x], pt[x]) {
+//        //x's are close enougth to each other
+//        d = self[y] - pt[y]
+//    } else {
+//        d = self[x] - pt[x];
+//    }
+//    if FloatEqual(d, 0.0) {
+//        //check if close enougth ot zero
+//        return 0
+//    } else if d < 0 {
+//        return -1
+//    }
+//    return 1
+//}
 
 

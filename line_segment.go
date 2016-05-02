@@ -2,12 +2,14 @@ package geom
 
 import (
     . "github.com/intdxdt/simplex/geom/mbr"
+    "github.com/intdxdt/simplex/struct/sset"
+    "github.com/intdxdt/simplex/struct/item"
 )
 
 //segments in range
 //xor - altenate segments if nothing is in range of box
-func (self *LineString) segs_inrange (seglist []*Segment,
-        box *MBR, i, j int, extend, xor bool) []*Segment {
+func (self *LineString) segs_inrange(seglist []*Segment,
+box *MBR, i, j int, extend, xor bool) []*Segment {
 
     //extend or refresh list
     if !extend {
@@ -43,6 +45,12 @@ ptlist []*Point, extend bool) []*Point {
     if !extend {
         ptlist = make([]*Point, 0)
     }
+
+    set := sset.NewSSet()
+    for _, pt := range ptlist {
+        set.Add(pt)
+    }
+
     for a := 0; a < len(segsa); a++ {
         for b := 0; b < len(segsb); b++ {
             coord, ok := segsa[a].Intersection(segsb[b], false)
@@ -50,12 +58,15 @@ ptlist []*Point, extend bool) []*Point {
                 continue
             }
             for _, pt := range coord {
-                if !InCoordinates(ptlist, pt) {
-                    ptlist = append(ptlist, coord...)
-                }
+                set.Add(pt)
             }
         }
     }
+
+    ptlist = make([]*Point, 0)
+    set.Each(func(o item.Item) {
+        ptlist = append(ptlist, o.(*Point))
+    })
     return ptlist
 }
 

@@ -17,12 +17,12 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     var inrange = self.index.Search(query.MBR)
     for i := 0; i < len(inrange); i++ {
         //cur self box
-        ibox := (*inrange[i].GetItem()).(*MonoMBR)
+        ibox := inrange[i].GetItem().(*MonoMBR)
         //search ln using ibox
 
         lnrange := other.index.Search(query.MBR)
         for q := 0; q < len(lnrange); q++ {
-            qbox := (*lnrange[q].GetItem()).(*MonoMBR)
+            qbox := lnrange[q].GetItem().(*MonoMBR)
             qrng, ok := ibox.BBox().Intersection(qbox.BBox())
 
             if ok {
@@ -56,13 +56,13 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
 
     for i := 0; !bln && i < len(inrange); i++ {
         //search ln using ibox
-        ibox := (*inrange[i].GetItem()).(*MonoMBR)
+        ibox := inrange[i].GetItem().(*MonoMBR)
         query = ibox.BBox()
         lnrange := other.index.Search(query)
 
         for q := 0; !bln && q < len(lnrange); q++ {
 
-            qbox := (*lnrange[q].GetItem()).(*MonoMBR)
+            qbox := lnrange[q].GetItem().(*MonoMBR)
             qrng, _ := ibox.Intersection(qbox.MBR)
 
             selfsegs = self.segs_inrange(

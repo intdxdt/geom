@@ -21,7 +21,7 @@ func TestLineStringSelf(t *testing.T) {
             ln1 := NewLineStringFromWKT(wkt1)
             g.Assert(ln1.IsSimple()).IsFalse()
             g.Assert(ln1.IsComplex()).IsTrue()
-            g.Assert(len(ln1.SelfIntersection())).Equal(3)
+            g.Assert(len(ln1.SelfIntersection())).Equal(2)
 
             ln2 := NewLineStringFromWKT(wkt2)
             g.Assert(ln2.IsSimple()).IsFalse()

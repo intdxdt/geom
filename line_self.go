@@ -26,7 +26,7 @@ func (self *LineString) IsSimple() bool{
         inters := self.index.Search(query)
 
         for j := 0; bln && j < len(inters); j++ {
-            jbox := (*inters[j].GetItem()).(*MonoMBR)
+            jbox := inters[j].GetItem().(*MonoMBR)
 
             ckey := self.cashe_key(chain, jbox)
 
@@ -102,7 +102,7 @@ func (self *LineString) SelfIntersection() []*Point {
         inters := self.index.Search(query)
 
         for j := 0; j < len(inters); j++ {
-            jbox := (*inters[j].GetItem()).(*MonoMBR)
+            jbox := inters[j].GetItem().(*MonoMBR)
             ckey = self.cashe_key(chain, jbox)
 
             if cache[ckey] || jbox.MBR.Equals(chain.MBR) {
