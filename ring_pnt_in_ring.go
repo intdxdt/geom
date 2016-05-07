@@ -1,7 +1,7 @@
 package geom
 
 import (
-    . "github.com/intdxdt/simplex/util/math"
+    . "simplex/util/math"
 )
 
 //point completely in ring

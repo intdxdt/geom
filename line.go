@@ -1,7 +1,7 @@
 package geom
 
 import (
-    "github.com/intdxdt/simplex/struct/rtree"
+    "simplex/struct/rtree"
     "math"
 )
 

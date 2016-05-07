@@ -3,7 +3,7 @@ package geom
 import (
     . "github.com/franela/goblin"
     "testing"
-    "github.com/intdxdt/simplex/util/math"
+    "simplex/util/math"
 )
 
 func TestLineStringEdit(t *testing.T) {

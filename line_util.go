@@ -1,7 +1,7 @@
 package geom
 
 import (
-    . "github.com/intdxdt/simplex/geom/mbr"
+    . "simplex/geom/mbr"
 )
 
 //pop chain from chainl list

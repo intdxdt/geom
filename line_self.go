@@ -1,9 +1,9 @@
 package geom
 
 import (
-    . "github.com/intdxdt/simplex/geom/mbr"
-    . "github.com/intdxdt/simplex/struct/sset"
-    "github.com/intdxdt/simplex/struct/item"
+    . "simplex/geom/mbr"
+    . "simplex/struct/sset"
+    "simplex/struct/item"
     "strconv"
 )
 

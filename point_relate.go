@@ -1,8 +1,8 @@
 package geom
 
 import (
-    . "github.com/intdxdt/simplex/util/math"
-    . "github.com/intdxdt/simplex/struct/item"
+    . "simplex/util/math"
+    . "simplex/struct/item"
 )
 
 //Equals evaluates whether two points are the same

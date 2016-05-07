@@ -2,7 +2,7 @@ package geom
 
 import (
     . "github.com/franela/goblin"
-    . "github.com/intdxdt/simplex/geom/mbr"
+    . "simplex/geom/mbr"
     "testing"
 )
 

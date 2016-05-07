@@ -1,2 +1,2 @@
-#Geom
-Simplx geom 
+#Geometry Package
+geometry library 

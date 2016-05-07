@@ -2,15 +2,15 @@ package mbr
 
 import (
 	"math"
-    util "github.com/intdxdt/simplex/util/math"
+    . "simplex/util/math"
 )
 
 func (self *MBR) Equals(other *MBR) bool {
     return (
-    util.FloatEqual(self[x1], other[x1]) &&
-    util.FloatEqual(self[y1], other[y1]) &&
-    util.FloatEqual(self[x2], other[x2]) &&
-    util.FloatEqual(self[y2], other[y2]))
+    FloatEqual(self[x1], other[x1]) &&
+    FloatEqual(self[y1], other[y1]) &&
+    FloatEqual(self[x2], other[x2]) &&
+    FloatEqual(self[y2], other[y2]))
 }
 
 

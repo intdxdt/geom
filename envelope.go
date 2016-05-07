@@ -1,6 +1,6 @@
 package geom
 
-import . "github.com/intdxdt/simplex/geom/mbr"
+import . "simplex/geom/mbr"
 
 //envelope of linestring
 func (self *LineString) Envelope() *MBR {

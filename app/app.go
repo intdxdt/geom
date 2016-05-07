@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	. "github.com/intdxdt/simplex/geom"
+	. "simplex/geom"
 )
 
 func main() {

@@ -2,7 +2,7 @@ package geom
 
 import (
     "math"
-    . "github.com/intdxdt/simplex/geom/mbr"
+    . "simplex/geom/mbr"
 )
 
 type MonoMBR struct {
