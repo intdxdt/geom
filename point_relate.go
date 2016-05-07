@@ -3,6 +3,7 @@ package geom
 import (
     . "simplex/util/math"
     . "simplex/struct/item"
+    . "simplex/side"
 )
 
 //Equals evaluates whether two points are the same

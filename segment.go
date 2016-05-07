@@ -3,6 +3,7 @@ package geom
 import (
     . "simplex/util/math"
     . "simplex/geom/mbr"
+    . "simplex/side"
     "simplex/struct/sset"
     "simplex/struct/item"
 )
