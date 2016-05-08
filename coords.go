@@ -130,12 +130,4 @@ func CloneCoordinates(coordinates []*Point) []*Point {
 }
 
 
-//linear search if point is a member of list of points
-func InCoordinates(coords []*Point, pt *Point) bool {
-    bln := false
-    n := len(coords)
-    for i := 0; !bln && i < n; i++ {
-        bln = pt.Equals(coords[i])
-    }
-    return bln
-}
+

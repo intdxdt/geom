@@ -2,6 +2,7 @@ package geom
 
 import (
     . "simplex/util/math"
+    "math"
 )
 
 type Point [2]float64
@@ -25,9 +26,7 @@ func NewPoint(array []float64) *Point {
 //create a new linestring from wkt string
 //empty wkt will raise an exception
 func NewPointFromWKT(wkt_geom string) *Point {
-    return NewPoint(
-        ReadWKT(wkt_geom).ToArray()[0][0][:],
-    )
+    return NewPoint(ReadWKT(wkt_geom).ToArray()[0][0][:])
 }
 
 //Is point zero - origin
@@ -35,6 +34,10 @@ func (self *Point) IsZero() bool {
     return FloatEqual(self[x], 0.0) && FloatEqual(self[y], 0.0)
 }
 
+//is null
+func (self *Point) IsNull() bool {
+    return math.IsNaN(self[x]) || math.IsNaN(self[y])
+}
 
 //X gets the x coordinate of a point same as point[0]
 func (self *Point) X() float64 {
