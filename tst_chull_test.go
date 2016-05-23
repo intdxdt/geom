@@ -41,7 +41,7 @@ func TestCHull(t *testing.T) {
             var ch = []*Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
             g.Assert(ch).Eql(hull)
             var pt = []*Point{{33.52991674117594, 27.137460594059416}, }
-            g.Assert(len(ConvexHull(pt))).Equal(0)
+            g.Assert(len(ConvexHull(pt))).Equal(1)
         })
 
         g.It("should test convex hull of sqr as sqr", func() {
@@ -78,12 +78,12 @@ func TestCHull(t *testing.T) {
             hullEql(g, SimpleHull([]*Point{}), empty_hull, )
         })
         g.It("chull of one point is empty", func() {
-            hullEql(g, ConvexHull([]*Point{{200, 200}}), empty_hull, )
-            hullEql(g, SimpleHull([]*Point{{200, 200}}), empty_hull, )
+            hullEql(g, ConvexHull([]*Point{{200, 200}}), []*Point{{200, 200}}, )
+            hullEql(g, SimpleHull([]*Point{{200, 200}}), []*Point{{200, 200}}, )
         })
         g.It("chull of  two points is empty", func() {
-            hullEql(g, ConvexHull([]*Point{{200, 200}, {760, 300}}), empty_hull, )
-            hullEql(g, SimpleHull([]*Point{{200, 200}, {760, 300}}), empty_hull, )
+            hullEql(g, ConvexHull([]*Point{{200, 200}, {760, 300}}), []*Point{{200, 200}, {760, 300}}, )
+            hullEql(g, SimpleHull([]*Point{{200, 200}, {760, 300}}), []*Point{{200, 200}, {760, 300}}, )
         })
         g.It("chull for three points", func() {
             ch := ConvexHull([]*Point{{200, 200}, {760, 300}, {500, 500}})

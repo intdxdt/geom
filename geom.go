@@ -21,5 +21,6 @@ type Geometry interface {
     Envelope() *MBR
     AsLinear() []*LineString
     Intersects(Geometry) bool
+    Distance(Geometry) float64
 }
 
