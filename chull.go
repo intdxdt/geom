@@ -50,22 +50,22 @@ package geom
 // param points An array of [X, Y] coordinates
 
 func ConvexHull(points []*Point) []*Point {
-    //trivial case less than three coordinates
-    if len(points) < 3 {
-        return make([]*Point, 0)
-    }
     //copy points into mutable container
     pnts := CloneCoordinates(points)
+    //trivial case less than three coordinates
+    if len(points) < 3 {
+        return pnts
+    }
     var N = len(pnts)
 
     XYCoordinates{pnts}.Sort()
 
-    var lower = make(Coordinates, 0)
-    var upper = make(Coordinates, 0)
-    lower = build_hull(lower, pnts, 0, 1, N)
-    upper = build_hull(upper, pnts, N - 1, -1, -1)
-    _, upper = upper.Pop()
-    _, lower = lower.Pop()
+    var lower   = make(Coordinates, 0)
+    var upper   = make(Coordinates, 0)
+    lower       = build_hull(lower, pnts, 0, 1, N)
+    upper       = build_hull(upper, pnts, N - 1, -1, -1)
+    _, upper    = upper.Pop()
+    _, lower    = lower.Pop()
 
     for _, v := range upper {
         lower = append(lower, v)
@@ -99,12 +99,12 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
 //http://geomalgorithms.com/a12-_hull-3.html
 
 func SimpleHull(coords []*Point) []*Point {
+    coords = CloneCoordinates(coords)
     //trivial case less than three coordinates
     if len(coords) < 3 {
-        return make([]*Point, 0)
+        return coords
     }
 
-    coords = CloneCoordinates(coords)
     var n = len(coords)
     // initialize a deque dQ[] from bottom to top so that the
     // 1st three vertices of coords[] are a ccw triangle
