@@ -31,13 +31,16 @@ type WKTParserObj struct {
     holes *Holes
     gtype int
 }
-
+//Geometry Type
 func (self *WKTParserObj) GeometryType() int {
     return self.gtype
 }
+//Shell
 func (self *WKTParserObj) Shell() *Shell {
     return self.shell
 }
+
+//Holes - array of shells
 func (self *WKTParserObj) Holes() *Holes {
     return  self.holes
 }
@@ -93,6 +96,28 @@ func ReadWKT(wkt string) *WKTParserObj {
     }
     return obj
 }
+
+//Read wkt as geometry
+func ReadGeometry(wkt string) Geometry {
+    var g Geometry
+    obj := ReadWKT(wkt)
+
+    if obj.gtype == GeoType_Polygon {
+        pts := make([][]*Point, 0)
+        for _, v := range obj.ToArray() {
+            pts = append(pts, AsPointArray(v))
+        }
+        g = NewPolygon(pts...)
+    } else if obj.gtype == GeoType_LineString{
+        g = NewLineStringFromArray(obj.ToArray()[0], )
+    } else if obj.gtype == GeoType_Point {
+        g = NewPoint(obj.ToArray()[0][0][:])
+    }
+
+    return g
+}
+
+
 
 //Parse point
 func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
