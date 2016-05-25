@@ -79,7 +79,7 @@ func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
 func ReadWKT(wkt string) *WKTParserObj {
     var parser func(*string, *WKTParserObj)
     matches := re_typeStr.wkt_type_coords(wkt);
-    obj := &WKTParserObj{nil, nil, Unkown}
+    obj := &WKTParserObj{nil, nil, GeoType_Unkown}
 
     mtype, coords := *matches["type"], matches["coords"]
 
@@ -91,7 +91,7 @@ func ReadWKT(wkt string) *WKTParserObj {
         obj.gtype, parser = GeoType_Point, wkt_point_parser
     }
 
-    if coords != nil  && obj.gtype != Unkown {
+    if coords != nil  && obj.gtype != GeoType_Unkown {
         parser(coords, obj)
     }
     return obj

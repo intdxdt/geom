@@ -7,6 +7,12 @@ import (
     "strconv"
 )
 
+//get geometry type
+func (self *LineString) Type() *geoType{
+    return new_geoType(GeoType_LineString)
+}
+
+
 func (self *LineString) IsComplex() bool{
     return !self.IsSimple()
 }

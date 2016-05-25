@@ -22,7 +22,9 @@ func TestPoint(t *testing.T) {
 
     g.Describe("geom.point", func() {
         g.It("loads wkt as point", func() {
+            g.Assert(p1.Type().IsPoint()).IsTrue()
             g.Assert(p1.Envelope().Area()).Equal(0.0)
+
             g.Assert(p1.Area()).Equal(0.0)
             g.Assert(NewPointFromWKT(p1.String())).Eql(p1)
             g.Assert(NewPointFromWKT(p4.String())).Eql(p4)
@@ -93,16 +95,7 @@ func TestPoint(t *testing.T) {
             a := Point{3.87, 7.45}
             g.Assert(a.String()).Equal("POINT (3.87 7.45)")
             g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
-            g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
-        })
-    })
-
-    g.Describe("type conversion & util", func() {
-        g.It("string, wkt , bbox, chull", func() {
-            a := Point{3.87, 7.45}
-            g.Assert(a.String()).Equal("POINT (3.87 7.45)")
-            g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
-            g.Assert(a.ConvexHull()).Equal([]*Point{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+            g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][2]float64{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
         })
     })
 

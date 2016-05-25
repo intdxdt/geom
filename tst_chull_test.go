@@ -38,8 +38,15 @@ func TestCHull(t *testing.T) {
 
         g.It("should test convex hull", func() {
             var hull = ConvexHull(data)
+            var ply  = NewPolygon(data)
+            var ln  = NewLineString(data)
             var ch = []*Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
+            var ch_array = [][2]float64{{0, 0}, {9, 0}, {9, 9}, {0, 9}, {0, 0}}
+
             g.Assert(ch).Eql(hull)
+            g.Assert(ply.ConvexHull().Shell.ToArray()).Eql(ch_array)
+            g.Assert(ln.ConvexHull().Shell.ToArray()).Eql(ch_array)
+
             var pt = []*Point{{33.52991674117594, 27.137460594059416}, }
             g.Assert(len(ConvexHull(pt))).Equal(1)
         })

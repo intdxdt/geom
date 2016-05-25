@@ -30,7 +30,9 @@ func TestLineString(t *testing.T) {
 
     g.Describe("Linestring", func() {
         g.It("should test length", func() {
+            g.Assert(ln.Type().IsLineString()).IsTrue()
             g.Assert(ln.Length() == 4.0).IsTrue()
+
             g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
             g.Assert(ln.IsRing()).IsTrue()
             g.Assert(Round(ln.Area(), 5)).Equal(1.0)

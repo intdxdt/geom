@@ -25,16 +25,9 @@ func QuadrantRelation(g, other Geometry) string {
 }
 
 func quadrants(g, other Geometry) []Geometry {
-    /*
-     * Get bounding box intersections
-     @param g
-     @param other
-     @returns   Opt: {obj_bbox: [], const_bbox: [],  ext_lines : Opt}
-     @private
-    */
     var nw, nn, ne, ww, ii, ee, sw, ss, se Geometry
-    var box = g.Envelope().Clone()
-    var other_mbr = other.Envelope().Clone()
+    var box = g.BBox().Clone()
+    var other_mbr = other.BBox().Clone()
 
     box.ExpandIncludeMBR(other_mbr)
     box.ExpandByDelta(1e2, 1e2)
@@ -49,6 +42,7 @@ func quadrants(g, other Geometry) []Geometry {
         }
         mat = append(mat, row_mat)
     }
+
     /*
         .(3,0).|.(3,1).|.(3,2).|.(3,3).
                nw      nn      ne
@@ -59,6 +53,7 @@ func quadrants(g, other Geometry) []Geometry {
         .(0,0).|.(0,1).|.(0,2).|.(0,3).
     //TODO: ii can be improved by changing ii to convex hull
     */
+
     var _, ispoint = other.(*Point)
 
     nw = NewPolygon([]*Point{mat[2][0], mat[3][0], mat[3][1], mat[2][1], mat[2][0]})

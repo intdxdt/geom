@@ -21,7 +21,9 @@ func TestPolygon(t *testing.T) {
             wkt := "POLYGON (( 33.52991674117594 27.137460594059416, 33.52991674117594 30.589750223527805, 36.44941148514852 30.589750223527805, 36.44941148514852 27.137460594059416, 33.52991674117594 27.137460594059416 ))"
             ply_inpoly := NewPolygonFromWKT(wkt)
             ply_inpoly_clone := ply_inpoly.Clone()
+            g.Assert(poly.Type().IsPolygon()).IsTrue()
             g.Assert(poly.Envelope().Equals(poly.Shell.BBox())).IsTrue()
+
             g.Assert(poly.Envelope().Equals(poly.BBox())).IsTrue()
             g.Assert(poly.Intersects(ply_inpoly)).IsTrue()
             g.Assert(poly.Intersects(ply_inpoly_clone)).IsTrue()
