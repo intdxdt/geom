@@ -4,6 +4,7 @@ import (
     "regexp"
     "strings"
     "strconv"
+    "bytes"
 )
 
 var re_typeStr = wktRegex{
@@ -77,6 +78,7 @@ func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
 
 //Read wkt string
 func ReadWKT(wkt string) *WKTParserObj {
+    wkt = wkt_string(wkt)
     var parser func(*string, *WKTParserObj)
     matches := re_typeStr.wkt_type_coords(wkt);
     obj := &WKTParserObj{nil, nil, GeoType_Unkown}
@@ -118,6 +120,16 @@ func ReadGeometry(wkt string) Geometry {
 }
 
 
+
+//wkt string
+func wkt_string(wkt string) string{
+    var buffer bytes.Buffer
+    tokens := strings.Split(wkt, "\n")
+    for _, token := range tokens {
+        buffer.WriteString(strings.TrimSpace(token))
+    }
+    return buffer.String()
+}
 
 //Parse point
 func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
