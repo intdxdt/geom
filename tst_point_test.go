@@ -20,6 +20,10 @@ func TestPoint(t *testing.T) {
     p7 := NewPointXY(4.0, 4.9)
     p8 := NewPointXY(3.9, 4.9)
 
+    p9 := NewPointXYZ(3.9, 4.9, 9.8)
+    p10 := NewPoint([]float64{3.9, 4.9, 9.8})
+
+
     g.Describe("geom.point", func() {
         g.It("loads wkt as point", func() {
             g.Assert(p1.Type().IsPoint()).IsTrue()
@@ -30,14 +34,28 @@ func TestPoint(t *testing.T) {
             g.Assert(NewPointFromWKT(p4.String())).Eql(p4)
         })
 
-        g.It("x, y access", func() {
+        g.It("x, y, z access", func() {
             g.Assert(p0.IsZero()).IsTrue()
             g.Assert(p1.IsZero()).IsFalse()
             g.Assert(p1.Equals(p2)).IsTrue()
+
+            g.Assert(p1.X()).Equal(4.0)
+            g.Assert(p1.Y()).Equal(5.0)
+            g.Assert(p1.Z()).Equal(0.0)
+
             g.Assert(p5.X()).Equal(4.0)
             g.Assert(p5.Y()).Equal(0.0)
+
             g.Assert(p3.X()).Equal(p1.X())
             g.Assert(p3.Y()).Equal(p1.Y())
+
+            //3.9, 4.9, 9.8
+            g.Assert(p9.X()).Equal(3.9)
+            g.Assert(p9.Y()).Equal(4.9)
+            g.Assert(p9.Z()).Equal(9.8)
+            g.Assert(p9.Equals(p10)).IsTrue()
+
+
         })
 
         g.It("point relate", func() {

@@ -8,9 +8,9 @@ import (
 
 //Equals evaluates whether two points are the same
 func (pt *Point) Equals(point *Point) bool {
-    return (
-        FloatEqual(pt[x], point[x]) &&
-            FloatEqual(pt[y], point[y]))
+    return FloatEqual(pt[x], point[x]) &&
+        FloatEqual(pt[y], point[y]) &&
+        FloatEqual(pt[z], point[z])
 }
 
 

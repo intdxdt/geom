@@ -5,20 +5,27 @@ import (
     "math"
 )
 
-type Point [2]float64
+type Point [3]float64
 
 //New Point from x, y values
 func NewPointXY(x, y float64) *Point {
     return &Point{x, y}
 }
 
+//New Point from x, y values
+func NewPointXYZ(x, y, z float64) *Point {
+    return &Point{x, y, z}
+}
+
 //New constructor of Point
 func NewPoint(array []float64) *Point {
-    pt := &Point{0.0, 0.0}
+    pt := &Point{}
     if len(array) == 1 {
         pt[x] = array[x]
     } else if len(array) >= 2 {
         pt[x], pt[y] = array[x], array[y]
+    } else if len(array) >= 3 {
+        pt[z] = array[z]
     }
     return pt
 }
@@ -29,7 +36,7 @@ func NewPointFromWKT(wkt_geom string) *Point {
     return NewPoint(ReadWKT(wkt_geom).ToArray()[0][0][:])
 }
 
-//Is point zero - origin
+//Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
     return FloatEqual(self[x], 0.0) && FloatEqual(self[y], 0.0)
 }
@@ -47,6 +54,11 @@ func (self *Point) X() float64 {
 //Y gets the y coordinate of a point , same as self[1]
 func (self *Point) Y() float64 {
     return self[y]
+}
+
+//Z gets the z coordinate of a point , same as self[2]
+func (self *Point) Z() float64 {
+    return self[z]
 }
 
 //As line strings

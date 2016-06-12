@@ -7,6 +7,7 @@ import (
 const (
     x = iota
     y
+    z
     null = -9
 )
 
