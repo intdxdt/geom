@@ -20,12 +20,9 @@ func NewPointXYZ(x, y, z float64) *Point {
 //New constructor of Point
 func NewPoint(array []float64) *Point {
     pt := &Point{}
-    if len(array) == 1 {
-        pt[x] = array[x]
-    } else if len(array) >= 2 {
-        pt[x], pt[y] = array[x], array[y]
-    } else if len(array) >= 3 {
-        pt[z] = array[z]
+    n  := min(len(pt), len(array))
+    for i := 0; i < n; i++ {
+        pt[i] = array[i]
     }
     return pt
 }

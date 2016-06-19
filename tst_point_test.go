@@ -6,6 +6,7 @@ import (
     . "simplex/geom/mbr"
     "testing"
     "math"
+    "fmt"
 )
 
 func TestPoint(t *testing.T) {
@@ -22,6 +23,7 @@ func TestPoint(t *testing.T) {
 
     p9 := NewPointXYZ(3.9, 4.9, 9.8)
     p10 := NewPoint([]float64{3.9, 4.9, 9.8})
+    p11 := NewPoint([]float64{3.9, 4.9, 9.8, 7.9})
 
 
     g.Describe("geom.point", func() {
@@ -30,8 +32,8 @@ func TestPoint(t *testing.T) {
             g.Assert(p1.Envelope().Area()).Equal(0.0)
 
             g.Assert(p1.Area()).Equal(0.0)
-            g.Assert(NewPointFromWKT(p1.String())).Eql(p1)
-            g.Assert(NewPointFromWKT(p4.String())).Eql(p4)
+            g.Assert(NewPointFromWKT(p1.WKT())).Eql(p1)
+            g.Assert(NewPointFromWKT(p4.WKT())).Eql(p4)
         })
 
         g.It("x, y, z access", func() {
@@ -53,7 +55,8 @@ func TestPoint(t *testing.T) {
             g.Assert(p9.X()).Equal(3.9)
             g.Assert(p9.Y()).Equal(4.9)
             g.Assert(p9.Z()).Equal(9.8)
-            g.Assert(p9.Equals(p10)).IsTrue()
+             g.Assert(p9.Equals(p10)).IsTrue()
+            g.Assert(p9.Equals(p11)).IsTrue()
 
 
         })
@@ -74,7 +77,7 @@ func TestPoint(t *testing.T) {
         })
 
         g.It("as array", func() {
-            g.Assert(p1.ToArray()).Equal([2]float64{p1[x], p1[y]})
+            g.Assert(p1.ToArray()).Equal([]float64{p1[x], p1[y], 0})
         })
 
     })
@@ -111,9 +114,10 @@ func TestPoint(t *testing.T) {
     g.Describe("type conversion & util", func() {
         g.It("wkt string", func() {
             a := Point{3.87, 7.45}
-            g.Assert(a.String()).Equal("POINT (3.87 7.45)")
+            g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
             g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
-            g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][2]float64{{3.87, 7.45}, {3.87, 7.45}, {3.87, 7.45}})
+            fmt.Println("-->", a.ConvexHull().Shell.ToArray())
+            g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45,0}, {3.87, 7.45,0}, {3.87, 7.45,0}})
         })
     })
 

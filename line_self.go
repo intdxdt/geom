@@ -69,7 +69,8 @@ func (self *LineString) IsSimple() bool{
 }
 
 //cache box ij keys
-func (self *LineString) cashe_ij(cashe map[string]bool, box1, box2 *MonoMBR, rev bool) {
+func (self *LineString) cashe_ij(cashe map[string]bool,
+box1, box2 *MonoMBR, rev bool) {
     var a = strconv.Itoa(box1.i) + "_" + strconv.Itoa(box1.j)
     var b = strconv.Itoa(box2.i) + "_" + strconv.Itoa(box2.j)
 

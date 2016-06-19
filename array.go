@@ -1,14 +1,17 @@
 package geom
 
+
 //ToArray converts Point to [2]float64
-func (self *Point) ToArray() [2]float64 {
-    return [2]float64{self[x], self[y]}
+func (self *Point) ToArray() []float64 {
+    var coords = make([]float64, len(self))
+    copy(coords, self[:])
+    return coords
 }
 
 //Coordinates returns a copy of linestring coordinates
-func (self *LineString) ToArray() [][2]float64 {
+func (self *LineString) ToArray() [][]float64 {
     n := len(self.coordinates)
-    clone := make([][2]float64, n)
+    clone := make([][]float64, n)
     for i := 0; i < n; i++ {
         clone[i] = self.coordinates[i].ToArray()
     }

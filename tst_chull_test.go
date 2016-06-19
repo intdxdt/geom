@@ -28,7 +28,7 @@ func TestCHull(t *testing.T) {
     }
 
     g.Describe("convex & simple hull", func() {
-        var sqr = []*Point {
+        var sqr = []*Point{
             {33.52991674117594, 27.137460594059416},
             {33.52991674117594, 30.589750223527805},
             {36.44941148514852, 30.589750223527805},
@@ -38,10 +38,10 @@ func TestCHull(t *testing.T) {
 
         g.It("should test convex hull", func() {
             var hull = ConvexHull(data)
-            var ply  = NewPolygon(data)
-            var ln  = NewLineString(data)
+            var ply = NewPolygon(data)
+            var ln = NewLineString(data)
             var ch = []*Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
-            var ch_array = [][2]float64{{0, 0}, {9, 0}, {9, 9}, {0, 9}, {0, 0}}
+            var ch_array = [][]float64{{0, 0, 0}, {9, 0, 0}, {9, 9, 0}, {0, 9, 0}, {0, 0, 0}}
 
             g.Assert(ch).Eql(hull)
             g.Assert(ply.ConvexHull().Shell.ToArray()).Eql(ch_array)
@@ -52,10 +52,10 @@ func TestCHull(t *testing.T) {
         })
 
         g.It("should test convex hull of sqr as sqr", func() {
-            var hull    = ConvexHull(sqr)
-            var shull   = SimpleHull(sqr)
-            var hpoly   = NewPolygon(hull)
-            var shpoly  = NewPolygon(shull)
+            var hull = ConvexHull(sqr)
+            var shull = SimpleHull(sqr)
+            var hpoly = NewPolygon(hull)
+            var shpoly = NewPolygon(shull)
             var sqrpoly = NewPolygon(sqr)
 
             g.Assert(len(hull)).Equal(len(sqr) - 1)
@@ -139,13 +139,12 @@ func TestCHull(t *testing.T) {
             hullEql(g, ch, expectedHull)
         })
 
-
         g.It("chull for a set of 15 points with non-trivial hull", func() {
-            var poly =  []*Point{{30,30}, {50,60}, {60,20}, {70,45}, {86,39},
-                {112,60}, {200,113}, {250,50}, {300,200}, {130,240}, {76,150},
-                {47,76}, {36,40}, {33,35}, {30,30}};
-            var expectedHull =  []*Point{{300,200}, {250,50}, {60,20}, {30,30},
-                {47,76}, {76,150}, {130,240}};
+            var poly = []*Point{{30, 30}, {50, 60}, {60, 20}, {70, 45}, {86, 39},
+                {112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
+                {47, 76}, {36, 40}, {33, 35}, {30, 30}};
+            var expectedHull = []*Point{{300, 200}, {250, 50}, {60, 20}, {30, 30},
+                {47, 76}, {76, 150}, {130, 240}};
             hullEql(g, ConvexHull(poly), expectedHull);
         })
     })

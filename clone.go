@@ -12,7 +12,7 @@ func (self *LinearRing) Clone() *LinearRing {
 
 //Clone point
 func (self *Point) Clone() *Point {
-    return NewPointXY(self[x], self[y])
+    return NewPoint(self[:])
 }
 
 //Clone polygon

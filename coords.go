@@ -129,5 +129,15 @@ func CloneCoordinates(coordinates []*Point) []*Point {
     return clone
 }
 
+//
+func CoordinatesAsFloat2D(coordinates []*Point ) [][2]float64{
+    var n = len(coordinates)
+    var coords = make([][2]float64, n)
+    for i := 0; i < n; i++ {
+        coords[i] = [2]float64{coordinates[i][x], coordinates[i][y]}
+    }
+    return coords
+}
+
 
 

@@ -13,8 +13,8 @@ func TestLineString(t *testing.T) {
     pts := []*Point{
         {5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9},
     }
-    pt_array := [][2]float64{
-        {5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9},
+    pt_array := [][]float64{
+        {5.6, 7.9, 0}, {5.6, 8.9, 0}, {6.6, 8.9,0}, {6.6, 7.9,0}, {5.6, 7.9,0},
     }
 
     pts_closed := []*Point{{5.538, 8.467}, {5.498, 8.559}, {5.858, 8.987}, {6.654, 8.638}, {6.549, 8.024}, {5.765, 8.082}, {5.538, 8.467}}
@@ -99,7 +99,8 @@ func TestLineString(t *testing.T) {
     g.Describe("Linestring - WKT", func() {
         g.It("should test wkt string", func() {
             lnstr := "LINESTRING (5.6 7.9, 5.6 8.9, 6.6 8.9, 6.6 7.9, 5.6 7.9)"
-            g.Assert(ln.String()).Eql(lnstr)
+            g.Assert(ln.WKT()).Eql(lnstr)
+            fmt.Println("-->", ln.String())
         })
     })
 }
