@@ -30,14 +30,24 @@ func TestPolygon(t *testing.T) {
             //g.Assert(poly.Contains(ply_inpoly)).IsTrue()
         })
         g.It("should test polygon string", func() {
-            g.Assert(poly.String()).Eql(
+            g.Assert(poly.WKT()).Eql(
                 "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))",
             )
-            g.Assert(fmt.Sprintf("%v", poly0)).Eql(
+            g.Assert(poly0.WKT()).Eql(
                 "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10))",
             )
-            g.Assert(fmt.Sprintf("%v", poly)).Eql(
+            g.Assert(poly.WKT()).Eql(
                 "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))",
+            )
+            //=================================
+            g.Assert(poly.String()).Eql(
+                "[[[35, 10, 0],[45, 45, 0],[15, 40, 0],[10, 20, 0],[35, 10, 0]],[[20, 30, 0],[35, 35, 0],[30, 20, 0],[20, 30, 0]]]",
+            )
+            g.Assert(fmt.Sprintf("%v", poly0)).Eql(
+                "[[[35, 10, 0],[45, 45, 0],[15, 40, 0],[10, 20, 0],[35, 10, 0]]]",
+            )
+            g.Assert(fmt.Sprintf("%v", poly)).Eql(
+                "[[[35, 10, 0],[45, 45, 0],[15, 40, 0],[10, 20, 0],[35, 10, 0]],[[20, 30, 0],[35, 35, 0],[30, 20, 0],[20, 30, 0]]]",
             )
         })
 

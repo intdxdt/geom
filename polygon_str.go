@@ -1,7 +1,26 @@
 package geom
 
+import "bytes"
+
 //polygon as  string
 func (self *Polygon) String() string {
+    //NewWKTParserObj
+    var aslines = self.AsLinear()
+    var buf bytes.Buffer
+    var n = len(aslines) - 1
+    buf.WriteString("[")
+    for i, ln := range aslines {
+        buf.WriteString(ln.String())
+        if i < n {
+            buf.WriteString(",")
+        }
+    }
+    buf.WriteString("]")
+    return buf.String()
+}
+
+//polygon as  string
+func (self *Polygon) WKT() string {
     //NewWKTParserObj
     self_holes := self.Holes
     rings := make([][][2]float64, len(self_holes) + 1)
