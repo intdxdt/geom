@@ -24,6 +24,7 @@ type Geometry interface {
     Intersects(Geometry) bool
     Distance(Geometry) float64
     Type() *geoType
+    WKT() string 
 }
 
 type geoType struct {
