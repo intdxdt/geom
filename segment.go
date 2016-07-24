@@ -14,7 +14,7 @@ type Segment struct {
 }
 //New Segment constructor
 func NewSegment(a, b *Point) *Segment {
-    return &Segment{a, b}
+    return &Segment{A:a, B:b}
 }
 
 //Side of pt to segement

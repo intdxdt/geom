@@ -8,23 +8,24 @@ import (
 )
 
 //get geometry type
-func (self *LineString) Type() *geoType{
+func (self *LineString) Type() *geoType {
     return new_geoType(GeoType_LineString)
 }
 
-
-func (self *LineString) IsComplex() bool{
+func (self *LineString) IsComplex() bool {
     return !self.IsSimple()
 }
 
 //computes whether linestring is simple
-func (self *LineString) IsSimple() bool{
-    var cache   = make(map[string]bool)
-    var bln     = true//, bcomplx, chain, inters, jbox, qbox
-    var ln1     = make([]*Segment, 0)
-    var ln2     = make([]*Segment, 0)
-    var ptlist  = make([]*Point, 0)
+func (self *LineString) IsSimple() bool {
+    var bln = true//, bcomplx, chain, inters, jbox, qbox
+    var cache = make(map[string]bool)
+    var ln1 = make([]*Segment, 0)
+    var ln2 = make([]*Segment, 0)
+    var ptlist = make([]*Point, 0)
     var query   *MBR
+    var isring = self.IsRing()
+    var v_i, v_j = 0, len(self.coordinates) - 1
 
     for i := 0; bln && i < len(self.chains); i++ {
         chain := self.chains[i]
@@ -43,8 +44,14 @@ func (self *LineString) IsSimple() bool{
             self.cashe_ij(cache, chain, jbox, true)
             qbox, ok := chain.MBR.Intersection(jbox.MBR)
 
-            if ok == false && chain.j == jbox.i {
+            if (ok == false) ||
+                (qbox.Area() == 0.0 && chain.j == jbox.i) ||
+                (qbox.Area() == 0.0 && chain.i == jbox.j) {
                 continue //non overlapping && contiguous
+            }
+            if (isring &&  v_i == chain.i  && v_j == jbox.j) ||
+                (isring &&  v_j == chain.j  && v_i == jbox.i) {
+                continue //start and end vertex for closed ring
             }
 
             ln1 = self.segs_inrange(
@@ -57,9 +64,9 @@ func (self *LineString) IsSimple() bool{
                 ln1, ln2, ptlist, false,
             )
 
-            bcomplx := (
-                (chain.j != jbox.i && len(ptlist) > 0) ||
-                (chain.j == jbox.i && len(ptlist) > 1))
+            bcomplx := ((
+                chain.j != jbox.i && len(ptlist) > 0) || (
+                chain.j == jbox.i && len(ptlist) > 1))
             if bcomplx {
                 bln = false
             }
@@ -122,8 +129,8 @@ func (self *LineString) SelfIntersection() []*Point {
                 continue//non overlapping && contiguous
             }
 
-            ln1=self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
-            ln2=self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
+            ln1 = self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
+            ln2 = self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
             ptlist = self.segseg_intersection(ln1, ln2, ptlist, false)
 
             bcomplx = (chain.j != jbox.i && len(ptlist) > 0) ||

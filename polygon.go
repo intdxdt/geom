@@ -19,7 +19,7 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
     if len(rings) > 1 {
         holes = rings[1:]
     }
-    return &Polygon{shell, holes}
+    return &Polygon{Shell:shell, Holes:holes}
 }
 
 //create a new linestring from wkt string

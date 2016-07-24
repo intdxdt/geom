@@ -25,7 +25,6 @@ func TestPoint(t *testing.T) {
     p10 := NewPoint([]float64{3.9, 4.9, 9.8})
     p11 := NewPoint([]float64{3.9, 4.9, 9.8, 7.9})
 
-
     g.Describe("geom.point", func() {
         g.It("loads wkt as point", func() {
             g.Assert(p1.Type().IsPoint()).IsTrue()
@@ -40,6 +39,8 @@ func TestPoint(t *testing.T) {
             g.Assert(p0.IsZero()).IsTrue()
             g.Assert(p1.IsZero()).IsFalse()
             g.Assert(p1.Equals(p2)).IsTrue()
+            g.Assert(p1.Clone().Equals(p1)).IsTrue()
+            g.Assert(p1.Coordinates().Equals(p2)).IsTrue()
 
             g.Assert(p1.X()).Equal(4.0)
             g.Assert(p1.Y()).Equal(5.0)
@@ -55,9 +56,8 @@ func TestPoint(t *testing.T) {
             g.Assert(p9.X()).Equal(3.9)
             g.Assert(p9.Y()).Equal(4.9)
             g.Assert(p9.Z()).Equal(9.8)
-             g.Assert(p9.Equals(p10)).IsTrue()
+            g.Assert(p9.Equals(p10)).IsTrue()
             g.Assert(p9.Equals(p11)).IsTrue()
-
 
         })
 
@@ -117,7 +117,7 @@ func TestPoint(t *testing.T) {
             g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
             g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
             fmt.Println("-->", a.ConvexHull().Shell.ToArray())
-            g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45,0}, {3.87, 7.45,0}, {3.87, 7.45,0}})
+            g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45, 0}, {3.87, 7.45, 0}, {3.87, 7.45, 0}})
         })
     })
 

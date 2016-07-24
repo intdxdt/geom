@@ -66,13 +66,10 @@ func (self XCoordinates ) Sort(){
     sort.Sort(self)
 }
 
-
-
 //YCoordinates type for y sorting of boxes
 type YCoordinates struct{
     Coordinates
 }
-
 
 //Less sorts boxes by y
 func (o *YCoordinates) Less(i, j int) bool {
@@ -87,8 +84,23 @@ func (self *YCoordinates ) Sort(){
 
 
 //get copy of coordinates of linestring
+func (self *Point) Coordinates() *Point {
+    return self.Clone()
+}
+
+//get copy of coordinates of linestring
 func (self *LineString) Coordinates() []*Point {
     return CloneCoordinates(self.coordinates)
+}
+
+//get copy of coordinates of polygon
+func (self *Polygon) Coordinates() [][]*Point {
+    lns := self.AsLinear()
+    coords := make([][]*Point, len(lns))
+    for i , ln := range lns{
+        coords[i] = ln.Coordinates()
+    }
+    return coords
 }
 
 //checks if a point is a ring , by def every point is a ring
