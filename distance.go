@@ -94,12 +94,11 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 //Computes the distance between self and another linestring
 func dist_as_lines(self, other Geometry) float64 {
     var dist = math.NaN()
-    var bln = false
     var lns1 = self.AsLinear()
     var lns2 = other.AsLinear()
 
-    for i := 0; !bln && i < len(lns1); i++ {
-        for j := 0; !bln && j < len(lns2); j++ {
+    for i := 0; i < len(lns1); i++ {
+        for j := 0; j < len(lns2); j++ {
             d := lns1[i].line_line_dist(lns2[j])
             if math.IsNaN(dist) {
                 dist = d

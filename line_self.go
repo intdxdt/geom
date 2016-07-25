@@ -53,13 +53,13 @@ func (self *LineString) IsSimple() bool {
                 continue //start and end vertex for closed ring
             }
 
-            ln1 = self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
-            ln2 = self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
+            self.segs_inrange(&ln1, qbox, chain.i, chain.j)
+            self.segs_inrange(&ln2, qbox, jbox.i, jbox.j)
             self.segseg_intersection(ln1, ln2, ptset, false)
 
             bcomplx := ((
-                chain.j != jbox.i && !ptset.IsEmpty()) || (
-                chain.j == jbox.i && !ptset.IsEmpty())) //len(ptlist) > 1))
+                chain.j != jbox.i && ptset.Size() > 0) || (
+                chain.j == jbox.i && ptset.Size() > 1)) //len(ptlist) > 1))
             if bcomplx {
                 bln = false
             }
@@ -128,8 +128,8 @@ func (self *LineString) SelfIntersection() []*Point {
                 continue //start and end vertex for closed ring
             }
 
-            ln1 = self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
-            ln2 = self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
+            self.segs_inrange(&ln1, qbox, chain.i, chain.j)
+            self.segs_inrange(&ln2, qbox, jbox.i, jbox.j)
 
             self.segseg_intersection(ln1, ln2, ptset, true)
         }

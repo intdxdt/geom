@@ -7,34 +7,21 @@ import (
 
 //segments in range
 //xor - altenate segments if nothing is in range of box
-func (self *LineString) segs_inrange(seglist []*Segment,
-box *MBR, i, j int, extend, xor bool) []*Segment {
+func (self *LineString) segs_inrange(seglist *[]*Segment, box *MBR, i, j int){
+    *seglist = (*seglist)[:0]
 
-    //extend or refresh list
-    if !extend {
-        seglist = make([]*Segment, 0)
-    }
-
-    altsegs := make([]*Segment, 0)//, bool, seg
     for ; i < j; i++ {
         inters := box.IntersectsBounds(
             self.coordinates[i][:],
             self.coordinates[i + 1][:],
         )
-        var seg = &Segment{
-            self.coordinates[i],
-            self.coordinates[i + 1],
-        }
         if inters {
-            seglist = append(seglist, seg)
-        } else {
-            altsegs = append(altsegs, seg)
+            *seglist = append(*seglist, &Segment{
+                        A:self.coordinates[i],
+                        B:self.coordinates[i + 1],
+                    })
         }
     }
-    if xor && len(seglist) == 0 {
-        seglist = append(seglist, altsegs...)
-    }
-    return seglist
 }
 
 //Segment - Segment intersection of slice of arrays

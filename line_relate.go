@@ -16,8 +16,7 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     //if root mbrs intersect
     //var i, q, lnrange, ibox, qbox, qrng
     var othersegs = make([]*Segment, 0)
-    var selfsegs  = make([]*Segment, 0)
-
+    var selfsegs = make([]*Segment, 0)
 
     var inrange = self.index.Search(other.bbox.MBR)
 
@@ -31,15 +30,9 @@ func (self *LineString) Intersection(other *LineString) []*Point {
             qrng, ok := ibox.MBR.Intersection(qbox.MBR)
 
             if ok {
-                selfsegs = self.segs_inrange(
-                    selfsegs, qrng, ibox.i, ibox.j, false, false,
-                )
-                othersegs = other.segs_inrange(
-                    othersegs, qrng, qbox.i, qbox.j, false, false,
-                )
-                self.segseg_intersection(
-                    selfsegs, othersegs, ptset, true,
-                )
+                self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
+                other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+                self.segseg_intersection(selfsegs, othersegs, ptset, true)
             }
         }
     }
@@ -59,7 +52,7 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
     var bln = false
     //if root mbrs intersect
     var othersegs = make([]*Segment, 0)
-    var selfsegs  = make([]*Segment, 0)
+    var selfsegs = make([]*Segment, 0)
 
     var query = other.bbox.MBR
     var inrange = self.index.Search(query)
@@ -75,13 +68,8 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
             qbox := lnrange[q].GetItem().(*MonoMBR)
             qrng, _ := ibox.Intersection(qbox.MBR)
 
-            selfsegs = self.segs_inrange(
-                selfsegs, qrng, ibox.i, ibox.j, false, false,
-            )
-
-            othersegs = other.segs_inrange(
-                othersegs, qrng, qbox.i, qbox.j, false, false,
-            )
+            self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
+            other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
 
             if len(othersegs) > 0 && len(selfsegs) > 0 {
                 bln = self.segseg_intersects(selfsegs, othersegs)
@@ -94,7 +82,7 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
 
 //line intersect polygon rings
 func (self *LineString) intersects_polygon(lns []*LineString) bool {
-    var bln , intersects_hole, in_hole bool
+    var bln, intersects_hole, in_hole bool
     var rings = make([]*LinearRing, len(lns))
     for i, ln := range lns {
         rings[i] = &LinearRing{ln}
