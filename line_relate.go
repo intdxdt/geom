@@ -1,11 +1,16 @@
 package geom
 
+import (
+    "simplex/struct/sset"
+    "simplex/struct/item"
+)
+
 //intersection of self linestring with other
 func (self *LineString) Intersection(other *LineString) []*Point {
-    var ptlist = make([]*Point, 0)
+    var ptset = sset.NewSSet()
 
     if self.bbox.Disjoint(other.bbox.MBR) {
-        return ptlist //disjoint
+        return []*Point{} //disjoint
     }
 
     //if root mbrs intersect
@@ -13,17 +18,17 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     var othersegs = make([]*Segment, 0)
     var selfsegs  = make([]*Segment, 0)
 
-    var query = other.bbox
-    var inrange = self.index.Search(query.MBR)
+
+    var inrange = self.index.Search(other.bbox.MBR)
+
     for i := 0; i < len(inrange); i++ {
         //cur self box
         ibox := inrange[i].GetItem().(*MonoMBR)
         //search ln using ibox
-
-        lnrange := other.index.Search(query.MBR)
+        lnrange := other.index.Search(ibox.MBR)
         for q := 0; q < len(lnrange); q++ {
             qbox := lnrange[q].GetItem().(*MonoMBR)
-            qrng, ok := ibox.BBox().Intersection(qbox.BBox())
+            qrng, ok := ibox.MBR.Intersection(qbox.MBR)
 
             if ok {
                 selfsegs = self.segs_inrange(
@@ -32,13 +37,18 @@ func (self *LineString) Intersection(other *LineString) []*Point {
                 othersegs = other.segs_inrange(
                     othersegs, qrng, qbox.i, qbox.j, false, false,
                 )
-                ptlist = self.segseg_intersection(
-                    selfsegs, othersegs, ptlist, true,
+                self.segseg_intersection(
+                    selfsegs, othersegs, ptset, true,
                 )
             }
         }
     }
-    return ptlist  //debug
+
+    ptlist := make([]*Point, 0)
+    ptset.Each(func(o item.Item) {
+        ptlist = append(ptlist, o.(*Point))
+    })
+    return ptlist
 }
 
 

@@ -11,12 +11,14 @@ func (self *MBR) Width() float64 {
 func (self *MBR) Height() float64 {
     return self[y2] - self[y1]
 }
-
+//Area  of polygon
 func (self *MBR) Area() float64 {
     return self.Height() * self.Width()
 }
 
-
+func (self *MBR) IsPoint() bool{
+    return self.Height() == 0.0 && self.Width() == 0.0;
+}
 
 //Translate mbr  by change in x and y
 func (self *MBR)Translate(dx, dy float64) *MBR {

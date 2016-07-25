@@ -2,8 +2,7 @@ package geom
 
 import (
     . "simplex/geom/mbr"
-      "simplex/struct/sset"
-      "simplex/struct/item"
+    "simplex/struct/sset"
 )
 
 //segments in range
@@ -39,35 +38,21 @@ box *MBR, i, j int, extend, xor bool) []*Segment {
 }
 
 //Segment - Segment intersection of slice of arrays
-func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
-ptlist []*Point, extend bool) []*Point {
-
+func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptset *sset.SSet, extend bool) {
     if !extend {
-        ptlist = make([]*Point, 0)
-    }
-
-    set := sset.NewSSet()
-    for _, pt := range ptlist {
-        set.Add(pt)
+        ptset.Empty()
     }
 
     for a := 0; a < len(segsa); a++ {
         for b := 0; b < len(segsb); b++ {
-            coord, ok := segsa[a].Intersection(segsb[b], false)
-            if !ok {
-                continue
-            }
-            for _, pt := range coord {
-                set.Add(pt)
+            if coord, ok := segsa[a].Intersection(
+                segsb[b], false); ok {
+                for _, pt := range coord {
+                    ptset.Add(pt)
+                }
             }
         }
     }
-
-    ptlist = make([]*Point, 0)
-    set.Each(func(o item.Item) {
-        ptlist = append(ptlist, o.(*Point))
-    })
-    return ptlist
 }
 
 

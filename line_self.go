@@ -19,10 +19,10 @@ func (self *LineString) IsComplex() bool {
 //computes whether linestring is simple
 func (self *LineString) IsSimple() bool {
     var bln = true//, bcomplx, chain, inters, jbox, qbox
+    var ptset = NewSSet()
     var cache = make(map[string]bool)
     var ln1 = make([]*Segment, 0)
     var ln2 = make([]*Segment, 0)
-    var ptlist = make([]*Point, 0)
     var query   *MBR
     var isring = self.IsRing()
     var v_i, v_j = 0, len(self.coordinates) - 1
@@ -44,29 +44,22 @@ func (self *LineString) IsSimple() bool {
             self.cashe_ij(cache, chain, jbox, true)
             qbox, ok := chain.MBR.Intersection(jbox.MBR)
 
-            if (ok == false) ||
-                (qbox.Area() == 0.0 && chain.j == jbox.i) ||
-                (qbox.Area() == 0.0 && chain.i == jbox.j) {
-                continue //non overlapping && contiguous
+            if (ok == false) || ( chain.j == jbox.i) || ( chain.i == jbox.j) {
+                continue //non overlapping || contiguous
             }
+
             if (isring &&  v_i == chain.i  && v_j == jbox.j) ||
                 (isring &&  v_j == chain.j  && v_i == jbox.i) {
                 continue //start and end vertex for closed ring
             }
 
-            ln1 = self.segs_inrange(
-                ln1, qbox, chain.i, chain.j, false, false,
-            )
-            ln2 = self.segs_inrange(
-                ln2, qbox, jbox.i, jbox.j, false, false,
-            )
-            ptlist = self.segseg_intersection(
-                ln1, ln2, ptlist, false,
-            )
+            ln1 = self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
+            ln2 = self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
+            self.segseg_intersection(ln1, ln2, ptset, false)
 
             bcomplx := ((
-                chain.j != jbox.i && len(ptlist) > 0) || (
-                chain.j == jbox.i && len(ptlist) > 1))
+                chain.j != jbox.i && !ptset.IsEmpty()) || (
+                chain.j == jbox.i && !ptset.IsEmpty())) //len(ptlist) > 1))
             if bcomplx {
                 bln = false
             }
@@ -98,17 +91,17 @@ func (self *LineString)  cashe_key(box1, box2 *MonoMBR) string {
 // self intersection coordinates
 func (self *LineString) SelfIntersection() []*Point {
 
+    var ptset = NewSSet()
     var ckey string
     var cache = make(map[string]bool)
     var ln1 = make([]*Segment, 0)
     var ln2 = make([]*Segment, 0)
-    var ptlist = make([]*Point, 0)
 
     var query *MBR
     var chain *MonoMBR
-    var bcomplx bool
 
-    var selfinters = NewSSet()
+    var isring = self.IsRing()
+    var v_i, v_j = 0, len(self.coordinates) - 1
 
     for i := 0; i < len(self.chains); i++ {
         chain = self.chains[i]
@@ -124,35 +117,27 @@ func (self *LineString) SelfIntersection() []*Point {
             }
 
             self.cashe_ij(cache, chain, jbox, true)
-            qbox, bln := chain.MBR.Intersection(jbox.MBR)
-            if bln == false && chain.j == jbox.i {
-                continue//non overlapping && contiguous
+            qbox, ok := chain.MBR.Intersection(jbox.MBR)
+
+            if (ok == false) || (chain.j == jbox.i) || (chain.i == jbox.j) {
+                continue //non overlapping || contiguous
+            }
+
+            if (isring &&  v_i == chain.i  && v_j == jbox.j) ||
+                (isring &&  v_j == chain.j  && v_i == jbox.i) {
+                continue //start and end vertex for closed ring
             }
 
             ln1 = self.segs_inrange(ln1, qbox, chain.i, chain.j, false, false)
             ln2 = self.segs_inrange(ln2, qbox, jbox.i, jbox.j, false, false)
-            ptlist = self.segseg_intersection(ln1, ln2, ptlist, false)
 
-            bcomplx = (chain.j != jbox.i && len(ptlist) > 0) ||
-                (chain.j == jbox.i && len(ptlist) > 1)
-
-            if bcomplx {
-                for _, p := range ptlist {
-                    selfinters.Add(p)
-                }
-            }
+            self.segseg_intersection(ln1, ln2, ptset, true)
         }
     }
 
     var ptinters = make([]*Point, 0)
-    selfinters.Each(func(o item.Item) {
+    ptset.Each(func(o item.Item) {
         ptinters = append(ptinters, o.(*Point))
     })
     return ptinters
 }
-
-
-
-
-
-

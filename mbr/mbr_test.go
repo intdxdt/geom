@@ -54,6 +54,7 @@ func TestMBR(t *testing.T) {
 
             g.Assert(nm00[x1] == 0.0 && nm00[y1] == 0.0).IsTrue()
             g.Assert(nm00[x2] == 0.0 && nm00[y2] == 0.0).IsTrue()
+            g.Assert(nm00.IsPoint()).IsTrue()
 
             g.Assert(m1.Intersects(m2)).IsFalse()
             _, success = m1.Intersection(m2)
