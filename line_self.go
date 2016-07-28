@@ -3,9 +3,10 @@ package geom
 import (
     . "simplex/geom/mbr"
     . "simplex/struct/sset"
-    "simplex/struct/item"
+    . "simplex/struct/item"
     "strconv"
 )
+
 
 //get geometry type
 func (self *LineString) Type() *geoType {
@@ -44,7 +45,7 @@ func (self *LineString) IsSimple() bool {
             self.cashe_ij(cache, chain, jbox, true)
             qbox, ok := chain.MBR.Intersection(jbox.MBR)
 
-            if (ok == false) || ( chain.j == jbox.i) || ( chain.i == jbox.j) {
+            if !(ok) || ( chain.j == jbox.i) || ( chain.i == jbox.j) {
                 continue //non overlapping || contiguous
             }
 
@@ -92,6 +93,7 @@ func (self *LineString)  cashe_key(box1, box2 *MonoMBR) string {
 func (self *LineString) SelfIntersection() []*Point {
 
     var ptset = NewSSet()
+    var tmpset = NewSSet()
     var ckey string
     var cache = make(map[string]bool)
     var ln1 = make([]*Segment, 0)
@@ -101,7 +103,7 @@ func (self *LineString) SelfIntersection() []*Point {
     var chain *MonoMBR
 
     var isring = self.IsRing()
-    var v_i, v_j = 0, len(self.coordinates) - 1
+    var vi, vj = 0, len(self.coordinates) - 1
 
     for i := 0; i < len(self.chains); i++ {
         chain = self.chains[i]
@@ -119,25 +121,47 @@ func (self *LineString) SelfIntersection() []*Point {
             self.cashe_ij(cache, chain, jbox, true)
             qbox, ok := chain.MBR.Intersection(jbox.MBR)
 
-            if (ok == false) || (chain.j == jbox.i) || (chain.i == jbox.j) {
+            ispoint := qbox.IsPoint()
+            iscontiguous := (chain.j == jbox.i)
+            is_end_contiguous := (vi == chain.i  && vj == jbox.j)
+
+            if !ok || (ispoint && iscontiguous) {
                 continue //non overlapping || contiguous
             }
 
-            if (isring &&  v_i == chain.i  && v_j == jbox.j) ||
-                (isring &&  v_j == chain.j  && v_i == jbox.i) {
+            if ispoint && isring &&  is_end_contiguous {
                 continue //start and end vertex for closed ring
             }
 
             self.segs_inrange(&ln1, qbox, chain.i, chain.j)
             self.segs_inrange(&ln2, qbox, jbox.i, jbox.j)
+            self.segseg_intersection(ln1, ln2, tmpset, false)
 
-            self.segseg_intersection(ln1, ln2, ptset, true)
+            if !tmpset.IsEmpty() {
+                for _, v := range tmpset.Values() {
+                    ptset.Add(&InterPoint{
+                        Pt : v.(*Point),
+                        I:chain.i, J:chain.j, K:jbox.i, L:jbox.j,
+                    })
+                }
+            }
+            //overlaping contiguous mono bboxes
+            if !ispoint  && (iscontiguous || (isring && is_end_contiguous)) {
+                var pt = &InterPoint{Pt:nil, I:chain.i, J:chain.j, K:jbox.i, L:jbox.j}
+                if (isring &&  is_end_contiguous) {
+                    pt.Pt = self.coordinates[chain.i]
+                    ptset.Remove(pt)
+                } else if iscontiguous {
+                    pt.Pt = self.coordinates[chain.j]
+                    ptset.Remove(pt)
+                }
+            }
         }
     }
 
     var ptinters = make([]*Point, 0)
-    ptset.Each(func(o item.Item) {
-        ptinters = append(ptinters, o.(*Point))
+    ptset.Each(func(o Item) {
+        ptinters = append(ptinters, o.(*InterPoint).Pt)
     })
     return ptinters
 }
