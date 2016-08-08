@@ -16,7 +16,6 @@ func pop_mono_mbr(a []*MonoMBR) (*MonoMBR, []*MonoMBR) {
     return v, a[:n]
 }
 
-
 //pop chain from chainl list
 func pop_coords(a []*Point) (*Point, []*Point) {
     var v *Point
@@ -28,7 +27,6 @@ func pop_coords(a []*Point) (*Point, []*Point) {
     v, a[n] = a[n], nil
     return v, a[:n]
 }
-
 
 //compare bbox, ptr
 func is_bbox(a *MBR, b *MBR) bool {

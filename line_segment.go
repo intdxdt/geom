@@ -25,7 +25,8 @@ func (self *LineString) segs_inrange(seglist *[]*Segment, box *MBR, i, j int){
 }
 
 //Segment - Segment intersection of slice of arrays
-func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptset *sset.SSet, extend bool) {
+func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
+ptset *sset.SSet, extend bool) {
     if !extend {
         ptset.Empty()
     }

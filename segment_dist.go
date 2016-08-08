@@ -27,7 +27,7 @@ func (self *Segment) Distance(other *Segment) float64 {
         is_aspt_b = other.A.Equals(other.B)
 
         if is_aspt_a && is_aspt_b {
-            dist = self.A.Sub(other.B).Magnitude()
+            dist = self.A.Magnitude(other.B)
         } else if is_aspt_a || is_aspt_b {
             var ln *Segment
 
@@ -51,8 +51,9 @@ func (self *Segment) Distance(other *Segment) float64 {
         }
 
     } else {
-        mua = numera / denom
-        mub = numerb / denom
+        //if close to zero or one , snap
+        mua = snap_to_zero_or_one(numera / denom)
+        mub = snap_to_zero_or_one(numerb / denom)
 
         if mua < 0 || mua > 1 || mub < 0 || mub > 1 {
             //the is intersection along the the segments
@@ -92,14 +93,14 @@ func (self *Segment) Distance(other *Segment) float64 {
 func (self *Segment) segpt_mindist(pt *Point) float64 {
     var dist = math.NaN()
     var cPt *Point
-    var dln = self.B.Sub(self.A)
-    var dx, dy = dln[x], dln[y]
+    var dab = self.B.Sub(self.A)
 
-    if dln.IsZero() {
+    if dab.IsZero() {
         //line with zero length
-        dist = pt.Sub(self.A).Magnitude()
+        dist = pt.Magnitude(self.A)
     } else {
-        var u = pt.Sub(self.A).DotProduct(dln) / dln.SquareMagnitude()
+        var dx, dy = dab[x], dab[y]
+        var u = pt.Sub(self.A).DotProduct(dab) / (dx * dx + dy * dy)
 
         if u < 0 {
             cPt = self.A
@@ -108,7 +109,7 @@ func (self *Segment) segpt_mindist(pt *Point) float64 {
         } else {
             cPt = NewPointXY(self.A[x] + u * dx, self.A[y] + u * dy)
         }
-        dist = pt.Sub(cPt).Magnitude()
+        dist = pt.Magnitude(cPt)
     }
 
     return dist

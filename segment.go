@@ -31,9 +31,9 @@ func (self *Segment) Intersects(other *Segment, extln bool) bool {
     x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
 
     //snap to zero if near -0 or 0
-    snap_to_zero(&a)
-    snap_to_zero(&b)
-    snap_to_zero(&d)
+    a = snap_to_zero(a)
+    b = snap_to_zero(b)
+    d = snap_to_zero(d)
 
     if d == 0 {
         if a == 0.0 && b == 0.0 {
@@ -44,11 +44,12 @@ func (self *Segment) Intersects(other *Segment, extln bool) bool {
         return bln
     }
     //intersection along the the seg or extended seg
-    ua := a / d
-    ub := b / d
+    ua := snap_to_zero_or_one(a / d)
+    ub := snap_to_zero_or_one(b / d)
+
     ua_0_1 := (0.0 <= ua  && ua <= 1.0)
     ub_0_1 := (0.0 <= ub  && ub <= 1.0)
-    bln = ua_0_1 && ub_0_1 || extln
+    bln = (ua_0_1 && ub_0_1) || extln
     return bln
 }
 
@@ -63,9 +64,9 @@ func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
     x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
 
     //snap to zero if near -0 or 0
-    snap_to_zero(&a)
-    snap_to_zero(&b)
-    snap_to_zero(&d)
+    a = snap_to_zero(a)
+    b = snap_to_zero(b)
+    d = snap_to_zero(d)
 
     // Are the line coincident?
     if d == 0 {
@@ -84,8 +85,9 @@ func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
         return coords, bln
     }
     // is the intersection along the the segments
-    ua := a / d
-    ub := b / d
+    ua := snap_to_zero_or_one(a / d)
+    ub := snap_to_zero_or_one(b / d)
+
     ua_0_1 := 0.0 <= ua  && ua <= 1.0
     ub_0_1 := 0.0 <= ub  && ub <= 1.0
 
@@ -118,10 +120,21 @@ float64, float64, float64, float64) {
 }
 
 //clamp to zero if float is near zero
-func snap_to_zero(v *float64) {
-    if FloatEqual(*v, 0.0) {
-        *v = 0.0
+func snap_to_zero(v float64) float64 {
+    if FloatEqual(v, 0.0) {
+        v = 0.0
     }
+    return v
+}
+
+//clamp to zero or one
+func snap_to_zero_or_one(v float64) float64 {
+    if FloatEqual(v, 0.0) {
+        v = 0.0
+    } else if FloatEqual(v, 1.0) {
+        v = 1.0
+    }
+    return v
 }
 
 //updates coords that are in bounds

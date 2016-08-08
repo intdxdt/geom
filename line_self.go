@@ -122,7 +122,7 @@ func (self *LineString) SelfIntersection() []*Point {
             qbox, ok := chain.MBR.Intersection(jbox.MBR)
 
             ispoint := qbox.IsPoint()
-            iscontiguous := (chain.j == jbox.i)
+            iscontiguous := (chain.j == jbox.i) || ( chain.i == jbox.j)
             is_end_contiguous := (vi == chain.i  && vj == jbox.j)
 
             if !ok || (ispoint && iscontiguous) {

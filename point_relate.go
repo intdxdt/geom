@@ -26,12 +26,14 @@ func (pt *Point) Disjoint(point *Point) bool {
 //         0 pt on the line
 //         1 pt right of the line
 func (pt *Point) SideOf(a, b *Point) *Side {
-    v := pt.CrossProduct(a, b)
+    v := pt.CCW(a, b)
 
     if FloatEqual(v, 0.0) {
         v = 0.0
     }
-    var o = NewSide()
+
+    var o = NewSide().AsOn()
+
     if v > 0 {
         o.AsLeft()
     } else if v < 0 {
@@ -57,37 +59,3 @@ func (self *Point) Compare(o Item) int {
     }
     return 1
 }
-
-
-//compare points as items - x & y ordering
-//func (self *Point) Compare(o Item) int {
-//    pt := o.(*Point)
-//    dx := self[x] - pt[x]
-//    dy := self[y] - pt[y]
-//
-//    //check if close enougth ot zero
-//    if FloatEqual(dx, 0.0) && FloatEqual(dy, 0.0) {
-//        return 0
-//    } else if dx < 0 && dy < 0 {
-//        return -1
-//    } else if dy > 0 && dy > 0 {
-//        return 1
-//    }
-//    //check lexical
-//    d := self[x] - pt[x]
-//    if FloatEqual(self[x], pt[x]) {
-//        //x's are close enougth to each other
-//        d = self[y] - pt[y]
-//    } else {
-//        d = self[x] - pt[x];
-//    }
-//    if FloatEqual(d, 0.0) {
-//        //check if close enougth ot zero
-//        return 0
-//    } else if d < 0 {
-//        return -1
-//    }
-//    return 1
-//}
-
-

@@ -12,5 +12,5 @@ func NewLinearRing(coordinates []*Point) *LinearRing {
             coords = append(coords, coordinates[0].Clone())
         }
     }
-    return &LinearRing{NewLineString(coords)}
+    return &LinearRing{NewLineString(coords, false)}
 }

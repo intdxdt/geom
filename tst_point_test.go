@@ -141,19 +141,19 @@ func TestMagDist(t *testing.T) {
         g.It("should test vector magnitude and distance", func() {
             a := &Point{0, 0 }
             b := &Point{3, 4 }
-
-            g.Assert(NewPointXY(1, 1).Magnitude()).Equal(math.Sqrt2)
-            g.Assert(Round(NewPointXY(-3, 2).Magnitude(), 8)).Equal(
+            z := NewPointXY(0, 0)
+            g.Assert(NewPointXY(1, 1).Magnitude(z)).Equal(math.Sqrt2)
+            g.Assert(Round(NewPointXY(-3, 2).Magnitude(z), 8)).Equal(
                 Round(3.605551275463989, 8),
             )
 
-            g.Assert(NewPointXY(3, 4).Magnitude()).Equal(5.0)
+            g.Assert(NewPointXY(3, 4).Magnitude(z)).Equal(5.0)
             g.Assert(a.Distance(b)).Equal(5.0)
 
-            g.Assert(NewPointXY(3, 4).SquareMagnitude()).Equal(25.0)
+            g.Assert(NewPointXY(3, 4).SquareMagnitude(z)).Equal(25.0)
             g.Assert(a.SquareDistance(b)).Equal(25.0)
 
-            g.Assert(NewPointXY(4.587, 0.).Magnitude()).Equal(4.587)
+            g.Assert(NewPointXY(4.587, 0.).Magnitude(z)).Equal(4.587)
         })
     })
 
@@ -165,21 +165,6 @@ func TestDotProduct(t *testing.T) {
         g.It("should test dot product", func() {
             dot_prod := NewPointXY(1.2, -4.2).DotProduct(NewPointXY(1.2, -4.2))
             g.Assert(19.08).Equal(Round(dot_prod, 8))
-        })
-    })
-
-}
-
-func TestUnit(t *testing.T) {
-    g := Goblin(t)
-    g.Describe("Point -  Unit Vector", func() {
-        g.It("should test unit vector", func() {
-            v := &Point{-3, 2}
-            unit_v := v.UnitVector()
-            for i, v := range *unit_v {
-                (*unit_v)[i] = Round(v, 6)
-            }
-            g.Assert(unit_v).Equal(&Point{-0.83205, 0.5547})
         })
     })
 

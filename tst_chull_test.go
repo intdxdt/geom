@@ -89,8 +89,8 @@ func TestCHull(t *testing.T) {
             hullEql(g, SimpleHull([]*Point{{200, 200}}), []*Point{{200, 200}}, )
         })
         g.It("chull of  two points is empty", func() {
-            hullEql(g, ConvexHull([]*Point{{200, 200}, {760, 300}}), []*Point{{200, 200}, {760, 300}}, )
-            hullEql(g, SimpleHull([]*Point{{200, 200}, {760, 300}}), []*Point{{200, 200}, {760, 300}}, )
+            hullEql(g, ConvexHull([]*Point{{200, 200}, {760, 300}}, false), []*Point{{200, 200}, {760, 300}}, )
+            hullEql(g, SimpleHull([]*Point{{200, 200}, {760, 300}}, false), []*Point{{200, 200}, {760, 300}}, )
         })
         g.It("chull for three points", func() {
             ch := ConvexHull([]*Point{{200, 200}, {760, 300}, {500, 500}})

@@ -24,14 +24,8 @@ func (self *Point) DotProduct(other *Point) float64 {
 //i.e. z-component of their 3D cross product.
 //Returns a positive value, if OAB makes a counter-clockwise turn,
 //negative for clockwise turn, and zero if the points are collinear.
-func (o *Point) CrossProduct(a, b *Point) float64 {
+func (o *Point) CCW(a, b *Point) float64 {
     return (b[x] - a[x]) * (o[y] - a[y]) - (b[y] - a[y]) * (o[x] - a[x])
-}
-
-//Unit vector of point
-func (self *Point) UnitVector() *Point {
-    m := self.Magnitude()
-    return NewPointXY(self[x] / m, self[y] / m)
 }
 
 

@@ -1,6 +1,6 @@
-#Geometry Package
+# Geometry Package
 
-#Limitations of JTS - Family (Geos , Shapely)
+# Limitations of JTS - Family (Geos , Shapely)
    *Lack for suport for complex polygons
 
         

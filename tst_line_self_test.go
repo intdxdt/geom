@@ -14,6 +14,10 @@ func TestLineStringSelf(t *testing.T) {
     wkt4 := "LINESTRING ( 500 584, 497.93644268504266 592.2542292598295, 496 600, 494 608, 492 616, 490 624, 514 620, 526 608, 530 596, 526 576, 504 568, 502.0248985499647 575.9004058001412, 500 584 )"
     wkt5 := "LINESTRING ( 500 584, 497.93644268504266 592.2542292598295, 496 600, 494 608, 492 616, 490 624, 514 620, 526 608, 530 596, 496 600, 504 594, 504 590, 488 582, 527.5338370518444 583.6691852592224, 526 578, 520 572, 504 568, 502.0248985499647 575.9004058001412, 500 584 )"
 
+    wkt6 := "LINESTRING ( 2812022 4493396, 2812044 4493406, 2812022 4493396 )"
+    wkt7 := "LINESTRING ( 2812020 4493398, 2812044 4493406, 2812008 4493394 )"
+
+
     g.Describe("interPnt", func() {
         g.It("test self intersection", func() {
             pt := NewPointXY(-8, -2)
@@ -49,6 +53,12 @@ func TestLineStringSelf(t *testing.T) {
 
             ln5 := NewLineStringFromWKT(wkt5)
             g.Assert(len(ln5.SelfIntersection())).Equal(3)
+
+            ln6 := NewLineStringFromWKT(wkt6)
+            g.Assert(len(ln6.SelfIntersection())).Equal(0)
+
+            ln7 := NewLineStringFromWKT(wkt7)
+            g.Assert(len(ln7.SelfIntersection())).Equal(1)
         })
     })
 

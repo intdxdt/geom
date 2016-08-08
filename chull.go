@@ -49,9 +49,17 @@ package geom
 // description computes the convex hull of a point set.
 // param points An array of [X, Y] coordinates
 
-func ConvexHull(points []*Point) []*Point {
+func ConvexHull(points []*Point, clone_coords ...bool) []*Point {
+    var clone = true
+    if len(clone_coords) > 0 {
+        clone = clone_coords[0]
+    }
+    var pnts = points
     //copy points into mutable container
-    pnts := CloneCoordinates(points)
+    if clone {
+        pnts = CloneCoordinates(points)
+    }
+
     //trivial case less than three coordinates
     if len(points) < 3 {
         return pnts
@@ -60,12 +68,12 @@ func ConvexHull(points []*Point) []*Point {
 
     XYCoordinates{pnts}.Sort()
 
-    var lower   = make(Coordinates, 0)
-    var upper   = make(Coordinates, 0)
-    lower       = build_hull(lower, pnts, 0, 1, N)
-    upper       = build_hull(upper, pnts, N - 1, -1, -1)
-    _, upper    = upper.Pop()
-    _, lower    = lower.Pop()
+    var lower = make(Coordinates, 0)
+    var upper = make(Coordinates, 0)
+    lower = build_hull(lower, pnts, 0, 1, N)
+    upper = build_hull(upper, pnts, N - 1, -1, -1)
+    _, upper = upper.Pop()
+    _, lower = lower.Pop()
 
     for _, v := range upper {
         lower = append(lower, v)
@@ -98,8 +106,16 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
 //Return: h   = the number of points in H[]
 //http://geomalgorithms.com/a12-_hull-3.html
 
-func SimpleHull(coords []*Point) []*Point {
-    coords = CloneCoordinates(coords)
+func SimpleHull(coords []*Point, clone_coords ...bool) []*Point {
+    var clone = true
+    if len(clone_coords) > 0 {
+        clone = clone_coords[0]
+    }
+    //copy points into mutable container
+    if clone {
+        coords = CloneCoordinates(coords)
+    }
+
     //trivial case less than three coordinates
     if len(coords) < 3 {
         return coords

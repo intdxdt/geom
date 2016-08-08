@@ -15,7 +15,7 @@ func (self *Point) Distance(other Geometry) float64 {
     if self.Intersects(other) {
         dist = 0.0
     } else if ispoint {
-        dist = self.Sub(pt).Magnitude()
+        dist = self.Magnitude(pt)
     } else {
         dist = dist_as_lines(self, other)
     }

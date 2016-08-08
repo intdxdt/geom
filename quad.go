@@ -62,11 +62,11 @@ func quadrants(g, other Geometry) []Geometry {
     se = NewPolygon([]*Point{mat[0][2], mat[1][2], mat[1][3], mat[0][3], mat[0][2]})
 
     if ispoint {
-        nn = NewLineString([]*Point{mat[2][1], mat[3][1]})
-        ww = NewLineString([]*Point{mat[1][0], mat[1][1]})
+        nn = NewLineString([]*Point{mat[2][1], mat[3][1]}, false)
+        ww = NewLineString([]*Point{mat[1][0], mat[1][1]}, false)
         ii = mat[1][1].Clone()
-        ee = NewLineString([]*Point{mat[1][2], mat[1][3]})
-        ss = NewLineString([]*Point{mat[0][1], mat[1][1]})
+        ee = NewLineString([]*Point{mat[1][2], mat[1][3]}, false)
+        ss = NewLineString([]*Point{mat[0][1], mat[1][1]}, false)
     } else {
         nn = NewPolygon([]*Point{mat[2][1], mat[3][1], mat[3][2], mat[2][2], mat[2][1]})
         ww = NewPolygon([]*Point{mat[1][0], mat[2][0], mat[2][1], mat[1][1], mat[1][0]})

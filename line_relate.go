@@ -124,8 +124,9 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 // TODO:Improve from O(n2) - although expects few number of segs from index selection
 func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
     var bln = false
-    for a := 0; !bln && a < len(segsa); a++ {
-        for b := 0; !bln && b < len(segsb); b++ {
+    var na, nb = len(segsa), len(segsb)
+    for a := 0; !bln && a < na; a++ {
+        for b := 0; !bln && b < nb; b++ {
             bln = segsa[a].Intersects(segsb[b], false)
         }
     }
