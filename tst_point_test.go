@@ -6,7 +6,6 @@ import (
     . "simplex/geom/mbr"
     "testing"
     "math"
-    "fmt"
 )
 
 func TestPoint(t *testing.T) {
@@ -116,7 +115,6 @@ func TestPoint(t *testing.T) {
             a := Point{3.87, 7.45}
             g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
             g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
-            fmt.Println("-->", a.ConvexHull().Shell.ToArray())
             g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45, 0}, {3.87, 7.45, 0}, {3.87, 7.45, 0}})
         })
     })

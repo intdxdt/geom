@@ -3,7 +3,6 @@ package geom
 import (
     . "github.com/franela/goblin"
     . "simplex/util/math"
-    "fmt"
     "math"
     "testing"
 )
@@ -87,12 +86,6 @@ func TestSegDist(t *testing.T) {
 
             var n =  NewPointXY(1, 3)
             var o =  NewPointXY(6, 5)
-
-            fmt.Println(a)
-            fmt.Println(b)
-            fmt.Println(c)
-            fmt.Println(d)
-
             var expects = Round(1.1094003924504583, 12);
 
             seg_ab := NewSegment(a, b)

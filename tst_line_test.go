@@ -5,7 +5,6 @@ import (
     . "simplex/geom/mbr"
     . "simplex/util/math"
     "testing"
-    "fmt"
 )
 
 func TestLineString(t *testing.T) {
@@ -100,7 +99,6 @@ func TestLineString(t *testing.T) {
         g.It("should test wkt string", func() {
             lnstr := "LINESTRING (5.6 7.9, 5.6 8.9, 6.6 8.9, 6.6 7.9, 5.6 7.9)"
             g.Assert(ln.WKT()).Eql(lnstr)
-            fmt.Println("-->", ln.String())
         })
     })
 }
@@ -128,15 +126,6 @@ func TestLineStringRelate(t *testing.T) {
     plye := NewPolygonFromWKT(plywkte)
     plyf := NewPolygonFromWKT(plywktf)
     plyg := NewPolygonFromWKT(plywktg)
-
-    //fmt.Println(lna)
-    //fmt.Println(lnb)
-    //fmt.Println(plyb)
-    //fmt.Println(plyc)
-    fmt.Println("plyd :", plyd)
-    fmt.Println("plye :", plye)
-    fmt.Println("plyf :", plyf)
-    fmt.Println("plyg :", plyg)
 
     var pnt_null    *Point
     var ln_null     *LineString

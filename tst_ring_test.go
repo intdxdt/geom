@@ -4,7 +4,6 @@ import (
     . "github.com/franela/goblin"
     . "simplex/util/math"
     "testing"
-    "fmt"
 )
 
 func TestLinearRing(t *testing.T) {
@@ -31,8 +30,6 @@ func TestLinearRing(t *testing.T) {
     var ln4 = NewLineStringFromWKT(wkt2)
 
     rng0 := NewLinearRing([]*Point{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}})
-
-    fmt.Println(rng0.String())
 
     //points in relation to ln1
     pt0 := &Point{2.42747717129387, 4.4873795209295695} //outside
@@ -64,9 +61,6 @@ func TestLinearRing(t *testing.T) {
             g.Assert(rng0.PointCompletelyInRing(pt1)).Equal(false)
             g.Assert(rng0.PointCompletelyInRing(pt2)).Equal(false)
             g.Assert(rng0.PointCompletelyInRing(pt3)).Equal(true)
-
-            fmt.Println("pt1  :", pt1)
-            fmt.Println("rng0 :", rng0)
 
             g.Assert(rng0.Intersects(pt0)).Equal(false)
             g.Assert(rng0.Intersects(pt1)).Equal(true)
