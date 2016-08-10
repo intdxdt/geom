@@ -44,7 +44,6 @@ func (self *LineString) Intersection(other *LineString) []*Point {
     return ptlist
 }
 
-
 //Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
 func (self *LineString) intersects_linestring(other *LineString) bool {
@@ -79,7 +78,6 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
     return bln
 }
 
-
 //line intersect polygon rings
 func (self *LineString) intersects_polygon(lns []*LineString) bool {
     var bln, intersects_hole, in_hole bool
@@ -110,16 +108,6 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
     return bln
 }
 
-
-////test intersects of self line string with point
-//func (self *LineString) IntersectsPoint(other *Point) bool {
-//    if other == nil {
-//        return false
-//    }
-//    return self.Intersects(other.AsLineString())
-//}
-
-
 // Tests whether a collection of segments from line a and line b intersects
 // TODO:Improve from O(n2) - although expects few number of segs from index selection
 func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
@@ -132,8 +120,3 @@ func (self *LineString)segseg_intersects(segsa []*Segment, segsb []*Segment) boo
     }
     return bln
 }
-
-
-
-
-

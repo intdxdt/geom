@@ -1,33 +1,31 @@
 package geom
 
+import (
+    "simplex/cart2d"
+)
+
 //Add creates a new point by adding to other point
-func (self *Point) Add(pt *Point) *Point {
-    return &Point{self[x] + pt[x], self[y] + pt[y]}
+func (a *Point) Add(b cart2d.Cart2D) *Point {
+    cx, cy := cart2d.Add(a, b)
+    return NewPointXY(cx, cy)
 }
 
 //Sub creates a new point by adding to other point
-func (self *Point) Sub(pt *Point) *Point {
-    return &Point{self[x] - pt[x], self[y] - pt[y]}
+func (a *Point) Sub(b cart2d.Cart2D) *Point {
+    cx, cy := cart2d.Sub(a, b)
+    return NewPointXY(cx, cy)
 }
 
 //KProduct create new point by multiplying point by a scaler  k
-func (self *Point) KProduct(k float64) *Point {
-    return &Point{k * self[x], k * self[y]}
+func (pt *Point) KProduct(k float64) *Point {
+    cx, cy := cart2d.KProduct(pt, k)
+    return NewPointXY(cx, cy)
 }
 
 //Dot Product of two points as vectors
-func (self *Point) DotProduct(other *Point) float64 {
-    return (self[x] * other[x]) + (self[y] * other[y])
+func (pt *Point) DotProduct(other *Point) float64 {
+    return cart2d.DotProduct(pt, other)
 }
-
-//2D cross product of OA and OB vectors,
-//i.e. z-component of their 3D cross product.
-//Returns a positive value, if OAB makes a counter-clockwise turn,
-//negative for clockwise turn, and zero if the points are collinear.
-func (o *Point) CCW(a, b *Point) float64 {
-    return (b[x] - a[x]) * (o[y] - a[y]) - (b[y] - a[y]) * (o[x] - a[x])
-}
-
 
 //Neg create new point by finding the negation of point
 func (self *Point) Neg() *Point {

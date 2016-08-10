@@ -4,6 +4,7 @@ import (
     . "simplex/util/math"
     . "simplex/struct/item"
     . "simplex/side"
+    "simplex/cart2d"
 )
 
 //Equals evaluates whether two points are the same
@@ -17,29 +18,6 @@ func (pt *Point) Equals(point *Point) bool {
 //Disjoint evaluates whether points are not coincident
 func (pt *Point) Disjoint(point *Point) bool {
     return !(pt.Intersects(point))
-}
-
-//SideOf point (Left|On|Right : -1, 0, 1 ) to an infinite line through a and b
-//Input:  two points a, b forming begin and end of line segment
-//Return: Side Obj with Side.s :
-//        -1 pt is left of the line through a and b
-//         0 pt on the line
-//         1 pt right of the line
-func (pt *Point) SideOf(a, b *Point) *Side {
-    v := pt.CCW(a, b)
-
-    if FloatEqual(v, 0.0) {
-        v = 0.0
-    }
-
-    var o = NewSide().AsOn()
-
-    if v > 0 {
-        o.AsLeft()
-    } else if v < 0 {
-        o.AsRight()
-    }
-    return o
 }
 
 //compare points as items - x | y ordering
@@ -58,4 +36,18 @@ func (self *Point) Compare(o Item) int {
         return -1
     }
     return 1
+}
+
+//position of C relative to line AB
+func (c *Point) SideOf(a, b *Point) *Side {
+    s := NewSide()
+    ccw := cart2d.CCW(a, b, c)
+    if FloatEqual(ccw, 0) {
+        s.AsOn()
+    } else if (ccw > 0) {
+        s.AsLeft()
+    } else if (ccw < 0) {
+        s.AsRight()
+    }
+    return s
 }
