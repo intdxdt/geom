@@ -19,8 +19,6 @@ func NewMBR(minx, miny, maxx, maxy float64) *MBR {
     return &MBR{minx, miny, maxx, maxy}
 }
 
-
-
 func (self *MBR ) Clone() *MBR {
     return &MBR{self[x1], self[y1], self[x2], self[y2]}
 }

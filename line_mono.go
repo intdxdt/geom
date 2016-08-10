@@ -33,7 +33,6 @@ func new_mono_mbr(box  *MBR) *MonoMBR {
     return &MonoMBR{box, null, null}
 }
 
-
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
@@ -129,5 +128,3 @@ func xy_sign(v float64) int {
     }
     return i
 }
-
-

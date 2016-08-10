@@ -88,7 +88,6 @@ func (self *Segment) Distance(other *Segment) float64 {
     return dist
 }
 
-
 //Minimum distance from segement to point
 func (self *Segment) segpt_mindist(pt *Point) float64 {
     var dist = math.NaN()

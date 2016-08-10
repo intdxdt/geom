@@ -81,4 +81,3 @@ func quadrants(g, other Geometry) []Geometry {
         sw, ss, se,
     }
 }
-

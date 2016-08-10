@@ -13,7 +13,6 @@ func (self *MBR) Equals(other *MBR) bool {
     FloatEqual(self[y2], other[y2]))
 }
 
-
 func (self *MBR) Intersection(other *MBR) (*MBR, bool) {
 	nan := math.NaN()
 

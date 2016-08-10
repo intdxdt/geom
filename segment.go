@@ -146,11 +146,3 @@ func update_coords_inbounds(bounds *MBR, x1, y1, x2, y2 float64, set *sset.SSet)
         set.Add(&Point{x2, y2})
     }
 }
-
-
-
-
-
-
-
-

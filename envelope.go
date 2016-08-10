@@ -22,7 +22,6 @@ func (self *Point) BBox() *MBR  {
     return self.Envelope()
 }
 
-
 //envelope of polygon
 func (self *Polygon) Envelope() *MBR {
     return self.Shell.bbox.MBR.Clone()

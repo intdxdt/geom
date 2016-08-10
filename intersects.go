@@ -1,6 +1,5 @@
 package geom
 
-
 //Checks if pt intersects other geometry
 func (pt *Point) Intersects(other Geometry) bool {
     if IsNullGeometry(other) {
@@ -35,7 +34,6 @@ func (self *LineString) Intersects(other Geometry) bool {
 
     return bln
 }
-
 
 //Checks if polygon intersects other geometry
 func (self *Polygon) Intersects(other Geometry) bool {

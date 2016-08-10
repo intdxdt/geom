@@ -119,8 +119,6 @@ func ReadGeometry(wkt string) Geometry {
     return g
 }
 
-
-
 //wkt string
 func wkt_string(wkt string) string{
     var buffer bytes.Buffer
@@ -231,4 +229,3 @@ func (self *wktRegex) wkt_type_coords(wkt string) map[string]*string {
 func is_empty_wkt(wkt string) bool {
     return strings.Index(wkt, "EMPTY") != -1
 }
-

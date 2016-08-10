@@ -1,6 +1,5 @@
 package geom
 
-
 //number of vertices
 func (self *LineString) LenVertices() int {
     return len(self.coordinates)

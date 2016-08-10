@@ -54,4 +54,3 @@ func (self *InterPoint) String() string {
 
     return buf.String()
 }
-

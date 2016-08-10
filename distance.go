@@ -53,7 +53,6 @@ func (self *LineString) Distance(other Geometry) float64 {
     return dist
 }
 
-
 //Computes the distance between self and another linestring
 //the distance between intersecting linestrings is 0.  Otherwise, the
 //distance is the Euclidean distance between the closest points.
@@ -88,8 +87,6 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 
     return dist
 }
-
-
 
 //Computes the distance between self and another linestring
 func dist_as_lines(self, other Geometry) float64 {

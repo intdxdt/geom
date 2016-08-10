@@ -14,7 +14,6 @@ func (pt *Point) Equals(point *Point) bool {
         FloatEqual(pt[z], point[z])
 }
 
-
 //Disjoint evaluates whether points are not coincident
 func (pt *Point) Disjoint(point *Point) bool {
     return !(pt.Intersects(point))

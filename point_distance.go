@@ -2,7 +2,6 @@ package geom
 
 import "math"
 
-
 //DistanceSquare computes distance squared between two points
 //Has possible overflow with squared x, y components
 func (self *Point ) SquareDistance(pt *Point) float64 {

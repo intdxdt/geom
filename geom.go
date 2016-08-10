@@ -50,5 +50,3 @@ func (self *geoType) IsLineString() bool {
 func (self *geoType) IsPoint() bool {
     return self.gtype == GeoType_Point
 }
-
-
