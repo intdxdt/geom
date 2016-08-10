@@ -1,49 +1,109 @@
 package geom
 
+import (
+    "fmt"
+    "math"
+   	. "simplex/util/math"
+   	. "simplex/struct/item"
+   	. "simplex/vector"
+)
 
-/**
- * @param points An array of [X, Y] coordinates
- */
-//func convexHull(points []*Point) []*Point {
-//    //trivial case 0 or 1 point
-//    if len(points) < 3 {
-//        return make([]*Point, 0)
-//    }
-//    //copy points into mutable container
-//    points = CloneCoordinates(points)
-//    var N = len(points)
-//
-//    XYCoordinates{points}.Sort()
-//
-//    cross_next := func(h Coordinates, i int) bool {
-//        o, a, b := h[len(h) - 2], h[len(h) - 1], points[i]
-//        return (a[x] - o[x]) * (b[y] - o[y]) - (a[y] - o[y]) * (b[x] - o[x]) <= 0
-//    }
-//
-//    var lower = make(Coordinates, 0)
-//    for i := 0; i < N; i++ {
-//        for (len(lower) >= 2 && cross_next(lower, i)) {
-//            _, lower = lower.Pop()
-//        }
-//        lower = append(lower, points[i])
-//    }
-//
-//    var upper = make(Coordinates, 0)
-//    for i := N - 1; i >= 0; i-- {
-//        for (len(upper) >= 2 && cross_next(upper, i)) {
-//            _, upper = upper.Pop()
-//        }
-//        upper = append(upper, points[i])
-//    }
-//
-//    _, upper = upper.Pop()
-//    _, lower = lower.Pop()
-//
-//    for _, pt := range upper {
-//        lower = append(lower, pt)
-//    }
-//    return lower
-//}
+type Hull struct {
+	H []*Point
+}
+
+func NewHull(coords []*Point) *Hull {
+	return &Hull{H:coords}
+}
+
+func (self *Hull) Antipodal(i, j int) int {
+	var fn = self.chainIndexer(i, len(self.H) - 1)
+	var idxer = self.indexer(i, len(self.H) - 1)
+
+	var ptI, ptJ =  self.H[i],  self.H[j]
+	var start, end = fn(i), fn(i - 1)
+
+	var mid = (start + end) / 2
+	var pt, ptj = self.H[idxer(mid)], self.H[j]
+
+	var uvect = func(m int) *Vector {
+		return NewVector(ptj, self.H[m])
+	}
+
+	var angl = Deg2rad(90.0)
+	var side = pt.SideOf(ptI, ptJ)
+
+	if side.IsOn() {
+		return end
+	} else if side.IsLeft() {
+		angl = Deg2rad(270.0)
+	}
+
+	vv := hv.Extvect(1e3, angl, true)
+	fmt.Println(vv.Vector())
+	orth := self.orthvector(hv.Direction(), angl)
+
+	for {
+		if start == end {
+			mid = start
+			break
+		}
+		mid = (start + end) / 2
+
+		cur := self.othoffset(orth, uvect(idxer(mid)))
+		next := self.othoffset(orth, uvect(idxer(mid + 1)))
+
+		if cur.Compare(next) == 0 {
+			mid += 1
+			break
+		} else {
+			if cur.Compare(next) < 0 {
+				start = mid + 1
+			} else if cur.Compare(next) > 0 {
+				end = mid
+			} else {
+				break
+			}
+		}
+	}
+	return idxer(mid)
+}
+
+func (self *Hull) othoffset(v, u *Vector) Float {
+	return Float(v.Project(u))
+}
+
+func (self *Hull)  orthvector(direction, angle float64) *Vector {
+	m := 1e3
+	bβ := direction + Pi //back bearing
+	fβ := bβ + angle //forward bearing
+	if fβ > Tau {
+		fβ -= Tau
+	}
+	return NewVectorXY(m * math.Cos(fβ), m * math.Sin(fβ))
+}
+
+func (self *Hull) indexer(origin, max int) func(k int) int {
+	return func(k int) int {
+		if k >= origin && k <= max {
+			return k
+		} else if k > max {
+			return k - max - 1
+		}
+		panic("index out of bounds")
+	}
+}
+
+func (self *Hull) chainIndexer(origin, max int) func(k int) int {
+	return func(k int) int {
+		if k >= origin && k <= max {
+			return k
+		} else if k < origin {
+			return max + k + 1
+		}
+		panic("index out of bounds")
+	}
+}
 
 
 // description computes the convex hull of a point set.
@@ -98,6 +158,7 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
     }
     return hb
 }
+
 
 //SimpleHull(): Melkman's 2D simple polyline O(n) convex hull algorithm
 //Input:  coords[] = array of 2D vertex points for a simple polyline
