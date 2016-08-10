@@ -5,7 +5,6 @@ import (
     "math"
    	. "simplex/util/math"
    	. "simplex/struct/item"
-   	. "simplex/vector"
 )
 
 type Hull struct {
