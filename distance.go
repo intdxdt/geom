@@ -71,8 +71,8 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
     for i := 0; !bln && i < len(ln) - 1; i++ {
         for j := 0; !bln && j < len(ln2) - 1; j++ {
 
-            segA := &Segment{ln[i], ln[i + 1]}
-            segB := &Segment{ln2[j], ln2[j + 1]}
+            segA := &Segment{A:ln[i],  B:ln[i + 1]}
+            segB := &Segment{A:ln2[j], B:ln2[j + 1]}
 
             d := segA.Distance(segB)
 
