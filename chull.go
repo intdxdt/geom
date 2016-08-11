@@ -1,7 +1,7 @@
 package geom
 
 import (
-   	. "simplex/util/math"
+    . "simplex/util/math"
     "simplex/cart2d"
 )
 
@@ -9,98 +9,100 @@ const RightAngle = 90.0
 const LeftAngle = 270.0
 
 type Hull struct {
-	H []*Point
+    H []*Point
 }
 
 func NewHull(coords []*Point) *Hull {
-	return &Hull{H:coords}
+    return &Hull{H:coords}
 }
 
 func (self *Hull) Antipodal(i, j int) int {
-	var n = len(self.H) - 1
-	var fn = self.chainIndexer(i, n)
-	var idxer = self.indexer(i, n)
+    var n = len(self.H) - 1
+    var fn = self.chainIndexer(i, n)
+    var idxer = self.indexer(i, n)
 
-	var ptI, ptJ = self.H[i], self.H[j]
-	var cmpIJ = ptJ.Sub(ptI)
-	var cmpDir = cart2d.Direction(cmpIJ)
+    var ptI, ptJ = self.H[i], self.H[j]
+    var cmpIJ = ptJ.Sub(ptI)
 
-	var start, end = fn(i), fn(i - 1)
+    var start, end = fn(i), fn(i - 1)
 
-	var mid = (start + end) / 2
-	var pt, ptj = self.H[idxer(mid)], self.H[j]
+    var mid = (start + end) / 2
+    var pt = self.H[idxer(mid)]
 
-	var uvect = func(m int) *Point {
-		return self.H[m].Sub(ptj)
-	}
+    var uvect = func(m int) *Point {
+        return self.H[m].Sub(ptJ)
+    }
 
-	var angl = Deg2rad(RightAngle)
-	var side = pt.SideOf(ptI, ptJ)
+    var side = pt.SideOf(ptI, ptJ)
 
-	if side.IsOn() {
-		return end
-	} else if side.IsLeft() {
-		angl = Deg2rad(LeftAngle)
-	}
+    var angl = Deg2rad(RightAngle)
+    if side.IsOn() {
+        return idxer(end)
+    } else if side.IsLeft() {
+        angl = Deg2rad(LeftAngle)
+    }
 
-	orth := self.orthvector(cmpIJ, cmpDir, angl)
+    orth := self.orthvector(cmpIJ, angl)
 
-	for {
-		if start == end {
-			mid = start
-			break
-		}
-		mid = (start + end) / 2
+    for {
+        if start == end {
+            mid = start
+            break
+        }
+        mid = (start + end) / 2
 
-		cur := self.offset(uvect(idxer(mid)), orth)
-		next := self.offset(uvect(idxer(mid + 1)), orth)
+        cur := self.offset(uvect(idxer(mid)), orth)
+        next := self.offset(uvect(idxer(mid + 1)), orth)
 
-		if FloatEqual(cur, next) {
-			mid += 1
-			break
-		} else {
-			if cur < next {
-				start = mid + 1
-			} else if cur > next {
-				end = mid
-			} else {
-				break
-			}
-		}
-	}
-	return idxer(mid)
+        if FloatEqual(cur, next) {
+            m := idxer(mid)
+            m1 := idxer(mid + 1)
+            d := cart2d.DistanceToPoint(ptI, ptJ, self.H[m])
+            d1 := cart2d.DistanceToPoint(ptI, ptJ, self.H[m1])
+            if FloatEqual(d, d1) || d1 > d {
+                mid += 1
+            }
+            break
+        } else {
+            if cur < next {
+                start = mid + 1
+            } else if cur > next {
+                end = mid
+            }
+        }
+    }
+    return idxer(mid)
 }
 
 func (self *Hull) offset(u, v *Point) float64 {
-	return cart2d.Project(u, v)
+    return cart2d.Project(u, v)
 }
 
-func (self *Hull)  orthvector(v *Point, direction, angle float64) *Point {
-	m := 1e3
-	cx, cy := cart2d.Extend(v, m, angle, true)
-	return NewPointXY(cx, cy)
+func (self *Hull)  orthvector(v *Point, angle float64) *Point {
+    cx, cy := cart2d.Extend(v, 1.0, angle, true)
+    return NewPointXY(cx, cy)
 }
 
 func (self *Hull) indexer(origin, max int) func(k int) int {
-	return func(k int) int {
-		if k >= origin && k <= max {
-			return k
-		} else if k > max {
-			return k - max - 1
-		}
-		panic("index out of bounds")
-	}
+    return func(k int) int {
+        if k >= origin && k <= max {
+            return k
+        } else if k > max {
+            return k - max - 1
+        }
+        panic("index out of bounds")
+    }
 }
 
 func (self *Hull) chainIndexer(origin, max int) func(k int) int {
-	return func(k int) int {
-		if k >= origin && k <= max {
-			return k
-		} else if k < origin {
-			return max + k + 1
-		}
-		panic("index out of bounds")
-	}
+    return func(k int) int {
+        if k >= origin && k <= max {
+            return k
+        } else if k < origin {
+            return max + k + 1
+        }
+        panic("index out of bounds")
+    }
 }
 
 
