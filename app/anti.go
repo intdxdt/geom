@@ -8,15 +8,14 @@ import (
 )
 
 func main() {
-    var A = NewPointXY(70, 55)
-    var B = NewPointXY(75, 55)
-    var C = NewPointXY(80, 55)
-    var D = NewPointXY(85, 55)
-
-    coords := []*Point{A, B, C, D}
+    var wkt = "LINESTRING ( 460 580, 472 597, 506 613, 532 597, 529 576, 522 549, 532 538, 563 531, 578 544, 584 561, 590 588, 590 605, 603 615, 607 650, 578 660, 558 679, 589 695, 611 696, 642 681, 644 658, 652 649, 679 641, 693 622, 679 606, 686 582, 746 581, 755 577, 764 534, 760 512, 737 488, 709 496, 685 471, 680 446, 671 429, 638 429, 630 442, 623 453, 585 429, 539 414, 510 433, 471 439, 433 431, 419 454, 428 476, 442 480, 473 480, 468 514, 440 521, 421 521, 412 534, 425 542, 449 545, 459 549 )"
+    g := ReadGeometry(wkt);
+    coords := g.AsLinear()[0].Coordinates();
     //coords := []*Point{A, B, C, D,I, F}
     h := ConvexHull(coords)
-    fmt.Println(h)
+    fmt.Println(h[0].WKT())
+    fmt.Println(h[1].WKT())
+    fmt.Println(h[7].WKT())
     fmt.Println(NewPolygon(h).WKT())
 
     hull := NewHull(h)

@@ -23,6 +23,34 @@ type wktRegex struct {
     *regexp.Regexp
 }
 
+//wkt type and coordiantes
+func (self *wktRegex) wkt_type_coords(wkt string) map[string]*string {
+    wkt = strings.TrimSpace(wkt)
+    captures := make(map[string]*string)
+    captures["wkt"], captures["type"], captures["coords"] = nil, nil, nil
+
+    if is_empty_wkt(wkt) {
+        self = &re_emptyTypeStr
+    }
+    match := self.FindStringSubmatch(wkt)
+    if match != nil {
+        for i, name := range self.SubexpNames() {
+            if i == 0 || name == "" {
+                if i == 0 {
+                    captures["wkt"] = &match[i]
+                }
+                continue
+            }
+            val := match[i]
+            if name == "type" {
+                val = strings.ToLower(val)
+            }
+            captures[name] = &val
+        }
+    }
+    return captures
+}
+
 
 type Shell [][2]float64
 type Holes []*Shell
@@ -197,33 +225,6 @@ func wkt_parse_float(str string) float64 {
     return x
 }
 
-//wkt type and coordiantes
-func (self *wktRegex) wkt_type_coords(wkt string) map[string]*string {
-    wkt = strings.TrimSpace(wkt)
-    captures := make(map[string]*string)
-    captures["wkt"], captures["type"], captures["coords"] = nil, nil, nil
-
-    if is_empty_wkt(wkt) {
-        self = &re_emptyTypeStr
-    }
-    match := self.FindStringSubmatch(wkt)
-    if match != nil {
-        for i, name := range self.SubexpNames() {
-            if i == 0 || name == "" {
-                if i == 0 {
-                    captures["wkt"] = &match[i]
-                }
-                continue
-            }
-            val := match[i]
-            if name == "type" {
-                val = strings.ToLower(val)
-            }
-            captures[name] = &val
-        }
-    }
-    return captures
-}
 
 //checks for the emptiness of wkt string
 func is_empty_wkt(wkt string) bool {
