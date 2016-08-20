@@ -26,3 +26,19 @@ func (self *MBR ) Clone() *MBR {
 func (self *MBR ) BBox() *MBR {
     return self
 }
+
+func (self *MBR) MinX() float64 {
+    return self[x1]
+}
+
+func (self *MBR) MinY() float64 {
+    return self[y1]
+}
+
+func (self *MBR) MaxX() float64 {
+    return self[x2]
+}
+
+func (self *MBR) MaxY() float64 {
+    return self[y2]
+}

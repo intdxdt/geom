@@ -52,8 +52,8 @@ func TestMBR(t *testing.T) {
             nm00, success := m00.Intersection(n00)
             g.Assert(success).IsTrue()
 
-            g.Assert(nm00[x1] == 0.0 && nm00[y1] == 0.0).IsTrue()
-            g.Assert(nm00[x2] == 0.0 && nm00[y2] == 0.0).IsTrue()
+            g.Assert(nm00.MinX() == 0.0 && nm00.MinY() == 0.0).IsTrue()
+            g.Assert(nm00.MaxX() == 0.0 && nm00.MaxY() == 0.0).IsTrue()
             g.Assert(nm00.IsPoint()).IsTrue()
 
             g.Assert(m1.Intersects(m2)).IsFalse()
@@ -124,8 +124,8 @@ func TestMBR(t *testing.T) {
             g.Assert(mp12.IntersectsBounds(p3, p4)).IsTrue()
             g.Assert(mp12.IntersectsBounds(p3, p4x)).IsFalse()
             g.Assert(mp12.IntersectsBounds(
-                []float64{m1[x1], m1[y1]},
-                []float64{m1[x2], m1[y2]},
+                []float64{m1.MinX(), m1.MinY()},
+                []float64{m1.MaxX(), m1.MaxY()},
             )).IsFalse()
             g.Assert(mp12.IntersectsPoint(p3)).IsFalse()
             g.Assert(m1.ContainsXY(1, 1)).IsTrue()
