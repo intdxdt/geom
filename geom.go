@@ -37,16 +37,16 @@ func new_geoType(gtype int) *geoType {
 }
 
 //is polygon
-func (self *geoType) IsPolygon() bool {
-    return self.gtype == GeoType_Polygon
+func (gt *geoType) IsPolygon() bool {
+    return gt.gtype == GeoType_Polygon
 }
 
 //is linestring
-func (self *geoType) IsLineString() bool {
-    return self.gtype == GeoType_LineString
+func (gt *geoType) IsLineString() bool {
+    return gt.gtype == GeoType_LineString
 }
 
 //is point
-func (self *geoType) IsPoint() bool {
-    return self.gtype == GeoType_Point
+func (gt *geoType) IsPoint() bool {
+    return gt.gtype == GeoType_Point
 }
