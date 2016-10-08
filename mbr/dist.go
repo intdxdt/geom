@@ -32,7 +32,6 @@ func (self *MBR) Distance(other *MBR) float64 {
 
 //DistanceSquare computes the distance squared between mbrs
 func (self *MBR) DistanceSquare(other *MBR) float64 {
-
 	if self.Intersects(other) {
 		return 0.0
 	}
