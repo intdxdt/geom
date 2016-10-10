@@ -138,11 +138,8 @@ func (self *LineString) SelfIntersection() []*Point {
 
 			if !tmpset.IsEmpty() {
 				for _, v := range tmpset.Values() {
-					intpt := &InterPoint{
-						Pt : v.(*Point),
-						I:chain.i, J:chain.j,
-						K:jbox.i, L:jbox.j,
-					}
+					intpt := &InterPoint{Pt : v.(*Point),
+						I:chain.i, J:chain.j, K:jbox.i, L:jbox.j}
 					ptset.Add(intpt)
 				}
 			}
