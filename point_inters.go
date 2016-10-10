@@ -17,12 +17,11 @@ func (self *InterPoint) Compare(o Item) int {
     other := o.(*InterPoint)
     d := self.Pt[x] - other.Pt[x]
     if FloatEqual(d, 0.0) {
-        //x's are close enougth to each other
         d = self.Pt[y] - other.Pt[y]
     }
 
     if FloatEqual(d, 0.0) {
-        //check if close enougth ot zero
+        //check if close enougth to zero
         dx := self.I - other.I
         if dx == 0 {
             dx = self.J - other.J
