@@ -38,9 +38,9 @@ func TestPoint(t *testing.T) {
         g.It("x, y, z access", func() {
             g.Assert(p0.IsZero()).IsTrue()
             g.Assert(p1.IsZero()).IsFalse()
-            g.Assert(p1.Equals(p2)).IsTrue()
-            g.Assert(p1.Clone().Equals(p1)).IsTrue()
-            g.Assert(p1.Coordinates().Equals(p2)).IsTrue()
+            g.Assert(p1.Equals2D(p2)).IsTrue()
+            g.Assert(p1.Clone().Equals2D(p1)).IsTrue()
+            g.Assert(p1.Coordinates().Equals2D(p2)).IsTrue()
 
             g.Assert(p1.X()).Equal(4.0)
             g.Assert(p1.Y()).Equal(5.0)
@@ -56,15 +56,15 @@ func TestPoint(t *testing.T) {
             g.Assert(p9.X()).Equal(3.9)
             g.Assert(p9.Y()).Equal(4.9)
             g.Assert(p9.Z()).Equal(9.8)
-            g.Assert(p9.Equals(p10)).IsTrue()
-            g.Assert(p9.Equals(p11)).IsTrue()
+            g.Assert(p9.Equals2D(p10)).IsTrue()
+            g.Assert(p9.Equals2D(p11)).IsTrue()
 
         })
 
         g.It("point relate", func() {
             pc := p1.Clone()
 
-            g.Assert(p1.Equals(pc)).IsTrue()
+            g.Assert(p1.Equals2D(pc)).IsTrue()
             g.Assert(p1.Compare(pc)).Equal(0)
             g.Assert(p1.Compare(p2)).Equal(0)
             g.Assert(p1.Compare(p4)).Equal(-1)
@@ -123,7 +123,7 @@ func TestPoint(t *testing.T) {
     g.Describe("point relates", func() {
         g.It("intersect , equals, isnull ", func() {
             var p0 *Point
-            g.Assert(p3.Equals(p1)).IsTrue()
+            g.Assert(p3.Equals2D(p1)).IsTrue()
             g.Assert(p3.Intersects(p1)).IsTrue()
             g.Assert(p3.Intersects(p0)).IsFalse()
             g.Assert(p3.Disjoint(p1)).IsFalse()

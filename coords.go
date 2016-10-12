@@ -126,7 +126,7 @@ func IsRing(coordinates []*Point) bool {
     if len(coordinates) < 2 {
         return false
     }
-    return coordinates[0].Equals(
+    return coordinates[0].Equals2D(
         coordinates[len(coordinates) - 1],
     )
 }
