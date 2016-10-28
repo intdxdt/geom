@@ -45,13 +45,13 @@ func (self *MBR) ExpandIncludeXY(x_coord, y_coord float64) *MBR {
 
     if x_coord < self[x1] {
         self[x1] = x_coord
-    }else if x_coord > self[x2] {
+    } else if x_coord > self[x2] {
         self[x2] = x_coord
     }
 
     if y_coord < self[y1] {
         self[y1] = y_coord
-    }else if y_coord > self[y2] {
+    } else if y_coord > self[y2] {
         self[y2] = y_coord
     }
 

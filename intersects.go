@@ -6,7 +6,7 @@ func (pt *Point) Intersects(other Geometry) bool {
         return false
     }
     if p, ok := IsPoint(other); ok {
-        return pt.Equals(p)
+        return pt.Equals2D(p)
     }
     return other.Intersects(pt)
 }

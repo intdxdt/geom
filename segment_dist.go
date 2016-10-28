@@ -23,8 +23,8 @@ func (self *Segment) Distance(other *Segment) float64 {
     numerb = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)
 
     if math.Abs(denom) < Eps {
-        is_aspt_a = self.A.Equals(self.B)
-        is_aspt_b = other.A.Equals(other.B)
+        is_aspt_a = self.A.Equals2D(self.B)
+        is_aspt_b = other.A.Equals2D(other.B)
 
         if is_aspt_a && is_aspt_b {
             dist = self.A.Magnitude(other.B)
