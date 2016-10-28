@@ -51,6 +51,7 @@ func TestSegment(t *testing.T) {
             g.Assert(len(pts)).Equal(2) //at h, i
 
             pts, ok = seg_hi.Intersection(seg_ab, false)
+            g.Assert(ok).IsFalse()
             g.Assert(seg_hi.Intersects(seg_ab, false)).Equal(ok)
             g.Assert(ok).Equal(false)
             g.Assert(len(pts)).Equal(0) //empty
