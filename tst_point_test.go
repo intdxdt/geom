@@ -190,11 +190,6 @@ func TestAngleAtPnt(t *testing.T) {
 
 func TestSideOf(t *testing.T) {
     g := Goblin(t)
-    /*
-        237 289,
-        354.47839239412275 333.38072601555746,
-        462 374
-     */
     a := NewPointXY(237, 289)
     b := NewPointXY(354.47839239412275, 333.38072601555746)
     c := NewPointXY(462, 374)
