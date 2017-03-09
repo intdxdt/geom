@@ -1,52 +1,52 @@
 package geom
 
 import (
-    . "simplex/geom/mbr"
+	. "simplex/geom/mbr"
 )
 
 const (
-    x = iota
-    y
-    z
-    null = -9
+	x = iota
+	y
+	z
+	null = -9
 )
 
 const (
-    GeoType_Unkown = iota - 1
-    GeoType_Point
-    GeoType_LineString
-    GeoType_Polygon
+	GeoType_Unkown = iota - 1
+	GeoType_Point
+	GeoType_LineString
+	GeoType_Polygon
 )
 
 type Geometry interface {
-    BBox() *MBR
-    AsLinear() []*LineString
-    Intersects(Geometry) bool
-    Distance(Geometry) float64
-    Type() *geoType
-    WKT() string
+	BBox() *MBR
+	AsLinear() []*LineString
+	Intersects(Geometry) bool
+	Distance(Geometry) float64
+	Type() *geoType
+	WKT() string
 }
 
 type geoType struct {
-    gtype int
+	gtype int
 }
 
 //New Side
 func new_geoType(gtype int) *geoType {
-    return &geoType{gtype}
+	return &geoType{gtype}
 }
 
 //is polygon
 func (gt *geoType) IsPolygon() bool {
-    return gt.gtype == GeoType_Polygon
+	return gt.gtype == GeoType_Polygon
 }
 
 //is linestring
 func (gt *geoType) IsLineString() bool {
-    return gt.gtype == GeoType_LineString
+	return gt.gtype == GeoType_LineString
 }
 
 //is point
 func (gt *geoType) IsPoint() bool {
-    return gt.gtype == GeoType_Point
+	return gt.gtype == GeoType_Point
 }

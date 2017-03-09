@@ -6,15 +6,15 @@ func distance_dxdy(self *MBR, other *MBR) (float64, float64) {
 	dx := 0.0
 	dy := 0.0
 	//find closest edge by x
-	if (self[x2] < other[x1]) {
+	if self[x2] < other[x1] {
 		dx = other[x1] - self[x2]
-	} else if (self[x1] > other[x2]) {
+	} else if self[x1] > other[x2] {
 		dx = self[x1] - other[x2]
 	}
 	//find closest edge by y
-	if (self[y2] < other[y1]) {
+	if self[y2] < other[y1] {
 		dy = other[y1] - self[y2]
-	}else if (self[y1] > other[y2]) {
+	}else if self[y1] > other[y2] {
 		dy = self[y1] - other[y2]
 	}
 	return dx, dy

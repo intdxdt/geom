@@ -7,149 +7,143 @@ type Coordinates []*Point
 
 //Len for sort interface
 func (o Coordinates) Len() int {
-    return len(o)
+	return len(o)
 }
 
 //Swap for sort interface
 func (o Coordinates) Swap(i, j int) {
-    o[i], o[j] = o[j], o[i]
+	o[i], o[j] = o[j], o[i]
 }
 
 //pop chain from chainl list
 func (self Coordinates) Pop() (*Point, Coordinates) {
-    var v *Point
-    var n int
-    if len(self) == 0 {
-        return nil, self
-    }
-    n = len(self) - 1
-    v, self[n] = self[n], nil
-    return v, self[:n]
+	var v *Point
+	var n int
+	if len(self) == 0 {
+		return nil, self
+	}
+	n = len(self) - 1
+	v, self[n] = self[n], nil
+	return v, self[:n]
 }
 
-
 //XBoxes type  for  x sorting of boxes
-type XYCoordinates struct{
-    Coordinates
+type XYCoordinates struct {
+	Coordinates
 }
 
 //lexical sort of x and y coordinates
 func (o XYCoordinates) Less(i, j int) bool {
-    if o.Coordinates[i][x] < o.Coordinates[j][x] {
-        return true
-    } else if o.Coordinates[i][x] == o.Coordinates[j][x] {
-        if o.Coordinates[i][y] < o.Coordinates[j][y]{
-            return true
-        }
-    }
-    return false
+	if o.Coordinates[i][x] < o.Coordinates[j][x] {
+		return true
+	} else if o.Coordinates[i][x] == o.Coordinates[j][x] {
+		if o.Coordinates[i][y] < o.Coordinates[j][y] {
+			return true
+		}
+	}
+	return false
 }
 
 //Inplace Lexicographic sort
-func (self XYCoordinates ) Sort(){
-    sort.Sort(self)
+func (self XYCoordinates) Sort() {
+	sort.Sort(self)
 }
 
 //XCoordinates type  for  x sorting of boxes
-type XCoordinates struct{
-    Coordinates
+type XCoordinates struct {
+	Coordinates
 }
 
 //Less sorts boxes by y
-func (self  XCoordinates) Less(i, j int) bool {
-    return self.Coordinates[i][x] < self.Coordinates[j][x]
+func (self XCoordinates) Less(i, j int) bool {
+	return self.Coordinates[i][x] < self.Coordinates[j][x]
 
 }
 
 //Inplace sort by x
-func (self XCoordinates ) Sort(){
-    sort.Sort(self)
+func (self XCoordinates) Sort() {
+	sort.Sort(self)
 }
 
 //YCoordinates type for y sorting of boxes
-type YCoordinates struct{
-    Coordinates
+type YCoordinates struct {
+	Coordinates
 }
 
 //Less sorts boxes by y
 func (o *YCoordinates) Less(i, j int) bool {
-    return o.Coordinates[i][y] < o.Coordinates[j][y]
+	return o.Coordinates[i][y] < o.Coordinates[j][y]
 
 }
 
 //Inplace sort by y
-func (self *YCoordinates ) Sort(){
-    sort.Sort(self)
+func (self *YCoordinates) Sort() {
+	sort.Sort(self)
 }
-
 
 //get copy of coordinates of linestring
 func (self *Point) Coordinates() *Point {
-    return self.Clone()
+	return self.Clone()
 }
 
 //get copy of coordinates of linestring
 func (self *LineString) Coordinates() []*Point {
-    return CloneCoordinates(self.coordinates)
+	return CloneCoordinates(self.coordinates)
 }
 
 //get copy of coordinates of polygon
 func (self *Polygon) Coordinates() [][]*Point {
-    lns := self.AsLinear()
-    coords := make([][]*Point, len(lns))
-    for i , ln := range lns{
-        coords[i] = ln.Coordinates()
-    }
-    return coords
+	lns := self.AsLinear()
+	coords := make([][]*Point, len(lns))
+	for i, ln := range lns {
+		coords[i] = ln.Coordinates()
+	}
+	return coords
 }
 
 //checks if a point is a ring , by def every point is a ring
 // which concides on itself
 func (self *Point) IsRing() bool {
-    return true
+	return true
 }
 
 //Checks if line string is a ring
 func (self *LineString) IsRing() bool {
-    return IsRing(self.coordinates)
+	return IsRing(self.coordinates)
 }
 
 //Checks if polygon is a ring - default to true since all polygons are closed ring(s)
 func (self *Polygon) IsRing() bool {
-    return true
+	return true
 }
-
 
 //------------------------------------------------------------------------------
 //Is coordinates a ring : P0 == Pn
 func IsRing(coordinates []*Point) bool {
-    if len(coordinates) < 2 {
-        return false
-    }
-    return coordinates[0].Equals2D(
-        coordinates[len(coordinates) - 1],
-    )
+	if len(coordinates) < 2 {
+		return false
+	}
+	return coordinates[0].Equals2D(
+		coordinates[len(coordinates)-1],
+	)
 }
 
 //Coordinates returns a copy of linestring coordinates
 func CloneCoordinates(coordinates []*Point) []*Point {
-    n := len(coordinates)
-    clone := make([]*Point, n)
-    for i := 0; i < n; i++ {
-        clone[i] = coordinates[i].Clone()
-    }
-    return clone
+	n := len(coordinates)
+	clone := make([]*Point, n)
+	for i := 0; i < n; i++ {
+		clone[i] = coordinates[i].Clone()
+	}
+	return clone
 }
 
 //
-func CoordinatesAsFloat2D(coordinates []*Point ) [][2]float64{
-    var n = len(coordinates)
-    var coords = make([][2]float64, n)
-    for i := 0; i < n; i++ {
-        coords[i] = [2]float64{coordinates[i][x], coordinates[i][y]}
-    }
-    return coords
+func CoordinatesAsFloat2D(coordinates []*Point) [][2]float64 {
+	var n = len(coordinates)
+	var coords = make([][2]float64, n)
+	for i := 0; i < n; i++ {
+		coords[i] = [2]float64{coordinates[i][x], coordinates[i][y]}
+	}
+	return coords
 }
-
-
-

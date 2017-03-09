@@ -1,14 +1,14 @@
 package geom
 
 import (
-	. "github.com/franela/goblin"
-	"testing"
-	"sort"
 	"fmt"
+	"github.com/franela/goblin"
+	"sort"
+	"testing"
 )
 
 func TestCoordinate(t *testing.T) {
-	g := Goblin(t)
+	g := goblin.Goblin(t)
 	coords := Coordinates{{0.0, 0.0}, {1.0, 0.0}, {2.0, 0.0}}
 	_2d := Coordinates{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}}
 	_2d1 := Coordinates{{0.0, 0.2}, {1.0, 0.9}, {1.0, 0.5}}
@@ -60,11 +60,11 @@ func TestCoordinate(t *testing.T) {
 
 			_2dx := XCoordinates{_2d}
 			_2dx.Sort()
-			g.Assert(_2dx.Coordinates).Eql(Coordinates{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}, })
+			g.Assert(_2dx.Coordinates).Eql(Coordinates{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}})
 
 			_2dxy := XYCoordinates{_2d}
 			_2dxy.Sort()
-			g.Assert(_2dxy.Coordinates).Eql(Coordinates{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}, })
+			g.Assert(_2dxy.Coordinates).Eql(Coordinates{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}})
 
 			_2dxy = XYCoordinates{_2d1}
 			_2dxy.Sort()
@@ -77,4 +77,3 @@ func TestCoordinate(t *testing.T) {
 	})
 
 }
-
