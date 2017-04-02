@@ -20,6 +20,7 @@ func TestHullGen(t *testing.T) {
 
 	coords := []*Point{A, B, C, D, E, F, G, H, I}
 	hull := NewHull(coords)
+	fmt.Println(NewPolygon(hull.H).WKT())
 	g.Describe("Geometry", func() {
 		g.It("it should test Hull Antipodal", func() {
 			g.Assert(hull.Antipodal(2, 3)).Equal(6)

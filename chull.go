@@ -3,6 +3,7 @@ package geom
 import (
 	"simplex/cart2d"
 	. "simplex/util/math"
+	"fmt"
 )
 
 const RightAngle = 90.0
@@ -28,6 +29,8 @@ func (self *Hull) Antipodal(i, j int) int {
 
 	var mid = (start + end) / 2
 	var pt = self.H[idxer(mid)]
+
+	fmt.Println(pt.WKT()) //<->
 
 	var uvect = func(m int) *Point {
 		return self.H[m].Sub(ptJ)
