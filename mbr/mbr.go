@@ -1,7 +1,7 @@
 package mbr
 
 import (
-	"math"
+	"simplex/util/math"
 )
 
 type MBR [4]float64
@@ -14,8 +14,8 @@ const (
 )
 
 func NewMBR(minx, miny, maxx, maxy float64) *MBR {
-	minx, maxx = math.Min(minx, maxx), math.Max(minx, maxx)
-	miny, maxy = math.Min(miny, maxy), math.Max(miny, maxy)
+	minx, maxx = math.MinF64(minx, maxx), math.MaxF64(minx, maxx)
+	miny, maxy = math.MinF64(miny, maxy), math.MaxF64(miny, maxy)
 	return &MBR{minx, miny, maxx, maxy}
 }
 

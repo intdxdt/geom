@@ -29,5 +29,4 @@ func TestGeom(t *testing.T) {
 			g.Assert(IsNullGeometry(rng)).IsTrue()
 		})
 	})
-
 }

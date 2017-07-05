@@ -2,14 +2,14 @@ package geom
 
 import (
 	"math"
-	"simplex/cart2d"
+	"simplex/cart"
 )
 
 //Compute angle at point
 func (self *Point) AngleAtPoint(a, b *Point) float64 {
 	sa, sb := a.Sub(self), b.Sub(self)
 	return math.Abs(math.Atan2(
-		cart2d.CrossProduct(sa, sb),
-		cart2d.DotProduct(sa, sb),
+		cart.CrossProduct(sa, sb),
+		cart.DotProduct(sa, sb),
 	))
 }

@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/cart2d"
+	"simplex/cart"
 	. "simplex/side"
 	. "simplex/struct/item"
 	"simplex/util/math"
@@ -43,13 +43,13 @@ func (self *Point) Compare(o Item) int {
 //position of C relative to line AB
 func (c *Point) SideOf(a, b *Point) *Side {
 	s := NewSide()
-	ccw := cart2d.CCW(a, b, c)
-	if math.FloatEqual(ccw, 0) {
+	ccw := cart.Orientation2D(a, b, c)
+	if math.FloatEqual(ccw, 0, 1e-10) {
 		s.AsOn()
 	} else if ccw > 0 {
-		s.AsLeft()
-	} else if ccw < 0 {
 		s.AsRight()
+	} else if ccw < 0 {
+		s.AsLeft()
 	}
 	return s
 }

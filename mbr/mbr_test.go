@@ -2,9 +2,8 @@ package mbr
 
 import (
 	"testing"
-	"math"
 	"github.com/franela/goblin"
-	umath "simplex/util/math"
+	"simplex/util/math"
 )
 
 func TestMBR(t *testing.T) {
@@ -94,7 +93,7 @@ func TestMBR(t *testing.T) {
 
 			d := math.Hypot(2, 3)
 			g.Assert(m1.Distance(m2)).Equal(d)
-			g.Assert(m1.DistanceSquare(m2)).Equal(umath.Round(d*d, 12))
+			g.Assert(m1.DistanceSquare(m2)).Equal(math.Round(d*d, 12))
 			g.Assert(m1.Distance(m3)).Equal(0.0)
 			g.Assert(m1.DistanceSquare(m3)).Equal(0.0)
 

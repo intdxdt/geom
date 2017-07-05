@@ -1,7 +1,7 @@
 package mbr
 
 import (
-	"math"
+	"simplex/util/math"
 )
 
 //Expand to include other mbr
@@ -31,8 +31,8 @@ func (self *MBR) ExpandByDelta(dx, dy float64) *MBR {
 	minx, miny := self[x1]-dx, self[y1]-dy
 	maxx, maxy := self[x2]+dx, self[y2]+dy
 
-	minx, maxx = math.Min(minx, maxx), math.Max(minx, maxx)
-	miny, maxy = math.Min(miny, maxy), math.Max(miny, maxy)
+	minx, maxx = math.MinF64(minx, maxx), math.MaxF64(minx, maxx)
+	miny, maxy = math.MinF64(miny, maxy), math.MaxF64(miny, maxy)
 
 	self[x1], self[y1] = minx, miny
 	self[x2], self[y2] = maxx, maxy

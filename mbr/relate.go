@@ -1,15 +1,14 @@
 package mbr
 
 import (
-	"math"
-	umath "simplex/util/math"
+	 "simplex/util/math"
 )
 
 func (self *MBR) Equals(other *MBR) bool {
-	return umath.FloatEqual(self[x1], other[x1]) &&
-		umath.FloatEqual(self[y1], other[y1]) &&
-		umath.FloatEqual(self[x2], other[x2]) &&
-		umath.FloatEqual(self[y2], other[y2])
+	return math.FloatEqual(self[x1], other[x1]) &&
+		math.FloatEqual(self[y1], other[y1]) &&
+		math.FloatEqual(self[x2], other[x2]) &&
+		math.FloatEqual(self[y2], other[y2])
 }
 
 func (self *MBR) Intersection(other *MBR) (*MBR, bool) {
@@ -69,15 +68,15 @@ func (self *MBR) IntersectsBounds(q1, q2 []float64) bool {
 	if len(q1) < 2 || len(q2) < 2 {
 		return false
 	}
-	minq := math.Min(q1[x1], q2[x1])
-	maxq := math.Max(q1[x1], q2[x1])
+	minq := math.MinF64(q1[x1], q2[x1])
+	maxq := math.MaxF64(q1[x1], q2[x1])
 
 	if self[x1] > maxq || self[x2] < minq {
 		return false
 	}
 
-	minq = math.Min(q1[y1], q2[y1])
-	maxq = math.Max(q1[y1], q2[y1])
+	minq = math.MinF64(q1[y1], q2[y1])
+	maxq = math.MaxF64(q1[y1], q2[y1])
 
 	// not disjoint
 	return !(self[y1] > maxq || self[y2] < minq)

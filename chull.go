@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"simplex/cart2d"
-	. "simplex/util/math"
+	"simplex/cart"
+	"simplex/util/math"
 	"fmt"
 )
 
@@ -38,11 +38,11 @@ func (self *Hull) Antipodal(i, j int) int {
 
 	var side = pt.SideOf(ptI, ptJ)
 
-	var angl = Deg2rad(RightAngle)
+	var angl = math.Deg2rad(RightAngle)
 	if side.IsOn() {
 		return idxer(end)
 	} else if side.IsLeft() {
-		angl = Deg2rad(LeftAngle)
+		angl = math.Deg2rad(LeftAngle)
 	}
 
 	orth := self.orthvector(cmpIJ, angl)
@@ -57,12 +57,12 @@ func (self *Hull) Antipodal(i, j int) int {
 		cur := self.offset(uvect(idxer(mid)), orth)
 		next := self.offset(uvect(idxer(mid+1)), orth)
 
-		if FloatEqual(cur, next) {
+		if math.FloatEqual(cur, next) {
 			m := idxer(mid)
 			m1 := idxer(mid + 1)
-			d := cart2d.DistanceToPoint(ptI, ptJ, self.H[m])
-			d1 := cart2d.DistanceToPoint(ptI, ptJ, self.H[m1])
-			if FloatEqual(d, d1) || d1 > d {
+			d := cart.DistanceToPoint(ptI, ptJ, self.H[m])
+			d1 := cart.DistanceToPoint(ptI, ptJ, self.H[m1])
+			if math.FloatEqual(d, d1) || d1 > d {
 				mid += 1
 			}
 			break
@@ -78,11 +78,11 @@ func (self *Hull) Antipodal(i, j int) int {
 }
 
 func (self *Hull) offset(u, v *Point) float64 {
-	return cart2d.Project(u, v)
+	return cart.Project(u, v)
 }
 
 func (self *Hull) orthvector(v *Point, angle float64) *Point {
-	cx, cy := cart2d.Extend(v, 1.0, angle, true)
+	cx, cy := cart.Extend(v, 1.0, angle, true)
 	return NewPointXY(cx, cy)
 }
 

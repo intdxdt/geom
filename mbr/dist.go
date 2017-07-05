@@ -1,6 +1,6 @@
 package mbr
 
-import "math"
+import "simplex/util/math"
 
 func distance_dxdy(self *MBR, other *MBR) (float64, float64) {
 	dx := 0.0

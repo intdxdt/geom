@@ -3,7 +3,7 @@ package main
 import (
     "fmt"
     "simplex/geom"
-    "simplex/cart2d"
+    "simplex/cart"
     "simplex/util/math"
 )
 
@@ -43,7 +43,7 @@ func main() {
     //var uvect = D.Sub(ptJ)
     //
     //
-    //dist := cart2d.Project(uvect, oth)
+    //dist := cart.Project(uvect, oth)
     //fmt.Println(dist)
 
 }
@@ -51,6 +51,6 @@ func main() {
 
 func orthvector(v *geom.Point, angle float64) *geom.Point {
 	m := 30.0
-	cx, cy := cart2d.Extend(v, m, angle, true)
+	cx, cy := cart.Extend(v, m, angle, true)
 	return geom.NewPointXY(cx, cy)
 }
