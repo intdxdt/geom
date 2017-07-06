@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"math"
+	"simplex/util/math"
 	"simplex/cart"
 )
 

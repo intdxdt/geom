@@ -1,8 +1,7 @@
 package geom
 
 import (
-	"math"
-	umath "simplex/util/math"
+	"simplex/util/math"
 )
 
 //Distance betwen two segments
@@ -22,7 +21,7 @@ func (self *Segment) Distance(other *Segment) float64 {
 	numera = (x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)
 	numerb = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)
 
-	if math.Abs(denom) < umath.Eps {
+	if math.Abs(denom) < math.Eps {
 		is_aspt_a = self.A.Equals2D(self.B)
 		is_aspt_b = other.A.Equals2D(other.B)
 
@@ -40,11 +39,11 @@ func (self *Segment) Distance(other *Segment) float64 {
 			}
 			dist = ln.segpt_mindist(pta)
 		} else {
-			dist = math.Min(
-				math.Min(
+			dist = math.MinF64(
+				math.MinF64(
 					other.segpt_mindist(self.A),
 					other.segpt_mindist(self.B)),
-				math.Min(
+				math.MinF64(
 					self.segpt_mindist(other.A),
 					self.segpt_mindist(other.B),
 				))
@@ -70,7 +69,7 @@ func (self *Segment) Distance(other *Segment) float64 {
 			}
 
 			if pta != nil && ptb != nil {
-				dist = math.Min(
+				dist = math.MinF64(
 					other.segpt_mindist(pta),
 					self.segpt_mindist(ptb),
 				)

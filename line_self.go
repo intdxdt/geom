@@ -1,9 +1,9 @@
 package geom
 
 import (
+	"strconv"
 	"simplex/geom/mbr"
 	"simplex/struct/sset"
-	"strconv"
 )
 
 //get geometry type

@@ -1,6 +1,6 @@
 package geom
 
-import "math"
+import "simplex/util/math"
 
 //DistanceSquare computes distance squared between two points
 //Has possible overflow with squared x, y components

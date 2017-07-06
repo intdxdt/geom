@@ -227,12 +227,9 @@ func SimpleHull(coords []*Point, clone_coords ...bool) []*Point {
 	}
 
 	// transcribe deque dQ[] to the output hull array H[]
-	n = (top - bot) + 1
-	var hull = make([]*Point, n)
-	var h int // hull vertex counter
-	for h = 0; h < n; h++ {
-		hull[h] = dQ[bot+h]
+	var hull = make([]*Point, 0)
+	for h := 0; h <= (top - bot); h++ {
+		hull = append(hull, dQ[bot+h])
 	}
-
 	return hull
 }

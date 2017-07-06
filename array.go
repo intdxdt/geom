@@ -2,7 +2,7 @@ package geom
 
 //ToArray converts Point to [2]float64
 func (self *Point) ToArray() []float64 {
-	var coords = make([]float64, len(self))
+	var coords = make([]float64, len(*self))
 	copy(coords, self[:])
 	return coords
 }

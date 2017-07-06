@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"math"
+	"simplex/util/math"
 )
 
 //Distance computes distance between two points
@@ -79,7 +79,7 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 			if math.IsNaN(dist) {
 				dist = d
 			} else {
-				dist = math.Min(d, dist)
+				dist = math.MinF64(d, dist)
 			}
 			bln = (dist == 0.0)
 		}
@@ -100,7 +100,7 @@ func dist_as_lines(self, other Geometry) float64 {
 			if math.IsNaN(dist) {
 				dist = d
 			} else {
-				dist = math.Min(d, dist)
+				dist = math.MinF64(d, dist)
 			}
 		}
 	}

@@ -2,8 +2,7 @@ package geom
 
 import (
 	"github.com/franela/goblin"
-	"math"
-	umath "simplex/util/math"
+	"simplex/util/math"
 	"testing"
 )
 
@@ -85,7 +84,7 @@ func TestSegDist(t *testing.T) {
 
 			var n = NewPointXY(1, 3)
 			var o = NewPointXY(6, 5)
-			var expects = umath.Round(1.1094003924504583, 12)
+			var expects = math.Round(1.1094003924504583, 12)
 
 			seg_ab := NewSegment(a, b)
 			seg_ba := NewSegment(b, a)
@@ -102,50 +101,50 @@ func TestSegDist(t *testing.T) {
 			seg_no := NewSegment(n, o)
 			seg_tu := NewSegment(t, u)
 
-			g.Assert(umath.Round(seg_ab.Distance(seg_ab), 12)).Equal(0.0)
-			g.Assert(umath.Round(seg_ab.Distance(seg_cd), 12)).Equal(expects)
-			g.Assert(umath.Round(seg_ab.Distance(seg_dc), 12)).Equal(expects)
-			g.Assert(umath.Round(seg_ba.Distance(seg_cd), 12)).Equal(expects)
-			g.Assert(umath.Round(seg_cd.Distance(seg_ab), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ab.Distance(seg_ab), 12)).Equal(0.0)
+			g.Assert(math.Round(seg_ab.Distance(seg_cd), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ab.Distance(seg_dc), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ba.Distance(seg_cd), 12)).Equal(expects)
+			g.Assert(math.Round(seg_cd.Distance(seg_ab), 12)).Equal(expects)
 
-			g.Assert(umath.Round(seg_dc.Distance(seg_ef), 12)).Equal(0.0)
+			g.Assert(math.Round(seg_dc.Distance(seg_ef), 12)).Equal(0.0)
 			g.Assert(seg_dd.Distance(seg_ff)).Equal(d.Distance(f))
-			g.Assert(umath.Round(seg_dc.Distance(seg_fg), 12)).Equal(
-				umath.Round(2.496150883013531, 12),
+			g.Assert(math.Round(seg_dc.Distance(seg_fg), 12)).Equal(
+				math.Round(2.496150883013531, 12),
 			)
 
-			g.Assert(umath.Round(seg_dc.Distance(seg_lm), 12)).Equal(
-				umath.Round(d.Distance(l), 12),
+			g.Assert(math.Round(seg_dc.Distance(seg_lm), 12)).Equal(
+				math.Round(d.Distance(l), 12),
 			)
 
-			g.Assert(umath.Round(seg_cd.Distance(seg_lm), 12)).Equal(
-				umath.Round(d.Distance(l), 12),
+			g.Assert(math.Round(seg_cd.Distance(seg_lm), 12)).Equal(
+				math.Round(d.Distance(l), 12),
 			)
-			g.Assert(umath.Round(seg_dc.Distance(seg_ll), 12)).Equal(
-				umath.Round(d.Distance(l), 12),
+			g.Assert(math.Round(seg_dc.Distance(seg_ll), 12)).Equal(
+				math.Round(d.Distance(l), 12),
 			)
-			g.Assert(umath.Round(seg_cd.Distance(seg_ll), 12)).Equal(
-				umath.Round(d.Distance(l), 12),
-			)
-
-			g.Assert(umath.Round(seg_dc.Distance(seg_jk), 12)).Equal(
-				umath.Round(c.Distance(j), 12),
-			)
-			g.Assert(umath.Round(seg_dc.Distance(seg_jj), 12)).Equal(
-				umath.Round(c.Distance(j), 12),
-			)
-			g.Assert(umath.Round(seg_jj.Distance(seg_dc), 12)).Equal(
-				umath.Round(c.Distance(j), 12),
+			g.Assert(math.Round(seg_cd.Distance(seg_ll), 12)).Equal(
+				math.Round(d.Distance(l), 12),
 			)
 
-			g.Assert(umath.Round(seg_ab.Distance(seg_no), 12)).Equal(
-				umath.Round(b.Distance(n), 12),
+			g.Assert(math.Round(seg_dc.Distance(seg_jk), 12)).Equal(
+				math.Round(c.Distance(j), 12),
 			)
-			g.Assert(umath.Round(seg_no.Distance(seg_ab), 12)).Equal(
-				umath.Round(n.Distance(b), 12),
+			g.Assert(math.Round(seg_dc.Distance(seg_jj), 12)).Equal(
+				math.Round(c.Distance(j), 12),
+			)
+			g.Assert(math.Round(seg_jj.Distance(seg_dc), 12)).Equal(
+				math.Round(c.Distance(j), 12),
+			)
+
+			g.Assert(math.Round(seg_ab.Distance(seg_no), 12)).Equal(
+				math.Round(b.Distance(n), 12),
+			)
+			g.Assert(math.Round(seg_no.Distance(seg_ab), 12)).Equal(
+				math.Round(n.Distance(b), 12),
 			)
 			//no intersects tu
-			g.Assert(umath.Round(seg_no.Distance(seg_tu), 12)).Equal(0.0)
+			g.Assert(math.Round(seg_no.Distance(seg_tu), 12)).Equal(0.0)
 
 			a = &Point{16.82295, 10.44635}
 			b = &Point{28.99656, 15.76452}
@@ -174,16 +173,16 @@ func TestSegDist(t *testing.T) {
 			var pt_online = NewPointXY(45.00000, 45.000000000000000000000000001)
 			ln := poly.Shell.AsLinear()[0]
 
-			g.Assert(umath.Round(ln.Distance(poly), 12)).Equal(umath.Round(0, 12))
-			g.Assert(umath.Round(ln.Distance(pt_online), 12)).Equal(umath.Round(0, 12))
-			g.Assert(umath.Round(pt1_out.Distance(ln), 12)).Equal(umath.Round(6.380786425247758, 12))
-			g.Assert(umath.Round(ln.Distance(pt1_out), 12)).Equal(umath.Round(6.380786425247758, 12))
-			g.Assert(umath.Round(pt1_out.Distance(poly), 12)).Equal(umath.Round(6.380786425247758, 12))
-			g.Assert(umath.Round(poly.Distance(pt1_out), 12)).Equal(umath.Round(6.380786425247758, 12))
-			g.Assert(umath.Round(pt2_out.Distance(poly), 12)).Equal(umath.Round(2.626841960149983, 12))
-			g.Assert(umath.Round(poly.Distance(pt2_out), 12)).Equal(umath.Round(2.626841960149983, 12))
-			g.Assert(umath.Round(pnt3_in.Distance(poly), 12)).Equal(umath.Round(0.0, 12))
-			g.Assert(umath.Round(poly.Distance(pnt3_in), 12)).Equal(umath.Round(0.0, 12))
+			g.Assert(math.Round(ln.Distance(poly), 12)).Equal(math.Round(0, 12))
+			g.Assert(math.Round(ln.Distance(pt_online), 12)).Equal(math.Round(0, 12))
+			g.Assert(math.Round(pt1_out.Distance(ln), 12)).Equal(math.Round(6.380786425247758, 12))
+			g.Assert(math.Round(ln.Distance(pt1_out), 12)).Equal(math.Round(6.380786425247758, 12))
+			g.Assert(math.Round(pt1_out.Distance(poly), 12)).Equal(math.Round(6.380786425247758, 12))
+			g.Assert(math.Round(poly.Distance(pt1_out), 12)).Equal(math.Round(6.380786425247758, 12))
+			g.Assert(math.Round(pt2_out.Distance(poly), 12)).Equal(math.Round(2.626841960149983, 12))
+			g.Assert(math.Round(poly.Distance(pt2_out), 12)).Equal(math.Round(2.626841960149983, 12))
+			g.Assert(math.Round(pnt3_in.Distance(poly), 12)).Equal(math.Round(0.0, 12))
+			g.Assert(math.Round(poly.Distance(pnt3_in), 12)).Equal(math.Round(0.0, 12))
 
 			var null_pt *Point
 			var null_poly *Polygon
@@ -205,7 +204,7 @@ func TestSegDist(t *testing.T) {
 			g.Assert(seg_ab.SideOf(b).IsOn()).IsTrue()
 
 			for i := range tpoints {
-				g.Assert(umath.Round(dists[i], 2)).Equal(umath.Round(t_dists[i], 2))
+				g.Assert(math.Round(dists[i], 2)).Equal(math.Round(t_dists[i], 2))
 			}
 		})
 

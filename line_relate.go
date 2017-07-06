@@ -47,11 +47,10 @@ func (self *LineString) Intersection(other *LineString) []*Point {
 //Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
 func (self *LineString) intersects_linestring(other *LineString) bool {
-
 	var bln = false
 	//if root mbrs intersect
-	var othersegs = make([]*Segment, 0)
-	var selfsegs = make([]*Segment, 0)
+	var othersegs   = make([]*Segment, 0)
+	var selfsegs    = make([]*Segment, 0)
 
 	var query = other.bbox.MBR
 	var inrange = self.index.Search(query)

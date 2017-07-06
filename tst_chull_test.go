@@ -2,7 +2,7 @@ package geom
 
 import (
 	"github.com/franela/goblin"
-	"math"
+	"simplex/util/math"
 	"simplex/struct/sset"
 	"testing"
 )
@@ -73,7 +73,7 @@ func TestCHull(t *testing.T) {
 			ch0 := SimpleHull(coords0)
 			ch1 := SimpleHull(coords1)
 
-			exp0 := []*Point{{409, 189}, {429, 235}, {395, 289}, {340, 298}, {409, 189}}
+			exp0 := []*Point{{409, 189}, {429, 235}, {395, 289}, {366.14493191082227, 293.7217384145927}, {340, 298}, {409, 189}}
 			exp1 := []*Point{{479, 184}, {504, 231}, {601, 254}, {638, 223}, {479, 184}}
 
 			hullEql(g, ch0, exp0)
@@ -131,20 +131,20 @@ func TestCHull(t *testing.T) {
 
 		g.It("chull for  a set of 12 points with non-trivial hull", func() {
 			var poly = []*Point{{50, 60}, {60, 20}, {70, 45}, {100, 70},
-				{125, 90}, {200, 113}, {250, 140}, {180, 170}, {105, 140},
-				{79, 140}, {60, 85}, {50, 60}}
+			                    {125, 90}, {200, 113}, {250, 140}, {180, 170}, {105, 140},
+			                    {79, 140}, {60, 85}, {50, 60}}
 			var expectedHull = []*Point{{250, 140}, {60, 20}, {50, 60},
-				{79, 140}, {180, 170}}
+			                            {79, 140}, {180, 170}}
 			ch := ConvexHull(poly)
 			hullEql(g, ch, expectedHull)
 		})
 
 		g.It("chull for a set of 15 points with non-trivial hull", func() {
 			var poly = []*Point{{30, 30}, {50, 60}, {60, 20}, {70, 45}, {86, 39},
-				{112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
-				{47, 76}, {36, 40}, {33, 35}, {30, 30}}
+			                    {112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
+			                    {47, 76}, {36, 40}, {33, 35}, {30, 30}}
 			var expectedHull = []*Point{{300, 200}, {250, 50}, {60, 20}, {30, 30},
-				{47, 76}, {76, 150}, {130, 240}}
+			                            {47, 76}, {76, 150}, {130, 240}}
 			hullEql(g, ConvexHull(poly), expectedHull)
 		})
 	})

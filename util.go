@@ -36,10 +36,3 @@ func IsLinearRing(g Geometry) (*LinearRing, bool) {
 	return ln, ok
 }
 
-//minimum
-func min(a, b int) int {
-	if b < a {
-		return b
-	}
-	return a
-}

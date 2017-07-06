@@ -1,6 +1,6 @@
 package geom
 
-import "math"
+import "simplex/util/math"
 
 //Area of point
 func (self *Point) Area() float64 {

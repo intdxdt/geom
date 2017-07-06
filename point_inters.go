@@ -2,7 +2,7 @@ package geom
 
 import (
 	"bytes"
-	. "simplex/struct/item"
+	"simplex/struct/item"
 	"simplex/util/math"
 	"strconv"
 )
@@ -13,7 +13,7 @@ type InterPoint struct {
 }
 
 //compare points as items - x | y ordering
-func (self *InterPoint) Compare(o Item) int {
+func (self *InterPoint) Compare(o item.Item) int {
 	other := o.(*InterPoint)
 	d := self.Pt[x] - other.Pt[x]
 	if math.FloatEqual(d, 0.0) {

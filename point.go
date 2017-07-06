@@ -1,8 +1,7 @@
 package geom
 
 import (
-	"math"
-	umath "simplex/util/math"
+	"simplex/util/math"
 )
 
 type Point [3]float64
@@ -20,7 +19,7 @@ func NewPointXYZ(x, y, z float64) *Point {
 //New constructor of Point
 func NewPoint(array []float64) *Point {
 	pt := &Point{}
-	n := min(len(pt), len(array))
+	n := math.MinInt(len(*pt), len(array))
 	for i := 0; i < n; i++ {
 		pt[i] = array[i]
 	}
@@ -35,7 +34,7 @@ func NewPointFromWKT(wkt_geom string) *Point {
 
 //Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
-	return umath.FloatEqual(self[x], 0.0) && umath.FloatEqual(self[y], 0.0)
+	return math.FloatEqual(self[x], 0.0) && math.FloatEqual(self[y], 0.0)
 }
 
 //is null
@@ -70,5 +69,5 @@ func (self *Point) AsLineStrings() []*LineString {
 
 //coordinate string
 func coord_str(pt *[2]float64) string {
-	return umath.FloatToString(pt[x]) + " " + umath.FloatToString(pt[y])
+	return math.FloatToString(pt[x]) + " " + math.FloatToString(pt[y])
 }

@@ -3,10 +3,9 @@ package geom
 import (
 	"fmt"
 	"github.com/franela/goblin"
-	"math"
-	. "simplex/geom/mbr"
-	. "simplex/util/math"
+	"simplex/util/math"
 	"testing"
+	. "simplex/geom/mbr"
 )
 
 func TestPoint(t *testing.T) {
@@ -142,8 +141,8 @@ func TestMagDist(t *testing.T) {
 			b := &Point{3, 4}
 			z := NewPointXY(0, 0)
 			g.Assert(NewPointXY(1, 1).Magnitude(z)).Equal(math.Sqrt2)
-			g.Assert(Round(NewPointXY(-3, 2).Magnitude(z), 8)).Equal(
-				Round(3.605551275463989, 8),
+			g.Assert(math.Round(NewPointXY(-3, 2).Magnitude(z), 8)).Equal(
+				math.Round(3.605551275463989, 8),
 			)
 
 			g.Assert(NewPointXY(3, 4).Magnitude(z)).Equal(5.0)
@@ -163,7 +162,7 @@ func TestDotProduct(t *testing.T) {
 	g.Describe("Point - Vector Dot Product", func() {
 		g.It("should test dot product", func() {
 			dot_prod := NewPointXY(1.2, -4.2).DotProduct(NewPointXY(1.2, -4.2))
-			g.Assert(19.08).Equal(Round(dot_prod, 8))
+			g.Assert(19.08).Equal(math.Round(dot_prod, 8))
 		})
 	})
 
@@ -176,8 +175,8 @@ func TestAngleAtPnt(t *testing.T) {
 			a := &Point{-1.28, 0.74}
 			b := &Point{1.9, 4.2}
 			c := &Point{3.16, -0.84}
-			g.Assert(Round(a.AngleAtPoint(b, c), 8)).Equal(Round(1.1694239325184717, 8))
-			g.Assert(Round(b.AngleAtPoint(a, c), 8)).Equal(Round(0.9882331199311394, 8))
+			g.Assert(math.Round(a.AngleAtPoint(b, c), 8)).Equal(math.Round(1.1694239325184717, 8))
+			g.Assert(math.Round(b.AngleAtPoint(a, c), 8)).Equal(math.Round(0.9882331199311394, 8))
 			a = &Point{130, 190}
 			b = &Point{133.47655797303372, 186.52344202696628}
 			c = &Point{137.21392329213458, 182.78607670786542}
@@ -191,8 +190,8 @@ func TestAngleAtPnt(t *testing.T) {
 func TestSideOf(t *testing.T) {
 	g := goblin.Goblin(t)
 	a := NewPointXY(237, 289)
-	b := NewPointXY(354.47839239412275, 333.38072601555746)
-	c := NewPointXY(462, 374)
+	b := NewPointXY(404.25, 357.25)
+	c := NewPointXY(460, 380)
 
 	d := NewPointXY(297.13043478260863, 339.30434782608694)
 	e := NewPointXY(445.8260869565217, 350.17391304347825)
