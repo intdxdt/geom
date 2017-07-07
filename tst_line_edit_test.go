@@ -1,9 +1,9 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
-	"simplex/util/math"
 	"testing"
+	"simplex/util/math"
+	"github.com/franela/goblin"
 )
 
 func TestLineStringEdit(t *testing.T) {

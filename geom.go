@@ -22,6 +22,7 @@ type Geometry interface {
 	BBox() *MBR
 	AsLinear() []*LineString
 	Intersects(Geometry) bool
+	Intersection(Geometry) []*Point
 	Distance(Geometry) float64
 	Type() *geoType
 	WKT() string

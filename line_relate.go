@@ -6,7 +6,7 @@ import (
 )
 
 //intersection of self linestring with other
-func (self *LineString) Intersection(other *LineString) []*Point {
+func (self *LineString) linear_intersection(other *LineString) []*Point {
 	var ptset = sset.NewSSet()
 
 	if self.bbox.Disjoint(other.bbox.MBR) {
