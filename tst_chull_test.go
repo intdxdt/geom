@@ -1,10 +1,10 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
+	"testing"
 	"simplex/util/math"
 	"simplex/struct/sset"
-	"testing"
+	"github.com/franela/goblin"
 )
 
 func TestCHull(t *testing.T) {

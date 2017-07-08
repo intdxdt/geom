@@ -1,9 +1,9 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
-	"simplex/geom/mbr"
 	"testing"
+	"simplex/geom/mbr"
+	"github.com/franela/goblin"
 )
 
 func TestLineStringMono(t *testing.T) {

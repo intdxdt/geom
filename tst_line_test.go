@@ -1,10 +1,10 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
-	. "simplex/geom/mbr"
-	. "simplex/util/math"
 	"testing"
+	. "simplex/geom/mbr"
+	"simplex/util/math"
+	"github.com/franela/goblin"
 )
 
 func TestLineString(t *testing.T) {
@@ -34,7 +34,7 @@ func TestLineString(t *testing.T) {
 
 			g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
 			g.Assert(ln.IsRing()).IsTrue()
-			g.Assert(Round(ln.Area(), 5)).Equal(1.0)
+			g.Assert(math.Round(ln.Area(), 5)).Equal(1.0)
 			g.Assert(ln.len(len(ln.coordinates)-1, 0) == ln.Length()).IsTrue()
 			g.Assert(ln.chain_length(ln.chains[0])).Equal(ln.chain_length(ln.chains[1]))
 			g.Assert(ln.chain_length(ln.chains[2])).Equal(ln.chain_length(ln.chains[3]))

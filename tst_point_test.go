@@ -1,7 +1,6 @@
 package geom
 
 import (
-	"fmt"
 	"github.com/franela/goblin"
 	"simplex/util/math"
 	"testing"
@@ -177,11 +176,6 @@ func TestAngleAtPnt(t *testing.T) {
 			c := &Point{3.16, -0.84}
 			g.Assert(math.Round(a.AngleAtPoint(b, c), 8)).Equal(math.Round(1.1694239325184717, 8))
 			g.Assert(math.Round(b.AngleAtPoint(a, c), 8)).Equal(math.Round(0.9882331199311394, 8))
-			a = &Point{130, 190}
-			b = &Point{133.47655797303372, 186.52344202696628}
-			c = &Point{137.21392329213458, 182.78607670786542}
-			val := b.AngleAtPoint(a, c)
-			fmt.Println("at b :", val)
 		})
 	})
 

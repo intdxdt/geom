@@ -62,12 +62,11 @@ func TestPolygon(t *testing.T) {
 			                {6.36, 8.77}, {6.58, 8.78}, {6.65, 8.61}, {6.57, 8.36},
 			                {6.32, 8.5}, {6.21, 8.34}, {5.94, 8.29}, {5.78, 8.5}}
 
-			harr  := ConvexHull(arr)
+			harr := ConvexHull(arr)
 			sharr := SimpleHull(arr)
 
 			hply := NewPolygon(harr)
 			sply := NewPolygon(sharr)
-
 
 			g.Assert(len(harr)).Equal(8)
 			g.Assert(len(sharr)).Equal(9)
@@ -82,10 +81,9 @@ func TestPolygon(t *testing.T) {
 				{5.91, 8.86}, {5.87, 8.74}}
 			harr = ConvexHull(arr2)
 			sharr = SimpleHull(arr2)
-			
+
 			hply = NewPolygon(harr)
 			sply = NewPolygon(sharr)
-
 
 			g.Assert(len(harr)).Equal(8)
 			g.Assert(len(sharr)).Equal(9)

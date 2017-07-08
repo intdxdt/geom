@@ -1,7 +1,6 @@
 package geom
 
 import (
-	"fmt"
 	"github.com/franela/goblin"
 	"sort"
 	"testing"
@@ -25,7 +24,6 @@ func TestCoordinate(t *testing.T) {
 			coords2 := Coordinates{{0.0, 0.0}, {1.0, 0.0}, {2.0, 0.0}}
 			c, coords2 := coords2.Pop()
 			c[2] = 4.5
-			fmt.Println(c)
 			g.Assert(c.Equals2D(&Point{2.0, 0.0, 4.5})).IsTrue()
 			g.Assert(c.Equals3D(NewPointXY(2.0, 0.0))).IsFalse()
 			g.Assert(c.Equals3D(&Point{2.0, 0.0, 4.5})).IsTrue()

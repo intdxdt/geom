@@ -3,7 +3,6 @@ package geom
 import (
 	"simplex/cart"
 	"simplex/util/math"
-	"fmt"
 )
 
 const RightAngle = 90.0
@@ -25,13 +24,10 @@ func (self *Hull) Antipodal(i, j int) int {
 	var ptI, ptJ = self.H[i], self.H[j]
 	var cmpIJ = ptJ.Sub(ptI)
 
-	var start, end = fn(i), fn(i - 1)
+	var start, end = fn(i), fn(i-1)
 
 	var mid = (start + end) / 2
 	var pt = self.H[idxer(mid)]
-
-	fmt.Println(pt.WKT()) //<->
-
 	var uvect = func(m int) *Point {
 		return self.H[m].Sub(ptJ)
 	}
@@ -110,7 +106,6 @@ func (self *Hull) chainIndexer(origin, max int) func(k int) int {
 
 // description computes the convex hull of a point set.
 // param points An array of [X, Y] coordinates
-
 func ConvexHull(points []*Point, clone_coords ...bool) []*Point {
 	var clone = true
 	if len(clone_coords) > 0 {
@@ -167,7 +162,6 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
 //Output: H[] = output convex hull array of vertices (max is n)
 //Return: h   = the number of points in H[]
 //http://geomalgorithms.com/a12-_hull-3.html
-
 func SimpleHull(coords []*Point, clone_coords ...bool) []*Point {
 	var clone = true
 	if len(clone_coords) > 0 {
