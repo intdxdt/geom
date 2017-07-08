@@ -5,9 +5,6 @@ import "simplex/struct/sset"
 //Checks if pt intersection other geometry
 func (pt *Point) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
-	if IsNullGeometry(other) {
-		return res
-	}
 
 	if p, ok := IsPoint(other); ok {
 		if pt.Equals2D(p) {
@@ -18,15 +15,13 @@ func (pt *Point) Intersection(other Geometry) []*Point {
 	} else if ply, ok := IsPolygon(other); ok {
 		res = pt.AsLineString().Intersection(ply)
 	}
+
 	return res
 }
 
 //Checks if pt intersection other geometry
 func (self *LineString) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
-	if IsNullGeometry(other) {
-		return res
-	}
 
 	if pt, ok := IsPoint(other); ok {
 		res = self.linear_intersection(pt.AsLineString())
@@ -35,15 +30,13 @@ func (self *LineString) Intersection(other Geometry) []*Point {
 	} else if ply, ok := IsPolygon(other); ok {
 		res = self.intersection_polygon_rings(ply.AsLinearRings())
 	}
+
 	return res
 }
 
 //Checks if pt intersection other geometry
 func (self *Polygon) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
-	if IsNullGeometry(other) {
-		return res
-	}
 
 	if pt, ok := IsPoint(other); ok {
 		ln := pt.AsLineString()
@@ -66,6 +59,7 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 			res = append(res, p.(*Point))
 		}
 	}
+
 	return res
 }
 
@@ -74,7 +68,7 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point
 	var shell = rings[0]
 	var ptset = sset.NewSSet()
 
-	bln := self.Intersects(shell.LineString)
+	bln := self.BBox().Intersects(shell.BBox())
 	res := make([]*Point, 0)
 
 	if bln {
