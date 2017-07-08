@@ -4,8 +4,9 @@ import (
 	"simplex/util/math"
 )
 
+
 //Distance betwen two segments
-func (self *Segment) Distance(other *Segment) float64 {
+func (self *Segment) SegSegDistance(other *Segment) float64 {
 	var dist = math.NaN()
 	var x1, y1 = self.A[x], self.A[y]
 	var x2, y2 = self.B[x], self.B[y]

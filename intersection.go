@@ -19,12 +19,19 @@ func (pt *Point) Intersection(other Geometry) []*Point {
 	return res
 }
 
+//Segment intersection other geometry
+func (self *Segment) Intersection(other Geometry) []*Point {
+	return self.AsLineString().Intersection(other)
+}
+
 //Checks if pt intersection other geometry
 func (self *LineString) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
 
 	if pt, ok := IsPoint(other); ok {
 		res = self.linear_intersection(pt.AsLineString())
+	} else if seg, ok := IsSegment(other); ok {
+		res = self.linear_intersection(seg.AsLineString())
 	} else if ln, ok := IsLineString(other); ok {
 		res = self.linear_intersection(ln)
 	} else if ply, ok := IsPolygon(other); ok {
@@ -41,6 +48,8 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 	if pt, ok := IsPoint(other); ok {
 		ln := pt.AsLineString()
 		res = ln.Intersection(self)
+	} else if seg, ok := IsSegment(other); ok {
+		res = seg.Intersection(self)
 	} else if ln, ok := IsLineString(other); ok {
 		res = ln.Intersection(self)
 	} else if ply, ok := IsPolygon(other); ok {

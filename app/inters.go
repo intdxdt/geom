@@ -25,10 +25,19 @@ func main() {
 	//ptC := NewPointFromWKT(ptCwkt)
 	//ptD := NewPointFromWKT(ptDwkt)
 
-
 	//g.PrivLnIntersection(ply)
 	pts := ply.Intersection(ptB)
 	for _, pt := range pts {
 		fmt.Println(pt.WKT())
 	}
+
+	a := NewPointXY(0, 0)
+	b := NewPointXY(-3, 4)
+	k := &Point{2, 2}
+	n := &Point{1, 5}
+
+	seg_ab := NewSegment(a, b)
+	seg_kn := &Segment{A: k, B: n}
+	bln := seg_ab.Intersects(seg_kn)
+	fmt.Println(bln)
 }

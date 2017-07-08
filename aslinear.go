@@ -5,6 +5,11 @@ func (self *Point) AsLinear() []*LineString {
 	return self.AsLineStrings()
 }
 
+//Segment as lineString
+func (self *Segment) AsLinear() []*LineString {
+	return []*LineString{self.AsLineString()}
+}
+
 //Linestring as line strings
 func (self *LineString) AsLinear() []*LineString {
 	return []*LineString{self}

@@ -1,21 +1,41 @@
 package geom
 
 import (
-	"simplex/geom/mbr"
 	"simplex/side"
+	"simplex/util/math"
+	"simplex/geom/mbr"
 	"simplex/struct/item"
 	"simplex/struct/sset"
-	umath "simplex/util/math"
 )
 
 type Segment struct {
-	A *Point
-	B *Point
+	A  *Point
+	B  *Point
+	ln  *LineString
 }
+
 
 //New Segment constructor
 func NewSegment(a, b *Point) *Segment {
 	return &Segment{A: a, B: b}
+}
+
+//GeomType
+func (self *Segment) Type() *geoType {
+	return new_geoType(GeoType_Segment)
+}
+
+//WKT
+func (self *Segment) WKT() string {
+	return self.AsLineString().WKT()
+}
+
+//Segment as line string
+func (self *Segment) AsLineString() *LineString {
+	if self.ln == nil {
+		self.ln = NewLineString([]*Point{self.A, self.B})
+	}
+	return self.ln
 }
 
 //Side of pt to segement
@@ -25,11 +45,11 @@ func (self *Segment) SideOf(pt *Point) *side.Side {
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1, lnb0, lnb1
-func (self *Segment) Intersects(other *Segment, extln bool) bool {
+func (self *Segment) SegSegIntersects(other *Segment, extln bool) bool {
 	var bln = false
 	var a, b, d,
-		x1, y1, x2, y2,
-		x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
+	x1, y1, x2, y2,
+	x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
 
 	//snap to zero if near -0 or 0
 	a = snap_to_zero(a)
@@ -54,15 +74,16 @@ func (self *Segment) Intersects(other *Segment, extln bool) bool {
 	return bln
 }
 
+
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
-func (self *Segment) Intersection(other *Segment, extln bool) ([]*Point, bool) {
+func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, bool) {
 	var set = sset.NewSSet()
 	var coords = make([]*Point, 0)
 	var bln = false
 	var a, b, d,
-		x1, y1, x2, y2,
-		x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
+	x1, y1, x2, y2,
+	x3, y3, x4, y4 = seg_intersect_abdxy(self, other)
 
 	//snap to zero if near -0 or 0
 	a = snap_to_zero(a)
@@ -122,7 +143,7 @@ func seg_intersect_abdxy(self, other *Segment) (float64, float64, float64,
 
 //clamp to zero if float is near zero
 func snap_to_zero(v float64) float64 {
-	if umath.FloatEqual(v, 0.0) {
+	if math.FloatEqual(v, 0.0) {
 		v = 0.0
 	}
 	return v
@@ -130,9 +151,9 @@ func snap_to_zero(v float64) float64 {
 
 //clamp to zero or one
 func snap_to_zero_or_one(v float64) float64 {
-	if umath.FloatEqual(v, 0.0) {
+	if math.FloatEqual(v, 0.0) {
 		v = 0.0
-	} else if umath.FloatEqual(v, 1.0) {
+	} else if math.FloatEqual(v, 1.0) {
 		v = 1.0
 	}
 	return v

@@ -22,6 +22,11 @@ func (self *Point) Distance(other Geometry) float64 {
 	return dist
 }
 
+//Distance computes distance from segment to other geometry
+func (self *Segment) Distance(other Geometry) float64 {
+		return self.AsLineString().Distance(other)
+}
+
 // Computes the distance between wktreg and another linestring
 // the distance between intersecting linestrings is 0.  Otherwise, the
 // distance is the Euclidean distance between the closest points.
@@ -74,7 +79,7 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 			segA := &Segment{A: ln[i], B: ln[i+1]}
 			segB := &Segment{A: ln2[j], B: ln2[j+1]}
 
-			d := segA.Distance(segB)
+			d := segA.SegSegDistance(segB)
 
 			if math.IsNaN(dist) {
 				dist = d

@@ -4,6 +4,8 @@ import (
 	"testing"
 	"simplex/util/math"
 	"github.com/franela/goblin"
+	"simplex/geom/mbr"
+	"fmt"
 )
 
 func TestSegment(t *testing.T) {
@@ -24,39 +26,55 @@ func TestSegment(t *testing.T) {
 			n := &Point{1, 5}
 
 			seg_ab := NewSegment(a, b)
-			seg_de := &Segment{d, e}
+			ln_ab := NewLineString([]*Point{a, b})
+			seg_de := &Segment{A: d, B: e}
 
-			seg_cd := &Segment{c, d}
-			seg_gkh := &Segment{gk, h}
-			seg_hi := &Segment{h, i}
-			seg_ak := &Segment{a, k}
-			seg_kn := &Segment{k, n}
+			seg_cd := &Segment{c, d, nil}
+			seg_gkh := &Segment{gk, h, nil}
+			seg_hi := &Segment{A: h, B: i}
+			seg_ak := &Segment{A: a, B: k}
+			seg_kn := &Segment{A: k, B: n}
 
-			pts, ok := seg_ab.Intersection(seg_de, false)
-			g.Assert(ok).Equal(true)
+			fmt.Println(ln_ab.WKT())
+			fmt.Println(ln_ab.WKT())
+
+			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
+			g.Assert(seg_ab.Type().IsLineString()).IsFalse()
+			g.Assert(seg_ab.BBox().Equals(mbr.NewMBR(0, 0, -3, 4))).IsTrue()
+			g.Assert(seg_ab.AsLinear()).Eql([]*LineString{ln_ab})
+			g.Assert(seg_ab.WKT()).Eql(ln_ab.WKT())
+			g.Assert(seg_ab.Intersects(k)).IsFalse()
+			g.Assert(seg_ab.Intersects(seg_kn)).IsFalse()
+			g.Assert(seg_ab.Intersects(seg_ak)).IsTrue()
+			g.Assert(seg_ab.Intersection(seg_ak)).Eql([]*Point{a})
+			g.Assert(seg_ab.Distance(seg_ak)).Equal(0.0)
+			g.Assert(math.FloatEqual(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
+
+			pts, ok := seg_ab.SegSegIntersection(seg_de, false)
+			g.Assert(ok).IsTrue()
 			g.Assert(pts[0]).Equal(&Point{-1.5, 2})
 
-			pts, ok = seg_ab.Intersection(seg_cd, false)
-			g.Assert(ok).Equal(true)
+			pts, ok = seg_ab.SegSegIntersection(seg_cd, false)
+			g.Assert(ok).IsTrue()
 			g.Assert(pts[0]).Equal(&Point{-1.5, 2})
 			g.Assert(pts[1]).Equal(&Point{0.0, 0.0})
 
-			pts, ok = seg_gkh.Intersection(seg_cd, false)
-			g.Assert(ok).Equal(true)
+			pts, ok = seg_gkh.SegSegIntersection(seg_cd, false)
+			g.Assert(ok).IsTrue()
 			g.Assert(len(pts)).Equal(1) //at h
 
-			pts, ok = seg_hi.Intersection(seg_cd, false)
-			g.Assert(ok).Equal(true)
+			pts, ok = seg_hi.SegSegIntersection(seg_cd, false)
+			g.Assert(ok).IsTrue()
 			g.Assert(len(pts)).Equal(2) //at h, i
 
-			pts, ok = seg_hi.Intersection(seg_ab, false)
-			g.Assert(seg_hi.Intersects(seg_ab, false)).Equal(ok)
-			g.Assert(ok).Equal(false)
+			pts, ok = seg_hi.SegSegIntersection(seg_ab, false)
+			g.Assert(seg_hi.SegSegIntersects(seg_ab, false)).Equal(ok)
+			g.Assert(ok).IsFalse()
 			g.Assert(len(pts)).Equal(0) //empty
 
-			pts, ok = seg_ak.Intersection(seg_kn, false)
-			g.Assert(seg_ak.Intersects(seg_kn, false)).Equal(ok)
-			g.Assert(ok).Equal(true)
+			pts, ok = seg_ak.SegSegIntersection(seg_kn, false)
+			g.Assert(seg_ak.SegSegIntersects(seg_kn, false)).Equal(ok)
+			g.Assert(ok).IsTrue()
 			g.Assert(len(pts)).Equal(1) //at k
 			g.Assert(pts[0]).Equal(k)   //k
 		})
@@ -101,50 +119,50 @@ func TestSegDist(t *testing.T) {
 			seg_no := NewSegment(n, o)
 			seg_tu := NewSegment(t, u)
 
-			g.Assert(math.Round(seg_ab.Distance(seg_ab), 12)).Equal(0.0)
-			g.Assert(math.Round(seg_ab.Distance(seg_cd), 12)).Equal(expects)
-			g.Assert(math.Round(seg_ab.Distance(seg_dc), 12)).Equal(expects)
-			g.Assert(math.Round(seg_ba.Distance(seg_cd), 12)).Equal(expects)
-			g.Assert(math.Round(seg_cd.Distance(seg_ab), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ab.SegSegDistance(seg_ab), 12)).Equal(0.0)
+			g.Assert(math.Round(seg_ab.SegSegDistance(seg_cd), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ab.SegSegDistance(seg_dc), 12)).Equal(expects)
+			g.Assert(math.Round(seg_ba.SegSegDistance(seg_cd), 12)).Equal(expects)
+			g.Assert(math.Round(seg_cd.SegSegDistance(seg_ab), 12)).Equal(expects)
 
-			g.Assert(math.Round(seg_dc.Distance(seg_ef), 12)).Equal(0.0)
-			g.Assert(seg_dd.Distance(seg_ff)).Equal(d.Distance(f))
-			g.Assert(math.Round(seg_dc.Distance(seg_fg), 12)).Equal(
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_ef), 12)).Equal(0.0)
+			g.Assert(seg_dd.SegSegDistance(seg_ff)).Equal(d.Distance(f))
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_fg), 12)).Equal(
 				math.Round(2.496150883013531, 12),
 			)
 
-			g.Assert(math.Round(seg_dc.Distance(seg_lm), 12)).Equal(
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_lm), 12)).Equal(
 				math.Round(d.Distance(l), 12),
 			)
 
-			g.Assert(math.Round(seg_cd.Distance(seg_lm), 12)).Equal(
+			g.Assert(math.Round(seg_cd.SegSegDistance(seg_lm), 12)).Equal(
 				math.Round(d.Distance(l), 12),
 			)
-			g.Assert(math.Round(seg_dc.Distance(seg_ll), 12)).Equal(
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_ll), 12)).Equal(
 				math.Round(d.Distance(l), 12),
 			)
-			g.Assert(math.Round(seg_cd.Distance(seg_ll), 12)).Equal(
+			g.Assert(math.Round(seg_cd.SegSegDistance(seg_ll), 12)).Equal(
 				math.Round(d.Distance(l), 12),
 			)
 
-			g.Assert(math.Round(seg_dc.Distance(seg_jk), 12)).Equal(
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_jk), 12)).Equal(
 				math.Round(c.Distance(j), 12),
 			)
-			g.Assert(math.Round(seg_dc.Distance(seg_jj), 12)).Equal(
+			g.Assert(math.Round(seg_dc.SegSegDistance(seg_jj), 12)).Equal(
 				math.Round(c.Distance(j), 12),
 			)
-			g.Assert(math.Round(seg_jj.Distance(seg_dc), 12)).Equal(
+			g.Assert(math.Round(seg_jj.SegSegDistance(seg_dc), 12)).Equal(
 				math.Round(c.Distance(j), 12),
 			)
 
-			g.Assert(math.Round(seg_ab.Distance(seg_no), 12)).Equal(
+			g.Assert(math.Round(seg_ab.SegSegDistance(seg_no), 12)).Equal(
 				math.Round(b.Distance(n), 12),
 			)
-			g.Assert(math.Round(seg_no.Distance(seg_ab), 12)).Equal(
+			g.Assert(math.Round(seg_no.SegSegDistance(seg_ab), 12)).Equal(
 				math.Round(n.Distance(b), 12),
 			)
 			//no intersects tu
-			g.Assert(math.Round(seg_no.Distance(seg_tu), 12)).Equal(0.0)
+			g.Assert(math.Round(seg_no.SegSegDistance(seg_tu), 12)).Equal(0.0)
 
 			a = &Point{16.82295, 10.44635}
 			b = &Point{28.99656, 15.76452}

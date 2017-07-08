@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"simplex/util/math"
 	"simplex/cart"
+	"simplex/util/math"
 )
 
 //Compute angle at point

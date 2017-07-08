@@ -33,7 +33,7 @@ func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
 	na, nb := len(segsa), len(segsb)
 	for a := 0; a < na; a++ {
 		for b := 0; b < nb; b++ {
-			coord, ok := segsa[a].Intersection(segsb[b], false)
+			coord, ok := segsa[a].SegSegIntersection(segsb[b], false)
 			if ok {
 				for _, pt := range coord {
 					ptset.Add(pt)

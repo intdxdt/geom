@@ -114,7 +114,7 @@ func (self *LineString) segseg_intersects(segsa []*Segment, segsb []*Segment) bo
 	var na, nb = len(segsa), len(segsb)
 	for a := 0; !bln && a < na; a++ {
 		for b := 0; !bln && b < nb; b++ {
-			bln = segsa[a].Intersects(segsb[b], false)
+			bln = segsa[a].SegSegIntersects(segsb[b], false)
 		}
 	}
 	return bln

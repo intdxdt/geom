@@ -11,14 +11,20 @@ func (pt *Point) Intersects(other Geometry) bool {
 	return other.Intersects(pt)
 }
 
+//Segment Intersects other geometry
+func (self *Segment) Intersects(other Geometry) bool {
+	return self.AsLineString().Intersects(other)
+}
+
 //Checks if linestring intersecs other geometry
 func (self *LineString) Intersects(other Geometry) bool {
 	if IsNullGeometry(other) {
 		return false
 	}
 	bln := false
-	_, ispoly := IsPolygon(other)
-	_, isline := IsLineString(other)
+	_, ispoly  := IsPolygon(other)
+	_, isline  := IsLineString(other)
+	_, isseg  := IsSegment(other)
 	_, ispoint := IsPoint(other)
 
 	other_lns := other.AsLinear()
@@ -28,7 +34,7 @@ func (self *LineString) Intersects(other Geometry) bool {
 		bln = false
 	} else if ispoly {
 		bln = self.intersects_polygon(other_lns)
-	} else if isline || ispoint {
+	} else if isline || ispoint || isseg {
 		bln = self.intersects_linestring(shell)
 	}
 

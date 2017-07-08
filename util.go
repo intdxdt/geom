@@ -3,6 +3,8 @@ package geom
 func IsNullGeometry(geom Geometry) bool {
 	if g, ok := IsPoint(geom); ok {
 		return g == nil
+	} else if g, ok := IsSegment(geom); ok {
+		return g == nil
 	} else if g, ok := IsLineString(geom); ok {
 		return g == nil
 	} else if g, ok := IsPolygon(geom); ok {
@@ -22,6 +24,12 @@ func IsPoint(g Geometry) (*Point, bool) {
 func IsPolygon(g Geometry) (*Polygon, bool) {
 	ply, ok := g.(*Polygon)
 	return ply, ok
+}
+
+//Is segment
+func IsSegment(g Geometry) (*Segment, bool) {
+	seg, ok := g.(*Segment)
+	return seg, ok
 }
 
 //Is linestring
