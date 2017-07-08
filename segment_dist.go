@@ -37,15 +37,15 @@ func (self *Segment) Distance(other *Segment) float64 {
 				pta = other.A
 				ln = self
 			}
-			dist = ln.segpt_mindist(pta)
+			dist = ln.DistanceToPoint(pta)
 		} else {
 			dist = math.MinF64(
 				math.MinF64(
-					other.segpt_mindist(self.A),
-					other.segpt_mindist(self.B)),
+					other.DistanceToPoint(self.A),
+					other.DistanceToPoint(self.B)),
 				math.MinF64(
-					self.segpt_mindist(other.A),
-					self.segpt_mindist(other.B),
+					self.DistanceToPoint(other.A),
+					self.DistanceToPoint(other.B),
 				))
 		}
 
@@ -70,13 +70,13 @@ func (self *Segment) Distance(other *Segment) float64 {
 
 			if pta != nil && ptb != nil {
 				dist = math.MinF64(
-					other.segpt_mindist(pta),
-					self.segpt_mindist(ptb),
+					other.DistanceToPoint(pta),
+					self.DistanceToPoint(ptb),
 				)
 			} else if pta != nil {
-				dist = other.segpt_mindist(pta)
+				dist = other.DistanceToPoint(pta)
 			} else {
-				dist = self.segpt_mindist(ptb)
+				dist = self.DistanceToPoint(ptb)
 			}
 		} else {
 			//lines intersect
@@ -88,7 +88,7 @@ func (self *Segment) Distance(other *Segment) float64 {
 }
 
 //Minimum distance from segement to point
-func (self *Segment) segpt_mindist(pt *Point) float64 {
+func (self *Segment) DistanceToPoint(pt *Point) float64 {
 	var dist = math.NaN()
 	var cPt *Point
 	var dab = self.B.Sub(self.A)

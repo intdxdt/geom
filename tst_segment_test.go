@@ -163,7 +163,7 @@ func TestSegDist(t *testing.T) {
 			dists := make([]float64, len(tpoints))
 
 			for i, tp := range tpoints {
-				dists[i] = tvect.segpt_mindist(tp)
+				dists[i] = tvect.DistanceToPoint(tp)
 			}
 
 			pt1_out := NewPointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
@@ -195,7 +195,7 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.IsNaN(poly.Distance(null_ln))).IsTrue()
 
 			var seg_aa = NewSegment(a, a)
-			g.Assert(seg_aa.segpt_mindist(a)).Equal(0.0)
+			g.Assert(seg_aa.DistanceToPoint(a)).Equal(0.0)
 			g.Assert(a.SideOf(a, b).IsOn()).IsTrue()
 			g.Assert(b.SideOf(a, b).IsOn()).IsTrue()
 

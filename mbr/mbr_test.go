@@ -2,8 +2,8 @@ package mbr
 
 import (
 	"testing"
-	"github.com/franela/goblin"
 	"simplex/util/math"
+	"github.com/franela/goblin"
 )
 
 func TestMBR(t *testing.T) {
