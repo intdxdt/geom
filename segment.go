@@ -2,8 +2,8 @@ package geom
 
 import (
 	"simplex/side"
-	"simplex/util/math"
 	"simplex/geom/mbr"
+	"simplex/util/math"
 	"simplex/struct/item"
 	"simplex/struct/sset"
 )
@@ -100,8 +100,9 @@ func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, b
 				update_coords_inbounds(bbox, x1, y1, x2, y2, set)
 			}
 		}
-		set.Each(func(o item.Item) {
+		set.Each(func(o item.Item) bool{
 			coords = append(coords, o.(*Point))
+			return true
 		})
 		bln = len(coords) > 0
 		return coords, bln

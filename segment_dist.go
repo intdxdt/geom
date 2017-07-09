@@ -22,7 +22,7 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 	numera = (x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)
 	numerb = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)
 
-	if math.Abs(denom) < math.Eps {
+	if math.Abs(denom) < math.EPSILON {
 		is_aspt_a = self.A.Equals2D(self.B)
 		is_aspt_b = other.A.Equals2D(other.B)
 

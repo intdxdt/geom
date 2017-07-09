@@ -38,8 +38,9 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 	}
 
 	ptlist := make([]*Point, 0)
-	ptset.Each(func(o item.Item) {
+	ptset.Each(func(o item.Item) bool {
 		ptlist = append(ptlist, o.(*Point))
+		return true
 	})
 	return ptlist
 }
