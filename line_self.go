@@ -18,7 +18,7 @@ func (self *LineString) IsComplex() bool {
 //computes whether linestring is simple
 func (self *LineString) IsSimple() bool {
 	var bln = true //, bcomplx, chain, inters, jbox, qbox
-	var ptset = sset.NewSSet()
+	var ptset = sset.NewSSet(PointCmp)
 	var cache = make(map[string]bool)
 	var ln1 = make([]*Segment, 0)
 	var ln2 = make([]*Segment, 0)
@@ -90,8 +90,8 @@ func (self *LineString) cashe_key(box1, box2 *MonoMBR) string {
 // self intersection coordinates
 func (self *LineString) SelfIntersection() []*Point {
 
-	var ptset  = sset.NewSSet()
-	var tmpset = sset.NewSSet()
+	var ptset  = sset.NewSSet(InterPointCmp)
+	var tmpset = sset.NewSSet(PointCmp)
 	var cache = make(map[string]bool)
 	var ln1 = make([]*Segment, 0)
 	var ln2 = make([]*Segment, 0)
@@ -156,7 +156,7 @@ func (self *LineString) SelfIntersection() []*Point {
 		}
 	}
 
-	var pt_inters = sset.NewSSet()
+	var pt_inters = sset.NewSSet(PointCmp)
 	for _, p := range ptset.Values() {
 		pt_inters.Add(p.(*InterPoint).Pt)
 	}

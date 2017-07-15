@@ -12,7 +12,7 @@ func TestCHull(t *testing.T) {
 
 	var empty_hull = make([]*Point, 0)
 	hullEql := func(g *goblin.G, hull, expects Coordinates) {
-		hs := sset.NewSSet()
+		hs := sset.NewSSet(PointCmp)
 		g.Assert(hull.Len()).Equal(expects.Len())
 		for _, pt := range hull {
 			hs.Add(pt)

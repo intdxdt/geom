@@ -12,6 +12,12 @@ type InterPoint struct {
 	I, J, K, L int
 }
 
+func InterPointCmp(a, b interface{}) int {
+	self   := a.(*InterPoint)
+	other  := b.(*InterPoint)
+	return self.Compare(other)
+}
+
 //compare points as items - x | y ordering
 func (self *InterPoint) Compare(o item.Item) int {
 	other := o.(*InterPoint)

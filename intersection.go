@@ -53,7 +53,7 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 	} else if ln, ok := IsLineString(other); ok {
 		res = ln.Intersection(self)
 	} else if ply, ok := IsPolygon(other); ok {
-		ptset := sset.NewSSet()
+		ptset := sset.NewSSet(PointCmp)
 		lns := ply.AsLinear()
 
 		for _, ln := range lns {
@@ -75,7 +75,7 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 //line intersect polygon rings
 func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point {
 	var shell = rings[0]
-	var ptset = sset.NewSSet()
+	var ptset = sset.NewSSet(PointCmp)
 
 	bln := self.BBox().Intersects(shell.BBox())
 	res := make([]*Point, 0)

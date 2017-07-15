@@ -4,16 +4,14 @@ import (
 	"simplex/side"
 	"simplex/geom/mbr"
 	"simplex/util/math"
-	"simplex/struct/item"
 	"simplex/struct/sset"
 )
 
 type Segment struct {
 	A  *Point
 	B  *Point
-	ln  *LineString
+	ln *LineString
 }
-
 
 //New Segment constructor
 func NewSegment(a, b *Point) *Segment {
@@ -74,11 +72,10 @@ func (self *Segment) SegSegIntersects(other *Segment, extln bool) bool {
 	return bln
 }
 
-
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
 func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, bool) {
-	var set = sset.NewSSet()
+	var set = sset.NewSSet(PointCmp)
 	var coords = make([]*Point, 0)
 	var bln = false
 	var a, b, d,
@@ -100,7 +97,7 @@ func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, b
 				update_coords_inbounds(bbox, x1, y1, x2, y2, set)
 			}
 		}
-		set.Each(func(o item.Item) bool{
+		set.ForEach(func(o interface{}, _ int) bool {
 			coords = append(coords, o.(*Point))
 			return true
 		})

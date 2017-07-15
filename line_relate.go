@@ -1,13 +1,12 @@
 package geom
 
 import (
-	"simplex/struct/item"
 	"simplex/struct/sset"
 )
 
 //intersection of self linestring with other
 func (self *LineString) linear_intersection(other *LineString) []*Point {
-	var ptset = sset.NewSSet()
+	var ptset = sset.NewSSet(PointCmp)
 
 	if self.bbox.Disjoint(other.bbox.MBR) {
 		return []*Point{} //disjoint
@@ -38,7 +37,7 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 	}
 
 	ptlist := make([]*Point, 0)
-	ptset.Each(func(o item.Item) bool {
+	ptset.ForEach(func(o interface{}, _ int) bool {
 		ptlist = append(ptlist, o.(*Point))
 		return true
 	})
@@ -50,8 +49,8 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 func (self *LineString) intersects_linestring(other *LineString) bool {
 	var bln = false
 	//if root mbrs intersect
-	var othersegs   = make([]*Segment, 0)
-	var selfsegs    = make([]*Segment, 0)
+	var othersegs = make([]*Segment, 0)
+	var selfsegs = make([]*Segment, 0)
 
 	var query = other.bbox.MBR
 	var inrange = self.index.Search(query)
