@@ -26,6 +26,11 @@ func TestGeom(t *testing.T) {
 			g.Assert(ok).IsTrue()
 			g.Assert(ring).Eql(rng)
 
+		})
+		g.It("it should panic if NOT one of fundermental types ", func() {
+			defer func() {
+				g.Assert(recover() != nil ).IsTrue()
+			}()
 			g.Assert(IsNullGeometry(rng)).IsTrue()
 		})
 	})

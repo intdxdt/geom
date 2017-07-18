@@ -5,6 +5,10 @@ import "simplex/struct/sset"
 //Checks if pt intersection other geometry
 func (pt *Point) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
+	//checks for non-geometry types
+	if IsNullGeometry(other) {
+		return res
+	}
 
 	if p, ok := IsPoint(other); ok {
 		if pt.Equals2D(p) {
@@ -12,10 +16,11 @@ func (pt *Point) Intersection(other Geometry) []*Point {
 		}
 	} else if ln, ok := IsLineString(other); ok {
 		res = pt.AsLineString().Intersection(ln)
+	} else if seg, ok := IsSegment(other); ok {
+		res = pt.AsLineString().Intersection(seg)
 	} else if ply, ok := IsPolygon(other); ok {
 		res = pt.AsLineString().Intersection(ply)
 	}
-
 	return res
 }
 
@@ -27,6 +32,10 @@ func (self *Segment) Intersection(other Geometry) []*Point {
 //Checks if pt intersection other geometry
 func (self *LineString) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
+	//checks for non-geometry types
+	if IsNullGeometry(other) {
+		return res
+	}
 
 	if pt, ok := IsPoint(other); ok {
 		res = self.linear_intersection(pt.AsLineString())
@@ -44,6 +53,10 @@ func (self *LineString) Intersection(other Geometry) []*Point {
 //Checks if pt intersection other geometry
 func (self *Polygon) Intersection(other Geometry) []*Point {
 	res := make([]*Point, 0)
+	//checks for non-geometry types
+	if IsNullGeometry(other) {
+		return res
+	}
 
 	if pt, ok := IsPoint(other); ok {
 		ln := pt.AsLineString()
@@ -55,7 +68,6 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 	} else if ply, ok := IsPolygon(other); ok {
 		ptset := sset.NewSSet(PointCmp)
 		lns := ply.AsLinear()
-
 		for _, ln := range lns {
 			pts := ln.Intersection(self)
 			for _, p := range pts {
@@ -85,7 +97,6 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point
 		for _, pt := range spts {
 			ptset.Add(pt)
 		}
-
 		//inside shell, does it touch hole boundary ?
 		for i := 1; i < len(rings); i++ {
 			hpts := self.linear_intersection(rings[i].LineString)
@@ -93,7 +104,6 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point
 				ptset.Add(pt)
 			}
 		}
-
 		//check for all vertices
 		for _, pt := range self.coordinates {
 			if shell.contains_point(pt) {
@@ -106,13 +116,10 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point
 				}
 			}
 		}
-
 		vals := ptset.Values()
 		for _, pt := range vals {
 			res = append(res, pt.(*Point))
 		}
-
 	}
-
 	return res
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 	"simplex/util/math"
 	"github.com/franela/goblin"
+	"fmt"
 )
 
 func TestLineStringEdit(t *testing.T) {
@@ -93,6 +94,7 @@ func TestLineStringEdit(t *testing.T) {
 			h := &Point{0.484154648492778, -0.645539531323704}
 			i := &Point{0.925118053504632, -1.233490738006176}
 			var ln_e *LineString
+			fmt.Println(">? ln_e >> ", ln_e == nil)
 			var pt_e *Point
 			ln_ab := NewLineString([]*Point{a, b})
 			ln_cd := NewLineString([]*Point{c, d})
@@ -104,8 +106,7 @@ func TestLineStringEdit(t *testing.T) {
 			g.Assert(ok).IsFalse()
 			g.Assert(ln_cd_clone.Intersects(ln_ab)).IsFalse()
 
-			ok = ln_cd.Intersects(ln_e)
-			g.Assert(ok).IsFalse()
+			g.Assert(ln_cd.Intersects(ln_e)).IsFalse()
 
 			ok = ln_cd.Intersects(ln_hi)
 			g.Assert(ok).IsTrue() //at h, i
