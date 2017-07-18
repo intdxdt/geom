@@ -2,6 +2,7 @@ package geom
 
 //Checks if pt intersects other geometry
 func (pt *Point) Intersects(other Geometry) bool {
+	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return false
 	}
@@ -18,9 +19,11 @@ func (self *Segment) Intersects(other Geometry) bool {
 
 //Checks if linestring intersecs other geometry
 func (self *LineString) Intersects(other Geometry) bool {
+	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return false
 	}
+
 	bln := false
 	_, ispoly := IsPolygon(other)
 	_, isline := IsLineString(other)
@@ -43,10 +46,12 @@ func (self *LineString) Intersects(other Geometry) bool {
 
 //Checks if polygon intersects other geometry
 func (self *Polygon) Intersects(other Geometry) bool {
-	var bln = false
+	//checks for non-geometry types
 	if IsNullGeometry(other) {
-		return bln
+		return false
 	}
+
+	var bln = false
 	var within_bounds bool
 	var rings []*LineString
 	var ln *LineString

@@ -1,5 +1,9 @@
 package geom
 
+//Checks if geometry type is one of the fundermental types
+//panics if geometry is not Point, Segment, LineString or Polygon
+//NOTE: type embedding of any of these types does satisfy the Geometry
+//Interface but is a null geometry.
 func IsNullGeometry(geom Geometry) bool {
 	if g, ok := IsPoint(geom); ok {
 		return g == nil
@@ -10,8 +14,7 @@ func IsNullGeometry(geom Geometry) bool {
 	} else if g, ok := IsPolygon(geom); ok {
 		return g == nil
 	}
-	//type unknown treat as null
-	return true
+	panic("unknown geometry type")
 }
 
 //Is point

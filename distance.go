@@ -10,11 +10,10 @@ func (self *Point) Distance(other Geometry) float64 {
 	if IsNullGeometry(other) {
 		return dist
 	}
-	pt, ispoint := IsPoint(other)
 
 	if self.Intersects(other) {
 		dist = 0.0
-	} else if ispoint {
+	} else if pt, ok := IsPoint(other); ok  {
 		dist = self.Magnitude(pt)
 	} else {
 		dist = dist_as_lines(self, other)
@@ -58,9 +57,9 @@ func (self *LineString) Distance(other Geometry) float64 {
 	return dist
 }
 
-//Computes the distance between wktreg and another linestring
+//Computes the distance between a linestring and another linestring
 //the distance between intersecting linestrings is 0.  Otherwise, the
-//distance is the Euclidean distance between the closest points.
+//distance is the Euclidean distance between the closest segments.
 func (self *LineString) line_line_dist(other *LineString) float64 {
 	//TODO(titus):this could be improved KNN in Rtree
 	// go bruteforce dist(seg , seg)
