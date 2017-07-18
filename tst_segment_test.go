@@ -2,10 +2,9 @@ package geom
 
 import (
 	"testing"
+	"simplex/geom/mbr"
 	"simplex/util/math"
 	"github.com/franela/goblin"
-	"simplex/geom/mbr"
-	"fmt"
 )
 
 func TestSegment(t *testing.T) {
@@ -13,6 +12,8 @@ func TestSegment(t *testing.T) {
 
 	g.Describe("Segment", func() {
 		g.It("should test segment intersection", func() {
+			wkt := "POLYGON (( -0.3604422185430426 -10, -0.3604422185430426 0.5291138245033155, 10 0.5291138245033155, 10 -10, -0.3604422185430426 -10 ))"
+			ply := NewPolygonFromWKT(wkt)
 			a := NewPointXY(0, 0)
 			b := NewPointXY(-3, 4)
 			c := NewPointXY(1.5, -2)
@@ -35,9 +36,6 @@ func TestSegment(t *testing.T) {
 			seg_ak := &Segment{A: a, B: k}
 			seg_kn := &Segment{A: k, B: n}
 
-			fmt.Println(ln_ab.WKT())
-			fmt.Println(ln_ab.WKT())
-
 			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
 			g.Assert(seg_ab.Type().IsLineString()).IsFalse()
 			g.Assert(seg_ab.BBox().Equals(mbr.NewMBR(0, 0, -3, 4))).IsTrue()
@@ -46,6 +44,12 @@ func TestSegment(t *testing.T) {
 			g.Assert(seg_ab.Intersects(k)).IsFalse()
 			g.Assert(seg_ab.Intersects(seg_kn)).IsFalse()
 			g.Assert(seg_ab.Intersects(seg_ak)).IsTrue()
+			g.Assert(seg_ab.Intersects(ply)).IsTrue()
+			g.Assert(ply.Intersects(seg_ab)).IsTrue()
+
+			g.Assert(seg_kn.Intersects(ply)).IsFalse()
+			g.Assert(ply.Intersects(seg_kn)).IsFalse()
+
 			g.Assert(seg_ab.Intersection(seg_ak)).Eql([]*Point{a})
 			g.Assert(seg_ab.Distance(seg_ak)).Equal(0.0)
 			g.Assert(math.FloatEqual(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
