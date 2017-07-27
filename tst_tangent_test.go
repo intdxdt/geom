@@ -3,7 +3,6 @@ package geom
 import (
 	"testing"
 	"github.com/franela/goblin"
-	"fmt"
 )
 
 func TestPointToPolyTangent(t *testing.T) {
@@ -12,9 +11,8 @@ func TestPointToPolyTangent(t *testing.T) {
 	ln := NewLineStringFromWKT(wkt)
 
 	coords := ln.coordinates
-	hull := ConvexHull(coords)
-	ply := NewPolygon(hull)
-	closed_coords := ply.Shell.coordinates
+	//hull := ConvexHull(coords)
+	//ply := NewPolygon(hull)
 
 	var i, j int
 	pt0 := NewPointXY(570, 60)
@@ -24,7 +22,6 @@ func TestPointToPolyTangent(t *testing.T) {
 
 	g.Describe("TangentPointToPoly", func() {
 		g.It("should tangent point to polygon", func() {
-			fmt.Println(ply.WKT())
 			i, j = TangentPointToPoly(pt0, coords)
 
 			g.Assert([]int{i, j}).Eql([]int{15, 19})
@@ -33,7 +30,6 @@ func TestPointToPolyTangent(t *testing.T) {
 			g.Assert([]int{i, j}).Eql([]int{10, 15})
 			i, j = TangentPointToPoly(pt2, coords)
 
-			fmt.Println(closed_coords)
 			g.Assert([]int{i, j}).Eql([]int{0, 10})
 
 			i, j = TangentPointToPoly(pt3, coords)
