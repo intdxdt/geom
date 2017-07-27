@@ -67,9 +67,19 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 		res = ln.Intersection(self)
 	} else if ply, ok := IsPolygon(other); ok {
 		ptset := sset.NewSSet(PointCmp)
+		//other intersect self
 		lns := ply.AsLinear()
 		for _, ln := range lns {
 			pts := ln.Intersection(self)
+			for _, p := range pts {
+				ptset.Add(p)
+			}
+		}
+
+		//self intersects other
+		lns = self.AsLinear()
+		for _, ln := range lns {
+			pts := ln.Intersection(other)
 			for _, p := range pts {
 				ptset.Add(p)
 			}

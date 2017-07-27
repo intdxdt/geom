@@ -3,10 +3,10 @@ package mbr
 func (self *MBR) AsArray() []float64 {
 	return []float64{self[x1], self[y1], self[x2], self[y2]}
 }
-func (self *MBR) AsPolyArray() [][2]float64 {
+func (self *MBR) AsPolyArray() [][]float64 {
 	lx, ly := self[x1], self[y1]
 	ux, uy := self[x2], self[y2]
-	return [][2]float64{{lx, ly}, {lx, uy}, {ux, uy}, {ux, ly}, {lx, ly}}
+	return [][]float64{{lx, ly}, {lx, uy}, {ux, uy}, {ux, ly}, {lx, ly}}
 }
 
 func (self *MBR) Width() float64 {

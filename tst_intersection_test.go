@@ -3,10 +3,12 @@ package geom
 import (
 	"testing"
 	"github.com/franela/goblin"
+	"time"
 )
 
 func TestIntersection(t *testing.T) {
 	g := goblin.Goblin(t)
+
 	type Seg struct {
 		*Segment
 	}
@@ -21,10 +23,16 @@ func TestIntersection(t *testing.T) {
 	ptCwkt := "POINT ( 722.1298042987639 582.0334837046336 )"
 	ptDwkt := "POINT ( 720 360 )"
 
+	polyAwkt := "POLYGON ((730 410, 920 500, 930 540, 930 580, 900 640, 810 650, 750 520, 730 410))"
+	polyBwkt := "POLYGON ((630 620, 730 410, 890 410, 1040 510, 1080 620, 1020 720, 690 720, 630 620))"
+
 	ln := NewLineStringFromWKT(lnwkt)
 	ln2 := NewLineStringFromWKT(lnwkt2)
 	ply := NewPolygonFromWKT(plywkt)
 	ply2 := NewPolygonFromWKT(plywkt2)
+
+	plyA := NewPolygonFromWKT(polyAwkt)
+	plyB := NewPolygonFromWKT(polyBwkt)
 
 	ptA := NewPointFromWKT(ptAwkt)
 	ptB := NewPointFromWKT(ptBwkt)
@@ -39,12 +47,16 @@ func TestIntersection(t *testing.T) {
 	g.Describe("Intersection with pt, seg, ln, poly", func() {
 
 		g.It("intersection", func() {
+			g.Timeout(1 * time.Hour)
+			inters := plyA.Intersection(plyB)
+			g.Assert(len(inters)).Equal(7)
+
 			g.Assert(ln.IsSimple()).IsTrue()
 			g.Assert(ply.IsSimple()).IsTrue()
 			g.Assert(len(ply.Intersection(nilG))).Equal(0)
 			g.Assert(len(ply.Intersection(ln))).Equal(4)
 			g.Assert(len(ply.Intersection(ln2))).Equal(22)
-			g.Assert(len(ply.Intersection(ply2))).Equal(10)
+			g.Assert(len(ply.Intersection(ply2))).Equal(13)
 
 			g.Assert(len(ptA.Intersection(nilG))).Equal(0)
 			g.Assert(len(ptA.Intersection(ply))).Equal(0)

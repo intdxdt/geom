@@ -21,13 +21,13 @@ const (
 )
 
 type Geometry interface {
-	BBox() *mbr.MBR
-	AsLinear() []*LineString
-	Intersects(Geometry) bool
-	Intersection(Geometry) []*Point
-	Distance(Geometry) float64
-	Type() *geoType
-	WKT() string
+	BBox()                  *mbr.MBR
+	AsLinear()              []*LineString
+	Intersects(Geometry)    bool
+	Intersection(Geometry)  []*Point
+	Distance(Geometry)      float64
+	Type()                  *geoType
+	WKT()                   string
 }
 
 type geoType struct {

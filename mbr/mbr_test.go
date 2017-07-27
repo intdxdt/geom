@@ -161,7 +161,7 @@ func TestMBR(t *testing.T) {
 			md.ExpandIncludeMBR(mb)
 
 			g.Assert(ma.AsArray()).Equal([]float64{0, 0, 5, 9})                                    //ma modified by expand
-			g.Assert(ma.AsPolyArray()).Equal([][2]float64{{0, 0}, {0, 9}, {5, 9}, {5, 0}, {0, 0}}) //ma modified by expand
+			g.Assert(ma.AsPolyArray()).Equal([][]float64{{0, 0}, {0, 9}, {5, 9}, {5, 0}, {0, 0}}) //ma modified by expand
 			g.Assert(mc.AsArray()).Equal([]float64{1.7, 1.5, 5, 9})                                //should not be touched
 			g.Assert(md.AsArray()).Equal([]float64{-1, -1, 2, 2})                                  //ma modified by expand
 
