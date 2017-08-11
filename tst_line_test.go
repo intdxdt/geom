@@ -2,9 +2,9 @@ package geom
 
 import (
 	"testing"
-	. "simplex/geom/mbr"
 	"simplex/util/math"
 	"github.com/franela/goblin"
+	"simplex/geom/mbr"
 )
 
 func TestLineString(t *testing.T) {
@@ -86,7 +86,7 @@ func TestLineString(t *testing.T) {
 		})
 
 		g.It("should test envelope", func() {
-			box := NewMBR(pts[0][x], pts[0][y], pts[0][x], pts[0][y])
+			box := mbr.NewMBR(pts[0][x], pts[0][y], pts[0][x], pts[0][y])
 			for _, v := range pts[1:] {
 				box.ExpandIncludeXY(v.X(), v.Y())
 			}
@@ -135,6 +135,7 @@ func TestLineStringRelate(t *testing.T) {
 		g.It("should linestring relate", func() {
 			g.Assert(lna.Envelope().Equals(lna.bbox.MBR)).IsTrue()
 			g.Assert(lna.Intersects(pnt_null)).IsFalse()
+			g.Assert(lna.Geometry().Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Intersects(ln_null)).IsFalse()
 			g.Assert(lna.Intersects(ply_null)).IsFalse()
 			g.Assert(lna.Intersects(lnb)).IsFalse()
@@ -158,6 +159,8 @@ func TestLineStringRelate(t *testing.T) {
 
 			g.Assert(lna.Intersects(plyb)).IsFalse()
 			g.Assert(lna.Intersects(plye)).IsTrue()
+			g.Assert(lna.Intersects(plye.Geometry())).IsTrue()
+			g.Assert(lna.Geometry().Intersects(plye)).IsTrue()
 			g.Assert(lna.Intersects(plyf)).IsFalse()
 		})
 	})

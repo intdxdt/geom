@@ -37,13 +37,18 @@ func TestSegment(t *testing.T) {
 			seg_kn := &Segment{A: k, B: n}
 
 			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
+			g.Assert(seg_ab.IsSimple()).IsTrue()
 			g.Assert(seg_ab.Type().IsLineString()).IsFalse()
 			g.Assert(seg_ab.BBox().Equals(mbr.NewMBR(0, 0, -3, 4))).IsTrue()
 			g.Assert(seg_ab.AsLinear()).Eql([]*LineString{ln_ab})
 			g.Assert(seg_ab.WKT()).Eql(ln_ab.WKT())
 			g.Assert(seg_ab.Intersects(k)).IsFalse()
 			g.Assert(seg_ab.Intersects(seg_kn)).IsFalse()
+			g.Assert(seg_ab.Geometry().Intersects(seg_kn)).IsFalse()
+			g.Assert(seg_ab.Intersects(seg_kn.Geometry())).IsFalse()
 			g.Assert(seg_ab.Intersects(seg_ak)).IsTrue()
+			g.Assert(seg_ab.Geometry().Intersects(seg_ak)).IsTrue()
+			g.Assert(seg_ab.Intersects(seg_ak.Geometry())).IsTrue()
 			g.Assert(seg_ab.Intersects(ply)).IsTrue()
 			g.Assert(ply.Intersects(seg_ab)).IsTrue()
 

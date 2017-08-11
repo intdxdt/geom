@@ -18,11 +18,6 @@ func NewSegment(a, b *Point) *Segment {
 	return &Segment{A: a, B: b}
 }
 
-//GeomType
-func (self *Segment) Type() *geoType {
-	return new_geoType(GeoType_Segment)
-}
-
 //WKT
 func (self *Segment) WKT() string {
 	return self.AsLineString().WKT()

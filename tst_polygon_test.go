@@ -27,6 +27,8 @@ func TestPolygon(t *testing.T) {
 
 			g.Assert(poly.Envelope().Equals(poly.BBox())).IsTrue()
 			g.Assert(poly.Intersects(ply_inpoly)).IsTrue()
+			g.Assert(poly.Geometry().Intersects(ply_inpoly)).IsTrue()
+			g.Assert(poly.Intersects(ply_inpoly.Geometry())).IsTrue()
 			g.Assert(poly.Intersects(ply_inpoly_clone)).IsTrue()
 			//g.Assert(poly.Contains(ply_inpoly)).IsTrue()
 		})

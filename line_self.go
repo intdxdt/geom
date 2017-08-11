@@ -11,6 +11,11 @@ func (self *LineString) Type() *geoType {
 	return new_geoType(GeoType_LineString)
 }
 
+//get geometry interface
+func (self *LineString) Geometry() Geometry {
+	return self
+}
+
 func (self *LineString) IsComplex() bool {
 	return !self.IsSimple()
 }

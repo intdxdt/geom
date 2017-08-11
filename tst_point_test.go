@@ -123,7 +123,9 @@ func TestPoint(t *testing.T) {
 			var p0 *Point
 			g.Assert(p3.Equals2D(p1)).IsTrue()
 			g.Assert(p3.Intersects(p1)).IsTrue()
+			g.Assert(p3.Intersects(p1.Geometry())).IsTrue()
 			g.Assert(p3.Intersects(p0)).IsFalse()
+			g.Assert(p3.Geometry().Intersects(p0)).IsFalse()
 			g.Assert(p3.Disjoint(p1)).IsFalse()
 			g.Assert(p3.Disjoint(p4)).IsTrue()
 			g.Assert(p6.IsNull()).IsTrue()
