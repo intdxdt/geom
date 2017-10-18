@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	. "simplex/geom"
+	"github.com/intdxdt/geom"
 )
 
 func main() {
@@ -17,11 +17,11 @@ func main() {
 	ptDwkt := "POINT ( 720 360 )"
 
 	//g := NewLineStringFromWKT(awkt)
-	ply := NewPolygonFromWKT(plywkt)
+	ply := geom.NewPolygonFromWKT(plywkt)
 	//ply2 := NewPolygonFromWKT(plywkt2)
 
 	//ptA := NewPointFromWKT(ptAwkt)
-	ptB := NewPointFromWKT(ptDwkt)
+	ptB := geom.NewPointFromWKT(ptDwkt)
 	//ptC := NewPointFromWKT(ptCwkt)
 	//ptD := NewPointFromWKT(ptDwkt)
 
@@ -31,13 +31,13 @@ func main() {
 		fmt.Println(pt.WKT())
 	}
 
-	a := NewPointXY(0, 0)
-	b := NewPointXY(-3, 4)
-	k := &Point{2, 2}
-	n := &Point{1, 5}
+	a := geom.NewPointXY(0, 0)
+	b := geom.NewPointXY(-3, 4)
+	k := &geom.Point{2, 2}
+	n := &geom.Point{1, 5}
 
-	seg_ab := NewSegment(a, b)
-	seg_kn := &Segment{A: k, B: n}
+	seg_ab := geom.NewSegment(a, b)
+	seg_kn := &geom.Segment{A: k, B: n}
 	bln := seg_ab.Intersects(seg_kn)
 	fmt.Println(bln)
 }

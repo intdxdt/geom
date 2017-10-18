@@ -2,9 +2,9 @@ package geom
 
 import (
 	"github.com/franela/goblin"
-	"simplex/util/math"
+	"github.com/intdxdt/math"
 	"testing"
-	. "simplex/geom/mbr"
+	. "github.com/intdxdt/mbr"
 )
 
 func TestPoint(t *testing.T) {

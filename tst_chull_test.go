@@ -2,8 +2,8 @@ package geom
 
 import (
 	"testing"
-	"simplex/util/math"
-	"simplex/struct/sset"
+	"github.com/intdxdt/math"
+	"github.com/intdxdt/sset"
 	"github.com/franela/goblin"
 )
 

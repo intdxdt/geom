@@ -1,8 +1,8 @@
 package main
 
 import (
-	"simplex/geom"
 	"fmt"
+	"github.com/intdxdt/geom"
 )
 
 func main() {

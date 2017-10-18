@@ -1,7 +1,7 @@
 package main
 
 import (
-	"simplex/geom"
+	"github.com/intdxdt/geom"
 	"fmt"
 )
 

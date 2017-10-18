@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/struct/sset"
+	"github.com/intdxdt/sset"
 )
 
 //intersection of self linestring with other

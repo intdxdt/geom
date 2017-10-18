@@ -2,9 +2,8 @@ package geom
 
 import (
 	"bytes"
-	"simplex/struct/item"
-	"simplex/util/math"
 	"strconv"
+	"github.com/intdxdt/math"
 )
 
 type InterPoint struct {
@@ -19,8 +18,7 @@ func InterPointCmp(a, b interface{}) int {
 }
 
 //compare points as items - x | y ordering
-func (self *InterPoint) Compare(o item.Item) int {
-	other := o.(*InterPoint)
+func (self *InterPoint) Compare(other *InterPoint) int {
 	d := self.Pt[x] - other.Pt[x]
 	if math.FloatEqual(d, 0.0) {
 		d = self.Pt[y] - other.Pt[y]

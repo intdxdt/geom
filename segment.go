@@ -2,9 +2,9 @@ package geom
 
 import (
 	"simplex/side"
-	"simplex/geom/mbr"
-	"simplex/util/math"
-	"simplex/struct/sset"
+	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/math"
+	"github.com/intdxdt/sset"
 )
 
 type Segment struct {

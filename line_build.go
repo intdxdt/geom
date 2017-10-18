@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/struct/rtree"
+	"github.com/intdxdt/rtree"
 )
 
 //builds rtree index of chains

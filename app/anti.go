@@ -2,9 +2,9 @@ package main
 
 import (
     "fmt"
-    "simplex/geom"
-    "simplex/cart"
-    "simplex/util/math"
+    "github.com/intdxdt/geom"
+    "github.com/intdxdt/cart"
+    "github.com/intdxdt/math"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/util/math"
+	"github.com/intdxdt/math"
 )
 
 

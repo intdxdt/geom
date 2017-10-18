@@ -3,7 +3,7 @@ package geom
 import (
 	"fmt"
 	"github.com/franela/goblin"
-	"simplex/util/math"
+	"github.com/intdxdt/math"
 	"testing"
 )
 

@@ -2,8 +2,8 @@ package geom
 
 import (
 	"testing"
-	"simplex/geom/mbr"
-	"simplex/util/math"
+	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
 )
 

@@ -1,6 +1,6 @@
 package geom
 
-import "simplex/struct/sset"
+import "github.com/intdxdt/sset"
 
 //Checks if pt intersection other geometry
 func (pt *Point) Intersection(other Geometry) []*Point {

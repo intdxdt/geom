@@ -2,9 +2,9 @@ package geom
 
 import (
 	"testing"
-	"simplex/util/math"
+	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
-	"simplex/geom/mbr"
+	"github.com/intdxdt/mbr"
 )
 
 func TestLineString(t *testing.T) {

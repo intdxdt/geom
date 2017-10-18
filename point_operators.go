@@ -1,17 +1,17 @@
 package geom
 
 import (
-	"simplex/cart"
+	"github.com/intdxdt/cart"
 )
 
 //Add creates a new point by adding to other point
-func (a *Point) Add(b cart.Pt2D) *Point {
+func (a *Point) Add(b cart.Coord2D) *Point {
 	cx, cy := cart.Add(a, b)
 	return NewPointXY(cx, cy)
 }
 
 //Sub creates a new point by adding to other point
-func (a *Point) Sub(b cart.Pt2D) *Point {
+func (a *Point) Sub(b cart.Coord2D) *Point {
 	cx, cy := cart.Sub(a, b)
 	return NewPointXY(cx, cy)
 }

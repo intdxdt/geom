@@ -1,10 +1,9 @@
 package geom
 
 import (
-	"simplex/cart"
 	"simplex/side"
-	"simplex/struct/item"
-	"simplex/util/math"
+	"github.com/intdxdt/cart"
+	"github.com/intdxdt/math"
 )
 
 //Equals evaluates whether two points are the same
@@ -23,8 +22,7 @@ func (pt *Point) Disjoint(point *Point) bool {
 }
 
 //compare points as items - x | y ordering
-func (self *Point) Compare(o item.Item) int {
-	pt := o.(*Point)
+func (self *Point) Compare(pt *Point) int {
 	d := self[x] - pt[x]
 	if math.FloatEqual(d, 0.0) {
 		//x's are close enougth to each other

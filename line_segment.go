@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"simplex/geom/mbr"
-	"simplex/struct/sset"
+	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/sset"
 )
 
 //segments in range

@@ -2,7 +2,7 @@ package geom
 
 import (
 	"testing"
-	"simplex/util/math"
+	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
 )
 

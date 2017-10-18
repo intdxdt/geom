@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"robust"
+	"github.com/intdxdt/robust"
 )
 
 //true if Vi is above Vj

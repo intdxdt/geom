@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"simplex/cart"
-	"simplex/util/math"
+	"github.com/intdxdt/cart"
+	"github.com/intdxdt/math"
 )
 
 const RightAngle = 90.0

@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"simplex/util/math"
-	"simplex/struct/rtree"
+	"github.com/intdxdt/math"
+	"github.com/intdxdt/rtree"
 )
 
 type LineString struct {
