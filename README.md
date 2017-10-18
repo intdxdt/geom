@@ -1,8 +1,8 @@
-# Geometry Package
+# geom
 
-# Limitations of JTS - Family (Geos , Shapely)
-   *Lack for suport for complex polygons
+euclidean geometry library based on rtree
 
+ 
         
 
 
