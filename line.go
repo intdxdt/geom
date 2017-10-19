@@ -5,11 +5,12 @@ import (
 	"github.com/intdxdt/rtree"
 )
 
+const bucketSize = 16
+
 type LineString struct {
 	chains      []*MonoMBR
 	coordinates []*Point
 	monosize    int
-	bucketsize  int
 	index       *rtree.RTree
 	bbox        *MonoMBR
 	length      float64
@@ -17,37 +18,23 @@ type LineString struct {
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
 //optional clone coords : make a copy of input coordinates
-func NewLineString(coordinates []*Point, clone_coords ...bool) *LineString {
-	var clone = true
-	if len(coordinates) < 2 {
+func NewLineString(coordinates []*Point) *LineString {
+	var n = len(coordinates)
+	if n < 2 {
 		panic("a linestring must have at least 2 coordinate")
 	}
-	self := &LineString{}
-	self.chains = make([]*MonoMBR, 0)
-
-	if len(clone_coords) > 0 {
-		clone = clone_coords[0]
-	}
-
-	if clone {
-		self.coordinates = CloneCoordinates(coordinates)
-	} else {
-		self.coordinates = coordinates
-	}
-
-	//init
-	self.monosize = int(math.Log2(float64(len(coordinates)) + 1.0))
-	self.bucketsize = 16
-	self.index = rtree.NewRTree(self.bucketsize)
-
-	self.process_chains(0, 0)
-	self.build_index()
-	return self
+	return (
+		&LineString{
+			chains:      make([]*MonoMBR, 0),
+			coordinates: coordinates[:n:n],
+			monosize:    int(math.Log2(float64(n) + 1.0)),
+			index:       rtree.NewRTree(bucketSize),
+		}).process_chains(0, n-1).build_index()
 }
 
 //New line string from array
 func NewLineStringFromArray(array [][2]float64) *LineString {
-	return NewLineString(AsPointArray(array), false)
+	return NewLineString(AsPointArray(array))
 }
 
 //create a new linestring from wkt string

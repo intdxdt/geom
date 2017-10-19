@@ -36,7 +36,7 @@ func new_mono_mbr(box *mbr.MBR) *MonoMBR {
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
-func (self *LineString) process_chains(i, j int) {
+func (self *LineString) process_chains(i, j int) *LineString {
 	var dx, dy float64
 	var v0, v1 *Point
 	var cur_x, cur_y, prev_x, prev_y int
@@ -95,6 +95,7 @@ func (self *LineString) process_chains(i, j int) {
 			self.chains = append(self.chains, mono)
 		}
 	}
+	return self
 }
 
 //compute bbox of x or y mono chain

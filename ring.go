@@ -6,11 +6,12 @@ type LinearRing struct {
 
 //new linear ring
 func NewLinearRing(coordinates []*Point) *LinearRing {
-	coords := CloneCoordinates(coordinates)
-	if len(coordinates) > 1 {
-		if !IsRing(coordinates) {
-			coords = append(coords, coordinates[0].Clone())
+	var n = len(coordinates)
+	var coords = coordinates[:n:n]
+	if n > 1 {
+		if !IsRing(coords) {
+			coords = append(coords, coords[0].Clone())
 		}
 	}
-	return &LinearRing{NewLineString(coords, false)}
+	return &LinearRing{NewLineString(coords)}
 }

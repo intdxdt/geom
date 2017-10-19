@@ -5,7 +5,7 @@ import (
 )
 
 //builds rtree index of chains
-func (self *LineString) build_index() {
+func (self *LineString) build_index()*LineString {
 	if !self.index.IsEmpty() {
 		self.index.Clear()
 	}
@@ -14,4 +14,5 @@ func (self *LineString) build_index() {
 		data[i] = self.chains[i]
 	}
 	self.index.Load(data) //bulkload
+	return self
 }
