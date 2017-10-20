@@ -1,14 +1,14 @@
 package geom
 
 import (
-	"github.com/intdxdt/mbr"
 	"strings"
+	"github.com/intdxdt/mbr"
 )
 
 const (
-	x    = iota
-	y
-	z
+	X    = iota
+	Y
+	Z
 	null = -9
 )
 
@@ -20,14 +20,17 @@ const (
 	GeoType_Polygon
 )
 
+//geometry constructor
+type GeometryFn func([]*Point) Geometry
+
 type Geometry interface {
-	BBox()                  *mbr.MBR
-	AsLinear()              []*LineString
-	Intersects(Geometry)    bool
-	Intersection(Geometry)  []*Point
-	Distance(Geometry)      float64
-	Type()                  *geoType
-	WKT()                   string
+	BBox() *mbr.MBR
+	AsLinear() []*LineString
+	Intersects(Geometry) bool
+	Intersection(Geometry) []*Point
+	Distance(Geometry) float64
+	Type() *geoType
+	WKT() string
 }
 
 type geoType struct {

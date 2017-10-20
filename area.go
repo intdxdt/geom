@@ -26,7 +26,7 @@ func (self *LinearRing) Area() float64 {
 	for i := 0; i < n; i++ {
 		a = b
 		b = coords[i]
-		area += a[y]*b[x] - a[x]*b[y]
+		area += a[Y]*b[X] - a[X]*b[Y]
 	}
 	return math.Abs(area * 0.5)
 }

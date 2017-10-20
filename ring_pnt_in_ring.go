@@ -25,9 +25,9 @@ func (self *LinearRing) completely_in_ring(pnt *Point) bool {
 		p1 = self.VertexAt(i)
 		p2 = self.VertexAt(i1)
 
-		if ((p1[y] > p[y]) && (p2[y] <= p[y])) || ((p2[y] > p[y]) && (p1[y] <= p[y])) {
-			x1, y1 = p1[x]-p[x], p1[y]-p[y]
-			x2, y2 = p2[x]-p[x], p2[y]-p[y]
+		if ((p1[Y] > p[Y]) && (p2[Y] <= p[Y])) || ((p2[Y] > p[Y]) && (p1[Y] <= p[Y])) {
+			x1, y1 = p1[X]-p[X], p1[Y]-p[Y]
+			x2, y2 = p2[X]-p[X], p2[Y]-p[Y]
 			//segment straddles x axis, so compute intersection with x-axis.
 			xInt = float64(math.SignOfDet2(x1, y1, x2, y2)) / (y2 - y1)
 			//xsave = xInt

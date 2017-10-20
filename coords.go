@@ -34,10 +34,10 @@ type XYCoordinates struct {
 
 //lexical sort of x and y coordinates
 func (o XYCoordinates) Less(i, j int) bool {
-	if o.Coordinates[i][x] < o.Coordinates[j][x] {
+	if o.Coordinates[i][X] < o.Coordinates[j][X] {
 		return true
-	} else if o.Coordinates[i][x] == o.Coordinates[j][x] {
-		if o.Coordinates[i][y] < o.Coordinates[j][y] {
+	} else if o.Coordinates[i][X] == o.Coordinates[j][X] {
+		if o.Coordinates[i][Y] < o.Coordinates[j][Y] {
 			return true
 		}
 	}
@@ -56,7 +56,7 @@ type XCoordinates struct {
 
 //Less sorts boxes by y
 func (self XCoordinates) Less(i, j int) bool {
-	return self.Coordinates[i][x] < self.Coordinates[j][x]
+	return self.Coordinates[i][X] < self.Coordinates[j][X]
 
 }
 
@@ -72,7 +72,7 @@ type YCoordinates struct {
 
 //Less sorts boxes by y
 func (o *YCoordinates) Less(i, j int) bool {
-	return o.Coordinates[i][y] < o.Coordinates[j][y]
+	return o.Coordinates[i][Y] < o.Coordinates[j][Y]
 
 }
 
@@ -143,7 +143,7 @@ func CoordinatesAsFloat2D(coordinates []*Point) [][2]float64 {
 	var n = len(coordinates)
 	var coords = make([][2]float64, n)
 	for i := 0; i < n; i++ {
-		coords[i] = [2]float64{coordinates[i][x], coordinates[i][y]}
+		coords[i] = [2]float64{coordinates[i][X], coordinates[i][Y]}
 	}
 	return coords
 }

@@ -86,7 +86,7 @@ func TestLineString(t *testing.T) {
 		})
 
 		g.It("should test envelope", func() {
-			box := mbr.NewMBR(pts[0][x], pts[0][y], pts[0][x], pts[0][y])
+			box := mbr.NewMBR(pts[0][X], pts[0][Y], pts[0][X], pts[0][Y])
 			for _, v := range pts[1:] {
 				box.ExpandIncludeXY(v.X(), v.Y())
 			}

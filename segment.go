@@ -122,11 +122,11 @@ func seg_intersect_abdxy(self, other *Segment) (float64, float64, float64,
 
 	var x1, y1, x2, y2, x3, y3, x4, y4, d, a, b float64
 
-	x1, y1 = self.A[x], self.A[y]
-	x2, y2 = self.B[x], self.B[y]
+	x1, y1 = self.A[X], self.A[Y]
+	x2, y2 = self.B[X], self.B[Y]
 
-	x3, y3 = other.A[x], other.A[y]
-	x4, y4 = other.B[x], other.B[y]
+	x3, y3 = other.A[X], other.A[Y]
+	x4, y4 = other.B[X], other.B[Y]
 
 	d = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1))
 	a = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3))

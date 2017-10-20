@@ -19,9 +19,9 @@ func InterPointCmp(a, b interface{}) int {
 
 //compare points as items - x | y ordering
 func (self *InterPoint) Compare(other *InterPoint) int {
-	d := self.Pt[x] - other.Pt[x]
+	d := self.Pt[X] - other.Pt[X]
 	if math.FloatEqual(d, 0.0) {
-		d = self.Pt[y] - other.Pt[y]
+		d = self.Pt[Y] - other.Pt[Y]
 	}
 
 	if math.FloatEqual(d, 0.0) {
@@ -46,9 +46,9 @@ func (self *InterPoint) Compare(other *InterPoint) int {
 func (self *InterPoint) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("[")
-	buf.WriteString(strconv.FormatFloat(self.Pt[x], 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(self.Pt[y], 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(self.Pt[z], 'f', -1, 64) + ", ")
+	buf.WriteString(strconv.FormatFloat(self.Pt[X], 'f', -1, 64) + ", ")
+	buf.WriteString(strconv.FormatFloat(self.Pt[Y], 'f', -1, 64) + ", ")
+	buf.WriteString(strconv.FormatFloat(self.Pt[Z], 'f', -1, 64) + ", ")
 	buf.WriteString(strconv.FormatFloat(float64(self.I), 'f', -1, 64) + ", ")
 	buf.WriteString(strconv.FormatFloat(float64(self.J), 'f', -1, 64) + ", ")
 	buf.WriteString(strconv.FormatFloat(float64(self.K), 'f', -1, 64) + ", ")

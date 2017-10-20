@@ -8,11 +8,11 @@ import (
 //Distance betwen two segments
 func (self *Segment) SegSegDistance(other *Segment) float64 {
 	var dist = math.NaN()
-	var x1, y1 = self.A[x], self.A[y]
-	var x2, y2 = self.B[x], self.B[y]
+	var x1, y1 = self.A[X], self.A[Y]
+	var x2, y2 = self.B[X], self.B[Y]
 
-	var x3, y3 = other.A[x], other.A[y]
-	var x4, y4 = other.B[x], other.B[y]
+	var x3, y3 = other.A[X], other.A[Y]
+	var x4, y4 = other.B[X], other.B[Y]
 	var mua, mub float64
 	var denom, numera, numerb float64
 	var is_aspt_a, is_aspt_b bool
@@ -98,7 +98,7 @@ func (self *Segment) DistanceToPoint(pt *Point) float64 {
 		//line with zero length
 		dist = pt.Magnitude(self.A)
 	} else {
-		var dx, dy = dab[x], dab[y]
+		var dx, dy = dab[X], dab[Y]
 		var u = pt.Sub(self.A).DotProduct(dab) / (dx*dx + dy*dy)
 
 		if u < 0 {
@@ -106,7 +106,7 @@ func (self *Segment) DistanceToPoint(pt *Point) float64 {
 		} else if u > 1 {
 			cPt = self.B
 		} else {
-			cPt = NewPointXY(self.A[x]+u*dx, self.A[y]+u*dy)
+			cPt = NewPointXY(self.A[X]+u*dx, self.A[Y]+u*dy)
 		}
 		dist = pt.Magnitude(cPt)
 	}

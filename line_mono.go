@@ -50,7 +50,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 	}
 
 	v0 = self.coordinates[i]
-	box := mbr.NewMBR(v0[x], v0[y], v0[x], v0[y])
+	box := mbr.NewMBR(v0[X], v0[Y], v0[X], v0[Y])
 
 	self.bbox = new_mono_mbr(box)
 	box = box.Clone()
@@ -63,8 +63,8 @@ func (self *LineString) process_chains(i, j int) *LineString {
 	for i = i + 1; i <= j; i += 1 {
 		v0 = self.coordinates[i-1]
 		v1 = self.coordinates[i]
-		dx = v1[x] - v0[x]
-		dy = v1[y] - v0[y]
+		dx = v1[X] - v0[X]
+		dy = v1[Y] - v0[Y]
 
 		self.length += math.Hypot(dx, dy)
 
@@ -88,7 +88,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 
 			prev_x, prev_y = cur_x, cur_y
 			p0, p1 := self.coordinates[i-1], self.coordinates[i]
-			box := mbr.NewMBR(p0[x], p0[y], p1[x], p1[y])
+			box := mbr.NewMBR(p0[X], p0[Y], p1[X], p1[Y])
 
 			mono = new_mono_mbr(box)
 			self.xy_monobox(mono, i-1, i)
@@ -101,7 +101,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 //compute bbox of x or y mono chain
 func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
 	if i != null {
-		mono.ExpandIncludeXY(self.coordinates[i][x], self.coordinates[i][y])
+		mono.ExpandIncludeXY(self.coordinates[i][X], self.coordinates[i][Y])
 		if j == null {
 			mono.j = i
 		} else {

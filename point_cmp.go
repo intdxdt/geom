@@ -8,9 +8,9 @@ import (
 func PointCmp(a , b interface{}) int {
 	self := a.(*Point)
 	other := b.(*Point)
-	d := self[x] - other[x]
+	d := self[X] - other[X]
 	if math.FloatEqual(d, 0.0) {
-		d = self[y] - other[y]
+		d = self[Y] - other[Y]
 	}
 
 	if math.FloatEqual(d, 0.0) {

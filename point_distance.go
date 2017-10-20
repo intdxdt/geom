@@ -10,13 +10,13 @@ func (self *Point) SquareDistance(pt *Point) float64 {
 
 //Computes vector magnitude of pt as vector: x , y as components
 func (self *Point) Magnitude(o *Point) float64 {
-	return math.Hypot(o[x]-self[x], o[y]-self[y])
+	return math.Hypot(o[X]-self[X], o[Y]-self[Y])
 }
 
 //Computes the square vector magnitude of pt as vector: x , y as components
 //This has a potential overflow problem based on coordinates of pt x^2 + y^2
 func (self *Point) SquareMagnitude(o *Point) float64 {
-	dx := o[x] - self[x]
-	dy := o[y] - self[y]
+	dx := o[X] - self[X]
+	dy := o[Y] - self[Y]
 	return (dx * dx) + (dy * dy)
 }

@@ -8,12 +8,12 @@ import (
 
 //Equals evaluates whether two points are the same
 func (pt *Point) Equals2D(point *Point) bool {
-	return math.FloatEqual(pt[x], point[x]) && math.FloatEqual(pt[y], point[y])
+	return math.FloatEqual(pt[X], point[X]) && math.FloatEqual(pt[Y], point[Y])
 }
 
 func (pt *Point) Equals3D(point *Point) bool {
-	return math.FloatEqual(pt[x], point[x]) && math.FloatEqual(pt[y], point[y]) &&
-		math.FloatEqual(pt[z], point[z])
+	return math.FloatEqual(pt[X], point[X]) && math.FloatEqual(pt[Y], point[Y]) &&
+		math.FloatEqual(pt[Z], point[Z])
 }
 
 //Disjoint evaluates whether points are not coincident
@@ -23,10 +23,10 @@ func (pt *Point) Disjoint(point *Point) bool {
 
 //compare points as items - x | y ordering
 func (self *Point) Compare(pt *Point) int {
-	d := self[x] - pt[x]
+	d := self[X] - pt[X]
 	if math.FloatEqual(d, 0.0) {
 		//x's are close enougth to each other
-		d = self[y] - pt[y]
+		d = self[Y] - pt[Y]
 	}
 
 	if math.FloatEqual(d, 0.0) {

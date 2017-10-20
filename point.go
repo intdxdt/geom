@@ -34,27 +34,27 @@ func NewPointFromWKT(wkt_geom string) *Point {
 
 //Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
-	return math.FloatEqual(self[x], 0.0) && math.FloatEqual(self[y], 0.0)
+	return math.FloatEqual(self[X], 0.0) && math.FloatEqual(self[Y], 0.0)
 }
 
 //is null
 func (self *Point) IsNull() bool {
-	return math.IsNaN(self[x]) || math.IsNaN(self[y])
+	return math.IsNaN(self[X]) || math.IsNaN(self[Y])
 }
 
 //X gets the x coordinate of a point same as point[0]
 func (self *Point) X() float64 {
-	return self[x]
+	return self[X]
 }
 
 //Y gets the y coordinate of a point , same as wktreg[1]
 func (self *Point) Y() float64 {
-	return self[y]
+	return self[Y]
 }
 
 //Z gets the z coordinate of a point , same as wktreg[2]
 func (self *Point) Z() float64 {
-	return self[z]
+	return self[Z]
 }
 
 //As line strings
@@ -69,5 +69,5 @@ func (self *Point) AsLineStrings() []*LineString {
 
 //coordinate string
 func coord_str(pt *[2]float64) string {
-	return math.FloatToString(pt[x]) + " " + math.FloatToString(pt[y])
+	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y])
 }

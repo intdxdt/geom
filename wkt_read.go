@@ -164,8 +164,8 @@ func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
 	var coords = strings.TrimSpace(*wkt_coords)
 	var coord = re_spaces.Split(coords, -1)
 	pt := [2]float64{
-		wkt_parse_float(coord[x]),
-		wkt_parse_float(coord[y]),
+		wkt_parse_float(coord[X]),
+		wkt_parse_float(coord[Y]),
 	}
 	obj.shell, obj.holes = &Shell{pt}, nil
 }
@@ -209,8 +209,8 @@ func wkt_string_coords(str *string) *Shell {
 	for i := 0; i < n; i++ {
 		coords := re_spaces.Split(strings.TrimSpace(points[i]), -1)
 		pt := [2]float64{
-			wkt_parse_float(coords[x]),
-			wkt_parse_float(coords[y]),
+			wkt_parse_float(coords[X]),
+			wkt_parse_float(coords[Y]),
 		}
 		comps[i] = pt
 	}
