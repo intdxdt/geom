@@ -11,7 +11,7 @@ func NewPointXY(x, y float64) *Point {
 	return &Point{x, y}
 }
 
-//New Point from x, y values
+//New Point from x, y, z values
 func NewPointXYZ(x, y, z float64) *Point {
 	return &Point{x, y, z}
 }

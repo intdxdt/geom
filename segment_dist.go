@@ -4,7 +4,6 @@ import (
 	"github.com/intdxdt/math"
 )
 
-
 //Distance betwen two segments
 func (self *Segment) SegSegDistance(other *Segment) float64 {
 	var dist = math.NaN()
@@ -27,7 +26,8 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 		is_aspt_b = other.A.Equals2D(other.B)
 
 		if is_aspt_a && is_aspt_b {
-			dist = self.A.Magnitude(other.B)
+			//dist = self.A.Magnitude(other.B)
+			dist = math.Hypot(x1-x4, y1-y4)
 		} else if is_aspt_a || is_aspt_b {
 			var ln *Segment
 
@@ -91,24 +91,39 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 //Minimum distance from segement to point
 func (self *Segment) DistanceToPoint(pt *Point) float64 {
 	var dist = math.NaN()
-	var cPt *Point
-	var dab = self.B.Sub(self.A)
+	//var cPt *Point
+	var ax, ay = self.A[X], self.A[Y]
+	var bx, by = self.B[X], self.B[Y]
+	var px, py = pt[X], pt[Y]
+	//var dab = self.B.Sub(self.A)
+	var dx, dy = bx-ax, by-ay
+	var isz_x = math.FloatEqual(dx, 0)
+	var isz_y = math.FloatEqual(dy, 0)
 
-	if dab.IsZero() {
+	if isz_x && isz_y {
 		//line with zero length
-		dist = pt.Magnitude(self.A)
+		//dist = pt.Magnitude(self.A)
+		dist = math.Hypot(px-ax, py-ay)
 	} else {
-		var dx, dy = dab[X], dab[Y]
-		var u = pt.Sub(self.A).DotProduct(dab) / (dx*dx + dy*dy)
+		var cPtx, cPty float64
+		//var dx, dy = dab[X], dab[Y]
+		var pax, pay = px-ax, py-ay
+		//(pax * dx) + (pay * dy)
+		//var u = pt.Sub(self.A).DotProduct(dab) / (dx*dx + dy*dy)
+		var u = ((pax * dx) + (pay * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
-			cPt = self.A
+			//cPt = self.A
+			cPtx, cPty = ax, ay
 		} else if u > 1 {
-			cPt = self.B
+			//cPt = self.B
+			cPtx, cPty = bx, by
 		} else {
-			cPt = NewPointXY(self.A[X]+u*dx, self.A[Y]+u*dy)
+			//cPt = NewPointXY(self.A[X]+u*dx, self.A[Y]+u*dy)
+			cPtx, cPty = ax+u*dx, ay+u*dy
 		}
-		dist = pt.Magnitude(cPt)
+		//dist = pt.Magnitude(cPt)
+		dist = math.Hypot(px-cPtx, py-cPty)
 	}
 
 	return dist
