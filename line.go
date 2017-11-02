@@ -5,7 +5,7 @@ import (
 	"github.com/intdxdt/rtree"
 )
 
-const bucketSize = 16
+const bucketSize = 8
 
 type LineString struct {
 	chains      []*MonoMBR
