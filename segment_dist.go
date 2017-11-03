@@ -10,7 +10,7 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 }
 
 //Distance betwen two segments
-func  SegSegDistance(sa, sb , oa, ob *Point) float64 {
+func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 	var dist = math.NaN()
 	var x1, y1 = sa[X], sa[Y]
 	var x2, y2 = sb[X], sb[Y]
@@ -34,14 +34,14 @@ func  SegSegDistance(sa, sb , oa, ob *Point) float64 {
 			//dist = sa.Magnitude(ob)
 			dist = math.Hypot(x1-x4, y1-y4)
 		} else if is_aspt_a || is_aspt_b {
-			var lna,lnb *Point
+			var lna, lnb *Point
 
 			if is_aspt_a {
 				pta = sa
-				lna,lnb = oa, ob
+				lna, lnb = oa, ob
 			} else if is_aspt_b {
 				pta = oa
-				lna,lnb = sa, sb
+				lna, lnb = sa, sb
 			}
 			dist = DistanceToPoint(lna, lnb, pta)
 		} else {
@@ -76,13 +76,13 @@ func  SegSegDistance(sa, sb , oa, ob *Point) float64 {
 
 			if pta != nil && ptb != nil {
 				dist = math.MinF64(
-					DistanceToPoint(oa, ob , pta),
-					DistanceToPoint(sa, sb , ptb),
+					DistanceToPoint(oa, ob, pta),
+					DistanceToPoint(sa, sb, ptb),
 				)
 			} else if pta != nil {
-				dist = DistanceToPoint(oa, ob ,pta)
+				dist = DistanceToPoint(oa, ob, pta)
 			} else {
-				dist = DistanceToPoint(sa, sb ,ptb)
+				dist = DistanceToPoint(sa, sb, ptb)
 			}
 		} else {
 			//lines intersect
@@ -98,7 +98,7 @@ func (self *Segment) DistanceToPoint(pt *Point) float64 {
 	return DistanceToPoint(self.A, self.B, pt)
 }
 
-func DistanceToPoint(sa, sb , pt *Point) float64 {
+func DistanceToPoint(sa, sb, pt *Point) float64 {
 	var dist = math.NaN()
 	//var cPt *Point
 	var ax, ay = sa[X], sa[Y]
