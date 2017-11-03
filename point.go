@@ -59,7 +59,7 @@ func (self *Point) Z() float64 {
 
 //As line strings
 func (self *Point) AsLineString() *LineString {
-	return NewLineString([]*Point{self.Clone(), self.Clone()})
+	return NewLineString([]*Point{self, self})
 }
 
 //As line strings
