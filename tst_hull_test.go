@@ -44,10 +44,10 @@ func TestHullHexagon(t *testing.T) {
 	g.Describe("Geometry", func() {
 		g.It("it should test Hull Antipodal Hexagon", func() {
 			g.Assert(hull.Antipodal(0, 1)).Equal(4)
-			g.Assert(hull.Antipodal(1, 2)).Equal(5)
+			g.Assert(hull.Antipodal(1, 2)).Equal(4)
 			g.Assert(hull.Antipodal(2, 3)).Equal(5)
 			g.Assert(hull.Antipodal(3, 4)).Equal(1)
-			g.Assert(hull.Antipodal(4, 5)).Equal(2)
+			g.Assert(hull.Antipodal(4, 5)).Equal(1)
 		})
 	})
 
