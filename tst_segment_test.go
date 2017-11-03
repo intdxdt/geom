@@ -5,6 +5,7 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
+	"fmt"
 )
 
 func TestSegment(t *testing.T) {
@@ -57,6 +58,7 @@ func TestSegment(t *testing.T) {
 
 			g.Assert(seg_ab.Intersection(seg_ak)).Eql([]*Point{a})
 			g.Assert(seg_ab.Distance(seg_ak)).Equal(0.0)
+			fmt.Println(seg_ab.Distance(seg_kn))
 			g.Assert(math.FloatEqual(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
 
 			pts, ok := seg_ab.SegSegIntersection(seg_de, false)

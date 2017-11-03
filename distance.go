@@ -13,7 +13,7 @@ func (self *Point) Distance(other Geometry) float64 {
 
 	if self.Intersects(other) {
 		dist = 0.0
-	} else if pt, ok := IsPoint(other); ok  {
+	} else if pt, ok := IsPoint(other); ok {
 		dist = self.Magnitude(pt)
 	} else {
 		dist = dist_as_lines(self, other)
@@ -23,7 +23,7 @@ func (self *Point) Distance(other Geometry) float64 {
 
 //Distance computes distance from segment to other geometry
 func (self *Segment) Distance(other Geometry) float64 {
-		return self.AsLineString().Distance(other)
+	return self.AsLineString().Distance(other)
 }
 
 // Computes the distance between wktreg and another linestring
@@ -68,27 +68,21 @@ func (self *LineString) line_line_dist(other *LineString) float64 {
 
 // brute force distance
 func (self *LineString) mindist_bruteforce(other *LineString) float64 {
-	var dist = math.NaN()
-	var bln = false
+	var dist, d float64 = math.MaxFloat64, 0
+	var bln, exe = false, false
 	var ln = self.coordinates
 	var ln2 = other.coordinates
 	for i := 0; !bln && i < len(ln)-1; i++ {
 		for j := 0; !bln && j < len(ln2)-1; j++ {
-
-			segA := &Segment{A: ln[i], B: ln[i+1]}
-			segB := &Segment{A: ln2[j], B: ln2[j+1]}
-
-			d := segA.SegSegDistance(segB)
-
-			if math.IsNaN(dist) {
-				dist = d
-			} else {
-				dist = math.MinF64(d, dist)
-			}
-			bln = (dist == 0.0)
+			exe = true //execution of segment coords happened
+			d = SegSegDistance(ln[i], ln[i+1], ln2[j], ln2[j+1])
+			dist = math.MinF64(d, dist)
+			bln = dist == 0.0
 		}
 	}
-
+	if !exe {
+		dist = math.NaN()
+	}
 	return dist
 }
 
