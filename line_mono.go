@@ -41,16 +41,16 @@ func (self *LineString) process_chains(i, j int) *LineString {
 	var v0, v1 *Point
 	var cur_x, cur_y, prev_x, prev_y int
 	var mono *MonoMBR
+	var mono_limit = self.monosize
 
 	prev_x, prev_y = null, null
-	mono_limit := self.monosize
 
 	if j == 0 || j >= len(self.coordinates) {
 		j = len(self.coordinates) - 1
 	}
 
 	v0 = self.coordinates[i]
-	box := mbr.NewMBR(v0[X], v0[Y], v0[X], v0[Y])
+	var box = mbr.NewMBR(v0[X], v0[Y], v0[X], v0[Y])
 
 	self.bbox = new_mono_mbr(box)
 	box = box.Clone()

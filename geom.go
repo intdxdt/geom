@@ -60,6 +60,11 @@ func new_geoType(gtype int) *geoType {
 	return &geoType{gtype}
 }
 
+//Value
+func(gt *geoType) Value() int{
+	return gt.gtype
+}
+
 //is polygon
 func (gt *geoType) IsPolygon() bool {
 	return gt.gtype == GeoType_Polygon
