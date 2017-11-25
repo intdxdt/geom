@@ -23,7 +23,7 @@ func (self *Polygon) String() string {
 func (self *Polygon) WKT() string {
 	//NewWKTParserObj
 	self_holes := self.Holes
-	rings := make([][][2]float64, len(self_holes)+1)
+	rings := make([][][]float64, len(self_holes)+1)
 
 	rings[0] = CoordinatesAsFloat2D(self.Shell.coordinates)
 	for i := 0; i < len(self_holes); i++ {

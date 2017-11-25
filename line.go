@@ -33,7 +33,7 @@ func NewLineString(coordinates []*Point) *LineString {
 }
 
 //New line string from array
-func NewLineStringFromArray(array [][2]float64) *LineString {
+func NewLineStringFromArray(array [][]float64) *LineString {
 	return NewLineString(AsPointArray(array))
 }
 

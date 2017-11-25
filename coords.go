@@ -139,11 +139,11 @@ func CloneCoordinates(coordinates []*Point) []*Point {
 }
 
 //
-func CoordinatesAsFloat2D(coordinates []*Point) [][2]float64 {
+func CoordinatesAsFloat2D(coordinates []*Point) [][]float64 {
 	var n = len(coordinates)
-	var coords = make([][2]float64, n)
+	var coords = make([][]float64, n)
 	for i := 0; i < n; i++ {
-		coords[i] = [2]float64{coordinates[i][X], coordinates[i][Y]}
+		coords[i] = []float64{coordinates[i][X], coordinates[i][Y]}
 	}
 	return coords
 }

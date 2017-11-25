@@ -68,6 +68,7 @@ func (self *Point) AsLineStrings() []*LineString {
 }
 
 //coordinate string
-func coord_str(pt *[2]float64) string {
-	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y])
+func coord_str(pt *[]float64) string {
+	var o = *pt
+	return math.FloatToString(o[X]) + " " + math.FloatToString(o[Y])
 }

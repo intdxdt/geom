@@ -51,7 +51,7 @@ func (wktreg *wktRegex) wkt_type_coords(wkt string) map[string]*string {
 	return captures
 }
 
-type Shell [][2]float64
+type Shell [][]float64
 type Holes []*Shell
 
 type WKTParserObj struct {
@@ -76,8 +76,8 @@ func (self *WKTParserObj) Holes() *Holes {
 }
 
 //To array of coodinates of wkt string
-func (self *WKTParserObj) ToArray() [][][2]float64 {
-	coords := make([][][2]float64, 0)
+func (self *WKTParserObj) ToArray() [][][]float64 {
+	coords := make([][][]float64, 0)
 	sh := self.shell
 	if self.gtype == GeoType_Point || self.gtype == GeoType_LineString {
 		coords = append(coords, *sh)
@@ -91,7 +91,7 @@ func (self *WKTParserObj) ToArray() [][][2]float64 {
 }
 
 //New WKT parser object
-func NewWKTParserObj(gtype int, coords ...[][2]float64) *WKTParserObj {
+func NewWKTParserObj(gtype int, coords ...[][]float64) *WKTParserObj {
 	shells := make([]*Shell, len(coords))
 	for i := 0; i < len(coords); i++ {
 		sh := Shell(coords[i])
@@ -163,7 +163,7 @@ func wkt_point_parser(wkt_coords *string, obj *WKTParserObj) {
 	//var coords = str.trim().split(this.regExes.spaces)
 	var coords = strings.TrimSpace(*wkt_coords)
 	var coord = re_spaces.Split(coords, -1)
-	pt := [2]float64{
+	var pt = []float64{
 		wkt_parse_float(coord[X]),
 		wkt_parse_float(coord[Y]),
 	}
@@ -208,7 +208,7 @@ func wkt_string_coords(str *string) *Shell {
 
 	for i := 0; i < n; i++ {
 		coords := re_spaces.Split(strings.TrimSpace(points[i]), -1)
-		pt := [2]float64{
+		pt := []float64{
 			wkt_parse_float(coords[X]),
 			wkt_parse_float(coords[Y]),
 		}

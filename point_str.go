@@ -8,9 +8,8 @@ import (
 //String creates a wkt string format of point
 func (self *Point) WKT() string {
 	var coords = self.ToArray()
-	var array  = [2]float64{coords[X], coords[Y]}
 	return WriteWKT(
-		NewWKTParserObj(GeoType_Point, [][2]float64{array}),
+		NewWKTParserObj(GeoType_Point, [][]float64{{coords[X], coords[Y]}}),
 	)
 }
 

@@ -25,7 +25,7 @@ func TestWKT(t *testing.T) {
 			g.Assert(obj.GeometryType()).Eql(GeoType_Point)
 			g.Assert(obj.Shell() == nil).IsFalse()
 			g.Assert(len(*obj.Shell())).Eql(1)
-			g.Assert((*obj.shell)[0]).Eql([2]float64{30, 10})
+			g.Assert((*obj.shell)[0]).Eql([]float64{30, 10})
 
 			obj = ReadWKT(ept)
 			g.Assert(obj.gtype).Eql(GeoType_Point)
@@ -86,8 +86,8 @@ func TestWKT(t *testing.T) {
 
 	g.Describe("WKT Write", func() {
 
-		sh := [][2]float64{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}}
-		h1 := [][2]float64{{20, 30}, {35, 35}, {30, 20}, {20, 30}}
+		sh := [][]float64{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}}
+		h1 := [][]float64{{20, 30}, {35, 35}, {30, 20}, {20, 30}}
 		wkt_sh := "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10))"
 
 		g.It("tests wkt writer", func() {
@@ -108,11 +108,11 @@ func TestWKT(t *testing.T) {
 	})
 
 	g.Describe("WKT ToArray", func() {
-		ln := "LINESTRING (2.28 3.7, 2.98 5.36, 3.92 4.8, 3.9 3.64, 2.28 3.7)"
-		sh := [][2]float64{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}}
-		h1 := [][2]float64{{20, 30}, {35, 35}, {30, 20}, {20, 30}}
-		poly_array := [][][2]float64{sh, h1}
-		ln_array := [][2]float64{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}}
+		var ln = "LINESTRING (2.28 3.7, 2.98 5.36, 3.92 4.8, 3.9 3.64, 2.28 3.7)"
+		var sh = [][]float64{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}}
+		var h1 = [][]float64{{20, 30}, {35, 35}, {30, 20}, {20, 30}}
+		var poly_array = [][][]float64{sh, h1}
+		var ln_array = [][]float64{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}}
 
 		g.It("tests wkt to array", func() {
 			ln_obj := ReadWKT(ln)

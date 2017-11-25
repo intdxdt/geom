@@ -18,7 +18,7 @@ func (self *LineString) ToArray() [][]float64 {
 }
 
 //As point array
-func AsPointArray(array [][2]float64) []*Point {
+func AsPointArray(array [][]float64) []*Point {
 	var coords = make([]*Point, len(array))
 	for i := range array {
 		coords[i] = NewPoint(array[i][:])
