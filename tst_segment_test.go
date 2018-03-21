@@ -138,6 +138,11 @@ func TestSegDist(t *testing.T) {
 
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_ef), 12)).Equal(0.0)
 			g.Assert(seg_dd.SegSegDistance(seg_ff)).Equal(d.Distance(f))
+			g.Assert(seg_ff.Length()).Equal(0.0)
+			g.Assert(seg_ff.Distance(seg_jj)).Equal(seg_ff.A.Distance(seg_jj.A))
+			g.Assert(seg_ab.Length()).Equal(seg_ab.A.Distance(seg_ab.B))
+
+
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_fg), 12)).Equal(
 				math.Round(2.496150883013531, 12),
 			)

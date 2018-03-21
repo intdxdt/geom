@@ -4,6 +4,11 @@ import (
 	"github.com/intdxdt/math"
 )
 
+//Length of segment
+func (self *Segment) Length() float64 {
+	return math.Hypot(self.B[X]-self.A[X], self.B[Y]-self.A[Y])
+}
+
 //Distance betwen two segments
 func (self *Segment) SegSegDistance(other *Segment) float64 {
 	return SegSegDistance(self.A, self.B, other.A, other.B)
