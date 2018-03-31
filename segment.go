@@ -58,10 +58,10 @@ func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, b
 
 //clamp to zero or one
 func snap_to_zero_or_one(v float64) float64 {
-	if math.FloatEqual(v, 0.0) {
-		v = 0.0
-	} else if math.FloatEqual(v, 1.0) {
-		v = 1.0
+	if math.FloatEqual(v, 0) {
+		v = 0
+	} else if math.FloatEqual(v, 1) {
+		v = 1
 	}
 	return v
 }

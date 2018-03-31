@@ -98,13 +98,13 @@ func TestPoint(t *testing.T) {
 	g.Describe("Point operators", func() {
 		g.It("add ", func() {
 			a, b := &Point{3., 0.}, &Point{0., 4.}
-			g.Assert(a.Add(b)).Equal(&Point{3., 4.})
+			g.Assert(a.Add(b[0], b[1])).Equal(&Point{3., 4.})
 		})
 
 		g.It("sub & neg ", func() {
 			a, b := &Point{3., 4.}, &Point{4, 5}
 			nb := b.Neg()
-			g.Assert(a.Sub(b)).Equal(&Point{-1.0, -1.0})
+			g.Assert(a.Sub(b[0], b[1])).Equal(&Point{-1.0, -1.0})
 			g.Assert(nb).Equal(&Point{-4, -5})
 		})
 	})

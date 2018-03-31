@@ -22,14 +22,14 @@ func (self *Hull) Antipodal(i, j int) int {
 	var idxer = self.indexer(i, n)
 
 	var ptI, ptJ = self.H[i], self.H[j]
-	var cmpIJ = ptJ.Sub(ptI)
+	var cmpIJ = ptJ.Sub(ptI[0], ptI[1])
 
 	var start, end = fn(i), fn(i-1)
 
 	var mid = (start + end) / 2
 	var pt = self.H[idxer(mid)]
 	var uvect = func(m int) *Point {
-		return self.H[m].Sub(ptJ)
+		return self.H[m].Sub(ptJ[0],ptJ[1])
 	}
 
 	var side = pt.SideOf(ptI, ptJ)
@@ -123,7 +123,7 @@ func ConvexHull(points []*Point, clone_coords ...bool) []*Point {
 	}
 	var N = len(pnts)
 
-	XYCoordinates{pnts}.Sort()
+	Coordinates(pnts).Sort()
 
 	var lower = make(Coordinates, 0)
 	var upper = make(Coordinates, 0)

@@ -16,7 +16,5 @@ func (self *Point) Magnitude(o *Point) float64 {
 //Computes the square vector magnitude of pt as vector: x , y as components
 //This has a potential overflow problem based on coordinates of pt x^2 + y^2
 func (self *Point) SquareMagnitude(o *Point) float64 {
-	dx := o[X] - self[X]
-	dy := o[Y] - self[Y]
-	return (dx * dx) + (dy * dy)
+	return math.Hypot2(o[X]-self[X], o[Y]-self[Y])
 }

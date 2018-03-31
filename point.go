@@ -7,8 +7,13 @@ import (
 type Point [3]float64
 
 //New Point from x, y values
-func NewPointXY(x, y float64) *Point {
+func NewPt(x, y float64) *Point {
 	return &Point{x, y}
+}
+
+//New Point from x, y values
+func NewPointXY(x, y float64) *Point {
+	return NewPt(x, y)
 }
 
 //New Point from x, y, z values
@@ -65,10 +70,4 @@ func (self *Point) AsLineString() *LineString {
 //As line strings
 func (self *Point) AsLineStrings() []*LineString {
 	return []*LineString{self.AsLineString()}
-}
-
-//coordinate string
-func coord_str(pt *[]float64) string {
-	var o = *pt
-	return math.FloatToString(o[X]) + " " + math.FloatToString(o[Y])
 }

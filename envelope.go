@@ -22,7 +22,6 @@ func (self *Point) BBox() *mbr.MBR {
 	return self.Envelope()
 }
 
-
 //envelope of segment
 func (self *Segment) Envelope() *mbr.MBR {
 	return mbr.NewMBR(self.A[X], self.A[Y], self.B[X], self.B[Y])

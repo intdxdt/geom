@@ -7,26 +7,28 @@ import (
 )
 
 //Equals evaluates whether two points are the same
-func (pt *Point) Equals2D(point *Point) bool {
-	return math.FloatEqual(pt[X], point[X]) && math.FloatEqual(pt[Y], point[Y])
+func (pt *Point) Equals2D(o *Point) bool {
+	return math.FloatEqual(pt[X], o[X]) &&
+		math.FloatEqual(pt[Y], o[Y])
 }
 
-func (pt *Point) Equals3D(point *Point) bool {
-	return math.FloatEqual(pt[X], point[X]) && math.FloatEqual(pt[Y], point[Y]) &&
-		math.FloatEqual(pt[Z], point[Z])
+func (pt *Point) Equals3D(o *Point) bool {
+	return math.FloatEqual(pt[X], o[X]) &&
+		math.FloatEqual(pt[Y], o[Y]) &&
+		math.FloatEqual(pt[Z], o[Z])
 }
 
 //Disjoint evaluates whether points are not coincident
-func (pt *Point) Disjoint(point *Point) bool {
-	return !(pt.Intersects(point))
+func (pt *Point) Disjoint(o *Point) bool {
+	return !pt.Equals2D(o)
 }
 
 //compare points as items - x | y ordering
-func (self *Point) Compare(pt *Point) int {
-	d := self[X] - pt[X]
+func (self *Point) Compare(o *Point) int {
+	d := self[X] - o[X]
 	if math.FloatEqual(d, 0.0) {
 		//x's are close enougth to each other
-		d = self[Y] - pt[Y]
+		d = self[Y] - o[Y]
 	}
 
 	if math.FloatEqual(d, 0.0) {

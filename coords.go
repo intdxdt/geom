@@ -1,85 +1,45 @@
 package geom
 
-import "sort"
+import (
+	"sort"
+	"github.com/intdxdt/math"
+)
 
-//coordinates interable of points
 type Coordinates []*Point
 
-//Len for sort interface
-func (o Coordinates) Len() int {
-	return len(o)
+//len of coordinates - sort interface
+func (s Coordinates) Len() int {
+	return len(s)
+}
+//swap - sort interface
+func (s Coordinates) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
-//Swap for sort interface
-func (o Coordinates) Swap(i, j int) {
-	o[i], o[j] = o[j], o[i]
+//less - 2d compare - sort interface
+func (s Coordinates) Less(i, j int) bool {
+	return (s[i][0] < s[j][0]) || (
+		math.FloatEqual(s[i][0], s[j][0]) && s[i][1] < s[j][1])
 }
 
-//pop chain from chainl list
-func (self Coordinates) Pop() (*Point, Coordinates) {
+//2D sort
+func (s Coordinates) Sort() Coordinates{
+	sort.Sort(s)
+	return s
+}
+
+//pop point from
+func (s Coordinates) Pop() (*Point, Coordinates) {
 	var v *Point
 	var n int
-	if len(self) == 0 {
-		return nil, self
+	if len(s) == 0 {
+		return nil, s
 	}
-	n = len(self) - 1
-	v, self[n] = self[n], nil
-	return v, self[:n]
+	n = len(s) - 1
+	v, s[n] = s[n], nil
+	return v, s[:n]
 }
 
-//XBoxes type  for  x sorting of boxes
-type XYCoordinates struct {
-	Coordinates
-}
-
-//lexical sort of x and y coordinates
-func (o XYCoordinates) Less(i, j int) bool {
-	if o.Coordinates[i][X] < o.Coordinates[j][X] {
-		return true
-	} else if o.Coordinates[i][X] == o.Coordinates[j][X] {
-		if o.Coordinates[i][Y] < o.Coordinates[j][Y] {
-			return true
-		}
-	}
-	return false
-}
-
-//Inplace Lexicographic sort
-func (self XYCoordinates) Sort() {
-	sort.Sort(self)
-}
-
-//XCoordinates type  for  x sorting of boxes
-type XCoordinates struct {
-	Coordinates
-}
-
-//Less sorts boxes by y
-func (self XCoordinates) Less(i, j int) bool {
-	return self.Coordinates[i][X] < self.Coordinates[j][X]
-
-}
-
-//Inplace sort by x
-func (self XCoordinates) Sort() {
-	sort.Sort(self)
-}
-
-//YCoordinates type for y sorting of boxes
-type YCoordinates struct {
-	Coordinates
-}
-
-//Less sorts boxes by y
-func (o *YCoordinates) Less(i, j int) bool {
-	return o.Coordinates[i][Y] < o.Coordinates[j][Y]
-
-}
-
-//Inplace sort by y
-func (self *YCoordinates) Sort() {
-	sort.Sort(self)
-}
 
 //get copy of coordinates of linestring
 func (self *Point) Coordinates() *Point {

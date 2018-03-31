@@ -27,7 +27,7 @@ func str_point(shell *Shell) string {
 	var s string = "EMPTY"
 	if shell != nil && len(*shell) > 0 {
 		sh := *shell
-		s = "(" + coord_str(&sh[0]) + ")"
+		s = "(" + coord_str(sh[0]) + ")"
 	}
 	return s
 }
@@ -43,7 +43,7 @@ func str_polyline(shell *Shell) string {
 	if n > 0 {
 		lnstr := make([]string, n)
 		for i := 0; i < n; i++ {
-			lnstr[i] = coord_str(&sh[i])
+			lnstr[i] = coord_str(sh[i])
 		}
 		s = "(" + strings.Join(lnstr, ", ") + ")"
 	}
