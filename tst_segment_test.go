@@ -20,6 +20,7 @@ func TestSegment(t *testing.T) {
 			c := NewPointXY(1.5, -2)
 			d := NewPointXY(-1.5, 2)
 			e := NewPointXY(0.5, 3)
+
 			//f := &Point{-2, -2}
 			gk := &Point{-1.5, -2.5}
 			h := &Point{0.484154648492778, -0.645539531323704}
@@ -61,33 +62,33 @@ func TestSegment(t *testing.T) {
 			fmt.Println(seg_ab.Distance(seg_kn))
 			g.Assert(math.FloatEqual(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
 
-			pts, ok := seg_ab.SegSegIntersection(seg_de, false)
-			g.Assert(ok).IsTrue()
-			g.Assert(pts[0]).Equal(&Point{-1.5, 2})
+			pts := seg_ab.SegSegIntersection(seg_de)
+			g.Assert(pts[0].Point).Equal(&Point{-1.5, 2})
 
-			pts, ok = seg_ab.SegSegIntersection(seg_cd, false)
+			pts = seg_ab.SegSegIntersection(seg_cd)
+			ok := len(pts) > 0
 			g.Assert(ok).IsTrue()
-			g.Assert(pts[0]).Equal(&Point{-1.5, 2})
-			g.Assert(pts[1]).Equal(&Point{0.0, 0.0})
+			g.Assert(pts[0].Point).Equal(&Point{-1.5, 2})
+			g.Assert(pts[1].Point).Equal(&Point{0.0, 0.0})
 
-			pts, ok = seg_gkh.SegSegIntersection(seg_cd, false)
-			g.Assert(ok).IsTrue()
+			pts = seg_gkh.SegSegIntersection(seg_cd)
 			g.Assert(len(pts)).Equal(1) //at h
 
-			pts, ok = seg_hi.SegSegIntersection(seg_cd, false)
-			g.Assert(ok).IsTrue()
+			pts = seg_hi.SegSegIntersection(seg_cd)
 			g.Assert(len(pts)).Equal(2) //at h, i
 
-			pts, ok = seg_hi.SegSegIntersection(seg_ab, false)
-			g.Assert(seg_hi.SegSegIntersects(seg_ab, false)).Equal(ok)
+			pts = seg_hi.SegSegIntersection(seg_ab)
+			ok = len(pts) > 0
+			g.Assert(seg_hi.SegSegIntersects(seg_ab)).Equal(ok)
 			g.Assert(ok).IsFalse()
 			g.Assert(len(pts)).Equal(0) //empty
 
-			pts, ok = seg_ak.SegSegIntersection(seg_kn, false)
-			g.Assert(seg_ak.SegSegIntersects(seg_kn, false)).Equal(ok)
+			pts = seg_ak.SegSegIntersection(seg_kn)
+			ok = len(pts)>0
+			g.Assert(seg_ak.SegSegIntersects(seg_kn)).Equal(ok)
 			g.Assert(ok).IsTrue()
 			g.Assert(len(pts)).Equal(1) //at k
-			g.Assert(pts[0]).Equal(k)   //k
+			g.Assert(pts[0].Point).Equal(k)   //k
 		})
 	})
 
@@ -141,7 +142,6 @@ func TestSegDist(t *testing.T) {
 			g.Assert(seg_ff.Length()).Equal(0.0)
 			g.Assert(seg_ff.Distance(seg_jj)).Equal(seg_ff.A.Distance(seg_jj.A))
 			g.Assert(seg_ab.Length()).Equal(seg_ab.A.Distance(seg_ab.B))
-
 
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_fg), 12)).Equal(
 				math.Round(2.496150883013531, 12),

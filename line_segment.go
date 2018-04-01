@@ -15,6 +15,7 @@ func (self *LineString) segs_inrange(seglist *[]*Segment, box *mbr.MBR, i, j int
 			self.coordinates[i][:],
 			self.coordinates[i+1][:],
 		)
+
 		if inters {
 			*seglist = append(*seglist, &Segment{
 				A: self.coordinates[i],
@@ -25,20 +26,22 @@ func (self *LineString) segs_inrange(seglist *[]*Segment, box *mbr.MBR, i, j int
 }
 
 //Segment - Segment intersection of slice of arrays
-func (self *LineString) segseg_intersection(segsa, segsb []*Segment,
-	ptset *sset.SSet, extend bool) {
+func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptset *sset.SSet, extend bool) {
 	if !extend {
 		ptset.Empty()
 	}
-	na, nb := len(segsa), len(segsb)
+
+	var na, nb = len(segsa), len(segsb)
+
 	for a := 0; a < na; a++ {
 		for b := 0; b < nb; b++ {
-			coord, ok := segsa[a].SegSegIntersection(segsb[b], false)
-			if ok {
+			var coord = segsa[a].SegSegIntersection(segsb[b])
+			if len(coord) > 0 {
 				for _, pt := range coord {
-					ptset.Add(pt)
+					ptset.Add(pt.Point)
 				}
 			}
 		}
 	}
+
 }

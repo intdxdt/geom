@@ -2,8 +2,6 @@ package geom
 
 import (
 	"simplex/side"
-	"github.com/intdxdt/math"
-	"github.com/intdxdt/segs"
 )
 
 type Segment struct {
@@ -37,31 +35,12 @@ func (self *Segment) SideOf(pt *Point) *side.Side {
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1, lnb0, lnb1
-func (self *Segment) SegSegIntersects(other *Segment, extln bool) bool {
-	return segs.Intersects(
-		self.A[:], self.B[:], other.A[:], other.B[:],
-	)
+func (self *Segment) SegSegIntersects(other *Segment) bool {
+	return SegSegIntersects(self.A, self.B, other.A, other.B)
 }
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
-func (self *Segment) SegSegIntersection(other *Segment, extln bool) ([]*Point, bool) {
-	var coords = make([]*Point, 0)
-	var pts = segs.Intersection(
-		self.A[:], self.B[:], other.A[:], other.B[:],
-	)
-	for _, pt := range pts {
-		coords = append(coords, NewPoint(pt))
-	}
-	return coords, len(coords) > 0
-}
-
-//clamp to zero or one
-func snap_to_zero_or_one(v float64) float64 {
-	if math.FloatEqual(v, 0) {
-		v = 0
-	} else if math.FloatEqual(v, 1) {
-		v = 1
-	}
-	return v
+func (self *Segment) SegSegIntersection(other *Segment) []*InterPoint {
+	return SegSegIntersection(self.A, self.B, other.A, other.B)
 }

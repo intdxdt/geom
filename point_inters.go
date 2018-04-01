@@ -2,58 +2,59 @@ package geom
 
 import (
 	"bytes"
-	"strconv"
 	"github.com/intdxdt/math"
+	"fmt"
 )
 
 type InterPoint struct {
-	Pt         *Point
-	I, J, K, L int
+	*Point
+	Inter VBits
 }
 
-func InterPointCmp(a, b interface{}) int {
-	self   := a.(*InterPoint)
-	other  := b.(*InterPoint)
-	return self.Compare(other)
+type IntPts []*InterPoint
+
+func (s IntPts) Len() int {
+	return len(s)
+}
+func (s IntPts) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
-//compare points as items - x | y ordering
-func (self *InterPoint) Compare(other *InterPoint) int {
-	d := self.Pt[X] - other.Pt[X]
-	if math.FloatEqual(d, 0.0) {
-		d = self.Pt[Y] - other.Pt[Y]
-	}
+func (s IntPts) Less(i, j int) bool {
+	return (s[i].Point[X] < s[j].Point[X]) || (
+		math.FloatEqual(s[i].Point[X], s[j].Point[X]) && s[i].Point[Y] < s[j].Point[Y])
+}
 
-	if math.FloatEqual(d, 0.0) {
-		//check if close enougth to zero
-		dx := self.I - other.I
-		if dx == 0 {
-			dx = self.J - other.J
-		}
-		if dx < 0 {
-			return -1
-		} else if dx > 0 {
-			return 1
-		}
-		return 0
-	} else if d < 0 {
-		return -1
-	}
-	return 1
+func (p *InterPoint) IsIntersection() bool {
+	return p.Inter == 0
+}
+
+func (p *InterPoint) IsVertex() bool {
+	var mask = SelfMask | OtherMask
+	return p.Inter&mask > 0
+}
+
+func (p *InterPoint) IsVertexSelf() bool {
+	return p.Inter&SelfMask > 0
+}
+
+func (p *InterPoint) IsVertexOther() bool {
+	return p.Inter&OtherMask > 0
+}
+
+func (p *InterPoint) IsVerteXOR() bool {
+	return ( p.IsVertexSelf() &&  !p.IsVertexOther()) ||
+			(!p.IsVertexSelf() &&   p.IsVertexOther())
 }
 
 //string
 func (self *InterPoint) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("[")
-	buf.WriteString(strconv.FormatFloat(self.Pt[X], 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(self.Pt[Y], 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(self.Pt[Z], 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(float64(self.I), 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(float64(self.J), 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(float64(self.K), 'f', -1, 64) + ", ")
-	buf.WriteString(strconv.FormatFloat(float64(self.L), 'f', -1, 64))
+	buf.WriteString(math.FloatToString(self.Point[X]) + ", ")
+	buf.WriteString(math.FloatToString(self.Point[Y]) + ", ")
+	buf.WriteString(math.FloatToString(self.Point[Z]) + ", ")
+	buf.WriteString(fmt.Sprintf("%04b", self.Inter))
 	buf.WriteString("]")
-
 	return buf.String()
 }

@@ -22,6 +22,10 @@ func TestIntersection(t *testing.T) {
 	ptBwkt := "POINT ( 710 600 )"
 	ptCwkt := "POINT ( 722.1298042987639 582.0334837046336 )"
 	ptDwkt := "POINT ( 720 360 )"
+	ptEwkt := "POINT ( 730 600 )"
+	ptFwkt := "POINT ( 680 630 )"
+	ptGwkt := "POINT ( 780 660 )"
+	ptHwkt := "POINT ( 630 570 )"
 
 	polyAwkt := "POLYGON ((730 410, 920 500, 930 540, 930 580, 900 640, 810 650, 750 520, 730 410))"
 	polyBwkt := "POLYGON ((630 620, 730 410, 890 410, 1040 510, 1080 620, 1020 720, 690 720, 630 620))"
@@ -38,6 +42,10 @@ func TestIntersection(t *testing.T) {
 	ptB := NewPointFromWKT(ptBwkt)
 	ptC := NewPointFromWKT(ptCwkt)
 	ptD := NewPointFromWKT(ptDwkt)
+	ptE := NewPointFromWKT(ptEwkt)
+	ptF := NewPointFromWKT(ptFwkt)
+	ptG := NewPointFromWKT(ptGwkt)
+	ptH := NewPointFromWKT(ptHwkt)
 
 	segAA := NewSegment(ptA, ptA)
 	segAB := NewSegment(ptA, ptB)
@@ -51,8 +59,7 @@ func TestIntersection(t *testing.T) {
 			inters := plyA.Intersection(plyB)
 			g.Assert(len(inters)).Equal(7)
 
-			g.Assert(ln.IsSimple()).IsTrue()
-			g.Assert(ply.IsSimple()).IsTrue()
+
 			g.Assert(len(ply.Intersection(nilG))).Equal(0)
 			g.Assert(len(ply.Intersection(ln))).Equal(4)
 			g.Assert(len(ply.Intersection(ln2))).Equal(22)
@@ -90,6 +97,10 @@ func TestIntersection(t *testing.T) {
 			g.Assert(len(ln2.Intersection(nilG))).Equal(0)
 			g.Assert(len(ln2.Intersection(ptA))).Equal(1)
 			g.Assert(len(ln2.Intersection(ptB))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptE))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptF))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptG))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptH))).Equal(0)
 		})
 
 		g.It("polygon intersection other not segment ", func() {

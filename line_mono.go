@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/math"
 )
 
 type MonoMBR struct {
@@ -13,8 +13,7 @@ type MonoMBR struct {
 
 //clone  mono mbr
 func (box *MonoMBR) Clone() *MonoMBR {
-	clone_mbr := box.MBR.Clone()
-	return &MonoMBR{clone_mbr, box.i, box.j}
+	return &MonoMBR{box.MBR.Clone(), box.i, box.j}
 }
 
 //clone  mono mbr

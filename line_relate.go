@@ -7,9 +7,10 @@ import (
 //intersection of self linestring with other
 func (self *LineString) linear_intersection(other *LineString) []*Point {
 	var ptset = sset.NewSSet(PointCmp)
+	var ptlist []*Point
 
 	if self.bbox.Disjoint(other.bbox.MBR) {
-		return []*Point{} //disjoint
+		return ptlist //disjoint
 	}
 
 	//if root mbrs intersect
@@ -36,7 +37,6 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 		}
 	}
 
-	ptlist := make([]*Point, 0)
 	ptset.ForEach(func(o interface{}, _ int) bool {
 		ptlist = append(ptlist, o.(*Point))
 		return true
@@ -114,7 +114,7 @@ func (self *LineString) segseg_intersects(segsa []*Segment, segsb []*Segment) bo
 	var na, nb = len(segsa), len(segsb)
 	for a := 0; !bln && a < na; a++ {
 		for b := 0; !bln && b < nb; b++ {
-			bln = segsa[a].SegSegIntersects(segsb[b], false)
+			bln = segsa[a].SegSegIntersects(segsb[b])
 		}
 	}
 	return bln

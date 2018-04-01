@@ -2,8 +2,8 @@ package geom
 
 import (
 	"simplex/side"
-	"github.com/intdxdt/cart"
 	"github.com/intdxdt/math"
+	"github.com/intdxdt/robust"
 )
 
 //Equals evaluates whether two points are the same
@@ -42,9 +42,9 @@ func (self *Point) Compare(o *Point) int {
 
 //position of C relative to line AB
 func (c *Point) SideOf(a, b *Point) *side.Side {
-	s := side.NewSide()
-	ccw := cart.Orientation2D(a, b, c)
-	if ccw ==  0 {
+	var s = side.NewSide()
+	var ccw = c.Orientation2D(a, b)
+	if ccw == 0 {
 		s.AsOn()
 	} else if ccw < 0 {
 		s.AsLeft()
@@ -52,4 +52,12 @@ func (c *Point) SideOf(a, b *Point) *side.Side {
 		s.AsRight()
 	}
 	return s
+}
+
+//2D cross product of AB and AC vectors given A, B, and C as points,
+//i.e. z-component of their 3D cross product.
+//Returns a positive value, if ABC makes a counter-clockwise turn,
+//negative for clockwise turn, and zero if the points are collinear.
+func (c *Point) Orientation2D(a, b *Point) float64 {
+	return robust.Orientation2D(a[:2], b[:2], c[:2])
 }
