@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/side"
+	"github.com/intdxdt/side"
 )
 
 type Segment struct {

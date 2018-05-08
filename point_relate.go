@@ -1,7 +1,7 @@
 package geom
 
 import (
-	"simplex/side"
+	"github.com/intdxdt/side"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/robust"
 )
