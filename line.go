@@ -23,11 +23,12 @@ func NewLineString(coordinates []*Point) *LineString {
 	if n < 2 {
 		panic("a linestring must have at least 2 coordinate")
 	}
+	var mSize = int(math.Log2(float64(n) + 1.0))
 	return (
 		&LineString{
-			chains:      make([]*MonoMBR, 0),
+			chains:      make([]*MonoMBR, 0, mSize),
 			coordinates: coordinates[:n:n],
-			monosize:    int(math.Log2(float64(n) + 1.0)),
+			monosize:    mSize,
 			index:       rtree.NewRTree(bucketSize),
 		}).process_chains(0, n-1).build_index()
 }
