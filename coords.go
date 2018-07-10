@@ -5,12 +5,13 @@ import (
 	"github.com/intdxdt/math"
 )
 
-type Coordinates []*Point
+type Coordinates []Point
 
 //len of coordinates - sort interface
 func (s Coordinates) Len() int {
 	return len(s)
 }
+
 //swap - sort interface
 func (s Coordinates) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
@@ -23,38 +24,32 @@ func (s Coordinates) Less(i, j int) bool {
 }
 
 //2D sort
-func (s Coordinates) Sort() Coordinates{
+func (s Coordinates) Sort() Coordinates {
 	sort.Sort(s)
 	return s
 }
 
 //pop point from
-func (s Coordinates) Pop() (*Point, Coordinates) {
-	var v *Point
+func (s Coordinates) Pop() (Point, Coordinates) {
+	var v Point
 	var n int
 	if len(s) == 0 {
-		return nil, s
+		return NullPt, s
 	}
 	n = len(s) - 1
-	v, s[n] = s[n], nil
+	v, s[n] = s[n], NullPt
 	return v, s[:n]
 }
 
-
 //get copy of coordinates of linestring
-func (self *Point) Coordinates() *Point {
-	return self.Clone()
-}
-
-//get copy of coordinates of linestring
-func (self *LineString) Coordinates() []*Point {
+func (self *LineString) Coordinates() []Point {
 	return CloneCoordinates(self.coordinates)
 }
 
 //get copy of coordinates of polygon
-func (self *Polygon) Coordinates() [][]*Point {
+func (self *Polygon) Coordinates() [][]Point {
 	lns := self.AsLinear()
-	coords := make([][]*Point, len(lns))
+	coords := make([][]Point, len(lns))
 	for i, ln := range lns {
 		coords[i] = ln.Coordinates()
 	}
@@ -79,27 +74,22 @@ func (self *Polygon) IsRing() bool {
 
 //------------------------------------------------------------------------------
 //Is coordinates a ring : P0 == Pn
-func IsRing(coordinates []*Point) bool {
+func IsRing(coordinates []Point) bool {
 	if len(coordinates) < 2 {
 		return false
 	}
-	return coordinates[0].Equals2D(
-		coordinates[len(coordinates)-1],
-	)
+	return coordinates[0].Equals2D(&coordinates[len(coordinates)-1])
 }
 
 //Coordinates returns a copy of linestring coordinates
-func CloneCoordinates(coordinates []*Point) []*Point {
-	n := len(coordinates)
-	clone := make([]*Point, n)
-	for i := 0; i < n; i++ {
-		clone[i] = coordinates[i].Clone()
-	}
+func CloneCoordinates(coordinates []Point) []Point {
+	var clone = make([]Point, len(coordinates))
+	copy(clone, coordinates)
 	return clone
 }
 
 //
-func CoordinatesAsFloat2D(coordinates []*Point) [][]float64 {
+func CoordinatesAsFloat2D(coordinates []Point) [][]float64 {
 	var n = len(coordinates)
 	var coords = make([][]float64, n)
 	for i := 0; i < n; i++ {

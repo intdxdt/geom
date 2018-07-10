@@ -17,7 +17,7 @@ func (self *LineString) len(i, j int) float64 {
 		i, j = j, i
 	}
 	for ; i < j; i++ {
-		dist += self.coordinates[i].Distance(self.coordinates[i+1])
+		dist += self.coordinates[i].Magnitude(&self.coordinates[i+1])
 	}
 	return dist
 }

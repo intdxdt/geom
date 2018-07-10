@@ -5,12 +5,12 @@ type LinearRing struct {
 }
 
 //new linear ring
-func NewLinearRing(coordinates []*Point) *LinearRing {
+func NewLinearRing(coordinates []Point) *LinearRing {
 	var n = len(coordinates)
 	var coords = coordinates[:n:n]
 	if n > 1 {
 		if !IsRing(coords) {
-			coords = append(coords, coords[0].Clone())
+			coords = append(coords, coords[0])
 		}
 	}
 	return &LinearRing{NewLineString(coords)}

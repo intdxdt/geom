@@ -131,10 +131,10 @@ func ReadWKT(wkt string) *WKTParserObj {
 //Read wkt as geometry
 func ReadGeometry(wkt string) Geometry {
 	var g Geometry
-	obj := ReadWKT(wkt)
+	var obj = ReadWKT(wkt)
 
 	if obj.gtype == GeoType_Polygon {
-		pts := make([][]*Point, 0)
+		var pts [][]Point
 		for _, v := range obj.ToArray() {
 			pts = append(pts, AsPointArray(v))
 		}
@@ -142,7 +142,8 @@ func ReadGeometry(wkt string) Geometry {
 	} else if obj.gtype == GeoType_LineString {
 		g = NewLineStringFromArray(obj.ToArray()[0])
 	} else if obj.gtype == GeoType_Point {
-		g = NewPoint(obj.ToArray()[0][0][:])
+		var pt = CreatePoint(obj.ToArray()[0][0][:])
+		g = &pt
 	}
 
 	return g

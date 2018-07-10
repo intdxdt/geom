@@ -1,10 +1,8 @@
 package geom
 
-import "github.com/intdxdt/sset"
-
 //Checks if pt intersection other geometry
-func (pt *Point) Intersection(other Geometry) []*Point {
-	res := make([]*Point, 0)
+func (pt *Point) Intersection(other Geometry) []Point {
+	var res []Point
 	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return res
@@ -12,7 +10,7 @@ func (pt *Point) Intersection(other Geometry) []*Point {
 
 	if p, ok := IsPoint(other); ok {
 		if pt.Equals2D(p) {
-			res = append(res, NewPointXY(pt.X(), pt.Y()))
+			res = append(res, PointXY(pt.X(), pt.Y()))
 		}
 	} else if ln, ok := IsLineString(other); ok {
 		res = pt.AsLineString().Intersection(ln)
@@ -25,13 +23,13 @@ func (pt *Point) Intersection(other Geometry) []*Point {
 }
 
 //Segment intersection other geometry
-func (self *Segment) Intersection(other Geometry) []*Point {
+func (self *Segment) Intersection(other Geometry) []Point {
 	return self.AsLineString().Intersection(other)
 }
 
 //Checks if pt intersection other geometry
-func (self *LineString) Intersection(other Geometry) []*Point {
-	res := make([]*Point, 0)
+func (self *LineString) Intersection(other Geometry) []Point {
+	var res []Point
 	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return res
@@ -51,8 +49,8 @@ func (self *LineString) Intersection(other Geometry) []*Point {
 }
 
 //Checks if pt intersection other geometry
-func (self *Polygon) Intersection(other Geometry) []*Point {
-	res := make([]*Point, 0)
+func (self *Polygon) Intersection(other Geometry) []Point {
+	var res []Point
 	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return res
@@ -66,7 +64,7 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 	} else if ln, ok := IsLineString(other); ok {
 		res = ln.Intersection(self)
 	} else if ply, ok := IsPolygon(other); ok {
-		ptset := sset.NewSSet(PointCmp)
+		ptset := NewPtSet()
 		//other intersect self
 		lns := ply.AsLinear()
 		for _, ln := range lns {
@@ -87,7 +85,7 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 
 		pts := ptset.Values()
 		for _, p := range pts {
-			res = append(res, p.(*Point))
+			res = append(res, p.(Point))
 		}
 	}
 
@@ -95,31 +93,32 @@ func (self *Polygon) Intersection(other Geometry) []*Point {
 }
 
 //line intersect polygon rings
-func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point {
+func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point {
 	var shell = rings[0]
-	var ptset = sset.NewSSet(PointCmp)
+	var ptset = NewPtSet()
 
-	bln := self.BBox().Intersects(shell.BBox())
-	res := make([]*Point, 0)
+	var res []Point
+	var bln = self.BBox().Intersects(shell.BBox())
 
 	if bln {
 		spts := self.linear_intersection(shell.LineString)
-		for _, pt := range spts {
-			ptset.Add(pt)
+		for idx := range spts {
+			ptset.Add(spts[idx])
 		}
 		//inside shell, does it touch hole boundary ?
 		for i := 1; i < len(rings); i++ {
 			hpts := self.linear_intersection(rings[i].LineString)
-			for _, pt := range hpts {
-				ptset.Add(pt)
+			for idx := range hpts {
+				ptset.Add(hpts[idx])
 			}
 		}
 		//check for all vertices
-		for _, pt := range self.coordinates {
-			if shell.contains_point(pt) {
+		for idx := range self.coordinates {
+			var pt = self.coordinates[idx]
+			if shell.contains_point(&pt) {
 				inhole := false
 				for i := 1; !inhole && i < len(rings); i++ {
-					inhole = rings[i].contains_point(pt)
+					inhole = rings[i].contains_point(&pt)
 				}
 				if !inhole {
 					ptset.Add(pt)
@@ -128,7 +127,7 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []*Point
 		}
 		vals := ptset.Values()
 		for _, pt := range vals {
-			res = append(res, pt.(*Point))
+			res = append(res, pt.(Point))
 		}
 	}
 	return res

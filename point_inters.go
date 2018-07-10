@@ -7,7 +7,7 @@ import (
 )
 
 type InterPoint struct {
-	*Point
+	Point
 	Inter VBits
 }
 

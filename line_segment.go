@@ -2,7 +2,6 @@ package geom
 
 import (
 	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/sset"
 )
 
 //segments in range
@@ -18,15 +17,15 @@ func (self *LineString) segs_inrange(seglist *[]*Segment, box *mbr.MBR, i, j int
 
 		if inters {
 			*seglist = append(*seglist, &Segment{
-				A: self.coordinates[i],
-				B: self.coordinates[i+1],
+				A: &self.coordinates[i],
+				B: &self.coordinates[i+1],
 			})
 		}
 	}
 }
 
 //Segment - Segment intersection of slice of arrays
-func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptset *sset.SSet, extend bool) {
+func (self *LineString) segseg_intersection(segsa, segsb []*Segment, ptset *PtSet, extend bool) {
 	if !extend {
 		ptset.Empty()
 	}

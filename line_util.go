@@ -5,26 +5,26 @@ import (
 )
 
 //pop chain from chainl list
-func pop_mono_mbr(a []*MonoMBR) (*MonoMBR, []*MonoMBR) {
-	var v *MonoMBR
+func pop_mono_mbr(a []MonoMBR) (MonoMBR, []MonoMBR) {
+	var v MonoMBR
 	var n int
 	if len(a) == 0 {
-		return nil, a
+		return MonoMBR{}, a
 	}
 	n = len(a) - 1
-	v, a[n] = a[n], nil
+	v, a[n] = a[n], MonoMBR{}
 	return v, a[:n]
 }
 
 //pop chain from chainl list
-func pop_coords(a []*Point) (*Point, []*Point) {
-	var v *Point
+func pop_coords(a []Point) (Point, []Point) {
+	var v Point
 	var n int
 	if len(a) == 0 {
-		return nil, a
+		return NullPt, a
 	}
 	n = len(a) - 1
-	v, a[n] = a[n], nil
+	v, a[n] = a[n], NullPt
 	return v, a[:n]
 }
 

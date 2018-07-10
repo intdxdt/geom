@@ -11,7 +11,7 @@ func (self *LineString) build_index()*LineString {
 	}
 	data := make([]rtree.BoxObj, len(self.chains))
 	for i := range self.chains {
-		data[i] = self.chains[i]
+		data[i] = &self.chains[i]
 	}
 	self.index.Load(data) //bulkload
 	return self

@@ -22,8 +22,8 @@ func (self *LinearRing) completely_in_ring(pnt *Point) bool {
 	var crossings = 0 // number of segment/ray crossings
 	for i = 1; i < self.LenVertices(); i++ {
 		i1 = i - 1
-		p1 = self.VertexAt(i)
-		p2 = self.VertexAt(i1)
+		p1 = &self.coordinates[i]
+		p2 = &self.coordinates[i1]
 
 		if ((p1[Y] > p[Y]) && (p2[Y] <= p[Y])) || ((p2[Y] > p[Y]) && (p1[Y] <= p[Y])) {
 			x1, y1 = p1[X]-p[X], p1[Y]-p[Y]

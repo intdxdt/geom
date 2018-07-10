@@ -9,7 +9,7 @@ import (
 
 func segment(ln string) *Segment {
 	var coords = NewLineStringFromWKT(ln).Coordinates()
-	return NewSegment(coords[0], coords[1])
+	return NewSegment(&coords[0], &coords[1])
 }
 
 func printPts(pts []*InterPoint) {

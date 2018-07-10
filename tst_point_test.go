@@ -9,19 +9,19 @@ import (
 
 func TestPoint(t *testing.T) {
 	g := goblin.Goblin(t)
-	p0 := NewPointXY(0.0, 0.0)
-	p1 := NewPointXY(4, 5)
-	p2 := NewPointXY(4.0, 5.0)
-	p3 := NewPoint([]float64{4, 5})
-	p4 := NewPoint([]float64{4, 5.01})
-	p5 := NewPoint([]float64{4})
-	p6 := &Point{4.0, math.NaN()}
-	p7 := NewPointXY(4.0, 4.9)
-	p8 := NewPointXY(3.9, 4.9)
+	p0 := PointXY(0.0, 0.0)
+	p1 := PointXY(4, 5)
+	p2 := PointXY(4.0, 5.0)
+	p3 := CreatePoint([]float64{4, 5})
+	p4 := CreatePoint([]float64{4, 5.01})
+	p5 := CreatePoint([]float64{4})
+	p6 := Point{4.0, math.NaN()}
+	p7 := PointXY(4.0, 4.9)
+	p8 := PointXY(3.9, 4.9)
 
-	p9 := NewPointXYZ(3.9, 4.9, 9.8)
-	p10 := NewPoint([]float64{3.9, 4.9, 9.8})
-	p11 := NewPoint([]float64{3.9, 4.9, 9.8, 7.9})
+	p9 := PointXYZ(3.9, 4.9, 9.8)
+	p10 := CreatePoint([]float64{3.9, 4.9, 9.8})
+	p11 := CreatePoint([]float64{3.9, 4.9, 9.8, 7.9})
 
 	g.Describe("geom.point", func() {
 		g.It("loads wkt as point", func() {
@@ -29,16 +29,16 @@ func TestPoint(t *testing.T) {
 			g.Assert(p1.Envelope().Area()).Equal(0.0)
 
 			g.Assert(p1.Area()).Equal(0.0)
-			g.Assert(NewPointFromWKT(p1.WKT())).Eql(p1)
-			g.Assert(NewPointFromWKT(p4.WKT())).Eql(p4)
+			g.Assert(PointFromWKT(p1.WKT())).Eql(p1)
+			g.Assert(PointFromWKT(p4.WKT())).Eql(p4)
 		})
 
 		g.It("x, y, z access", func() {
 			g.Assert(p0.IsZero()).IsTrue()
 			g.Assert(p1.IsZero()).IsFalse()
-			g.Assert(p1.Equals2D(p2)).IsTrue()
-			g.Assert(p1.Clone().Equals2D(p1)).IsTrue()
-			g.Assert(p1.Coordinates().Equals2D(p2)).IsTrue()
+			g.Assert(p1.Equals2D(&p2)).IsTrue()
+			g.Assert(p1.Equals2D(&p1)).IsTrue()
+			//g.Assert(p1.Coordinates().Equals2D(p2)).IsTrue()
 
 			g.Assert(p1.X()).Equal(4.0)
 			g.Assert(p1.Y()).Equal(5.0)
@@ -54,23 +54,23 @@ func TestPoint(t *testing.T) {
 			g.Assert(p9.X()).Equal(3.9)
 			g.Assert(p9.Y()).Equal(4.9)
 			g.Assert(p9.Z()).Equal(9.8)
-			g.Assert(p9.Equals2D(p10)).IsTrue()
-			g.Assert(p9.Equals2D(p11)).IsTrue()
+			g.Assert(p9.Equals2D(&p10)).IsTrue()
+			g.Assert(p9.Equals2D(&p11)).IsTrue()
 
 		})
 
 		g.It("point relate", func() {
-			pc := p1.Clone()
+			pc := p1
 
-			g.Assert(p1.Equals2D(pc)).IsTrue()
-			g.Assert(p1.Compare(pc)).Equal(0)
-			g.Assert(p1.Compare(p2)).Equal(0)
-			g.Assert(p1.Compare(p4)).Equal(-1)
-			g.Assert(p1.Compare(p0)).Equal(1)
-			g.Assert(p1.Compare(p8)).Equal(1)
-			g.Assert(p8.Compare(p1)).Equal(-1)
-			g.Assert(p1.Compare(p7)).Equal(1)
-			g.Assert(p7.Compare(p1)).Equal(-1)
+			g.Assert(p1.Equals2D(&pc)).IsTrue()
+			g.Assert(p1.Compare(&pc)).Equal(0)
+			g.Assert(p1.Compare(&p2)).Equal(0)
+			g.Assert(p1.Compare(&p4)).Equal(-1)
+			g.Assert(p1.Compare(&p0)).Equal(1)
+			g.Assert(p1.Compare(&p8)).Equal(1)
+			g.Assert(p8.Compare(&p1)).Equal(-1)
+			g.Assert(p1.Compare(&p7)).Equal(1)
+			g.Assert(p7.Compare(&p1)).Equal(-1)
 
 		})
 
@@ -98,14 +98,14 @@ func TestPoint(t *testing.T) {
 	g.Describe("Point operators", func() {
 		g.It("add ", func() {
 			a, b := &Point{3., 0.}, &Point{0., 4.}
-			g.Assert(a.Add(b[0], b[1])).Equal(&Point{3., 4.})
+			g.Assert(a.Add(b[0], b[1])).Equal(Point{3., 4.})
 		})
 
 		g.It("sub & neg ", func() {
 			a, b := &Point{3., 4.}, &Point{4, 5}
 			nb := b.Neg()
-			g.Assert(a.Sub(b[0], b[1])).Equal(&Point{-1.0, -1.0})
-			g.Assert(nb).Equal(&Point{-4, -5})
+			g.Assert(a.Sub(b[0], b[1])).Equal(Point{-1.0, -1.0})
+			g.Assert(nb).Equal(Point{-4, -5})
 		})
 	})
 
@@ -121,13 +121,13 @@ func TestPoint(t *testing.T) {
 	g.Describe("point relates", func() {
 		g.It("intersect , equals, isnull ", func() {
 			var p0 *Point
-			g.Assert(p3.Equals2D(p1)).IsTrue()
-			g.Assert(p3.Intersects(p1)).IsTrue()
+			g.Assert(p3.Equals2D(&p1)).IsTrue()
+			g.Assert(p3.Intersects(&p1)).IsTrue()
 			g.Assert(p3.Intersects(p1.Geometry())).IsTrue()
 			g.Assert(p3.Intersects(p0)).IsFalse()
 			g.Assert(p3.Geometry().Intersects(p0)).IsFalse()
-			g.Assert(p3.Disjoint(p1)).IsFalse()
-			g.Assert(p3.Disjoint(p4)).IsTrue()
+			g.Assert(p3.Disjoint(&p1)).IsFalse()
+			g.Assert(p3.Disjoint(&p4)).IsTrue()
 			g.Assert(p6.IsNull()).IsTrue()
 		})
 	})
@@ -135,34 +135,39 @@ func TestPoint(t *testing.T) {
 }
 
 func TestMagDist(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
 	g.Describe("Point - Vector Magnitude", func() {
 		g.It("should test vector magnitude and distance", func() {
-			a := &Point{0, 0}
-			b := &Point{3, 4}
-			z := NewPointXY(0, 0)
-			g.Assert(NewPointXY(1, 1).Magnitude(z)).Equal(math.Sqrt2)
-			g.Assert(math.Round(NewPointXY(-3, 2).Magnitude(z), 8)).Equal(
+			var a = Point{0, 0}
+			var b = Point{3, 4}
+			var z = PointXY(0, 0)
+			var pt = PointXY(1, 1)
+			g.Assert((&pt).Magnitude(&z)).Equal(math.Sqrt2)
+			pt = PointXY(-3, 2)
+			g.Assert(math.Round((&pt).Magnitude(&z), 8)).Equal(
 				math.Round(3.605551275463989, 8),
 			)
+			pt = PointXY(3, 4)
+			g.Assert((&pt).Magnitude(&z)).Equal(5.0)
+			g.Assert(a.Distance(&b)).Equal(5.0)
+			pt = PointXY(3, 4)
+			g.Assert((&pt).SquareMagnitude(&z)).Equal(25.0)
+			g.Assert(a.SquareDistance(&b)).Equal(25.0)
 
-			g.Assert(NewPointXY(3, 4).Magnitude(z)).Equal(5.0)
-			g.Assert(a.Distance(b)).Equal(5.0)
-
-			g.Assert(NewPointXY(3, 4).SquareMagnitude(z)).Equal(25.0)
-			g.Assert(a.SquareDistance(b)).Equal(25.0)
-
-			g.Assert(NewPointXY(4.587, 0.).Magnitude(z)).Equal(4.587)
+			pt = PointXY(4.587, 0.)
+			g.Assert((&pt).Magnitude(&z)).Equal(4.587)
 		})
 	})
 
 }
 
 func TestDotProduct(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
 	g.Describe("Point - Vector Dot Product", func() {
 		g.It("should test dot product", func() {
-			dot_prod := NewPointXY(1.2, -4.2).DotProduct(NewPointXY(1.2, -4.2))
+			pt := PointXY(1.2, -4.2)
+			pt_a := PointXY(1.2, -4.2)
+			dot_prod := pt_a.DotProduct(&pt)
 			g.Assert(19.08).Equal(math.Round(dot_prod, 8))
 		})
 	})
@@ -184,28 +189,26 @@ func TestAngleAtPnt(t *testing.T) {
 }
 
 func TestSideOf(t *testing.T) {
-	g := goblin.Goblin(t)
-	a := NewPointXY(237, 289)
-	b := NewPointXY(404.25, 357.25)
-	c := NewPointXY(460, 380)
-
-	d := NewPointXY(297.13043478260863, 339.30434782608694)
-	e := NewPointXY(445.8260869565217, 350.17391304347825)
+	var g = goblin.Goblin(t)
+	var a = PointXY(237, 289)
+	var b = PointXY(404.25, 357.25)
+	var c = PointXY(460, 380)
+	var d = PointXY(297.13043478260863, 339.30434782608694)
+	var e = PointXY(445.8260869565217, 350.17391304347825)
 
 	g.Describe("side of point", func() {
 		g.It("side of line a, c", func() {
-			g.Assert(b.SideOf(a, c).IsOn()).IsTrue()
-			g.Assert(b.SideOf(a, c).IsOnOrLeft()).IsTrue()
-			g.Assert(b.SideOf(a, c).IsOnOrRight()).IsTrue()
+			g.Assert(b.SideOf(&a, &c).IsOn()).IsTrue()
+			g.Assert(b.SideOf(&a, &c).IsOnOrLeft()).IsTrue()
+			g.Assert(b.SideOf(&a, &c).IsOnOrRight()).IsTrue()
 
-			g.Assert(d.SideOf(a, c).IsLeft()).IsTrue()
-			g.Assert(d.SideOf(a, c).IsOnOrLeft()).IsTrue()
-			g.Assert(d.SideOf(a, c).IsOnOrRight()).IsFalse()
+			g.Assert(d.SideOf(&a, &c).IsLeft()).IsTrue()
+			g.Assert(d.SideOf(&a, &c).IsOnOrLeft()).IsTrue()
+			g.Assert(d.SideOf(&a, &c).IsOnOrRight()).IsFalse()
 
-			g.Assert(e.SideOf(a, c).IsRight()).IsTrue()
-			g.Assert(e.SideOf(a, c).IsOnOrRight()).IsTrue()
-			g.Assert(e.SideOf(a, c).IsOnOrLeft()).IsFalse()
-
+			g.Assert(e.SideOf(&a, &c).IsRight()).IsTrue()
+			g.Assert(e.SideOf(&a, &c).IsOnOrRight()).IsTrue()
+			g.Assert(e.SideOf(&a, &c).IsOnOrLeft()).IsFalse()
 		})
 	})
 

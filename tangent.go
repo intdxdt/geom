@@ -34,31 +34,29 @@ func isLeft(a, b, c *Point) float64 {
 //        V = array of vertices for any 2D polygon with V[n]=V[0]
 //Output: rtan = index of rightmost tangent point V[rtan]
 //        ltan = index of leftmost tangent point  V[ltan]
-func TangentPointToPoly(pt *Point, coords [] *Point) (int, int) {
+func TangentPointToPoly(pt *Point, coords []Point) (int, int) {
 	if !IsRing(coords) {
 		coords = CloneCoordinates(coords)
-		coords = append(coords, coords[0].Clone())
+		coords = append(coords, coords[0])
 	}
-	v := coords
-	n := len(v) - 1
+	var v = coords
+	var n = len(v) - 1
 
 	// eprev, enext  - V[i] previous && next edge turn direction
-	eprev := isLeft(v[0], v[1], pt)
+	var eprev = isLeft(&v[0], &v[1], pt)
 	var rtan, ltan int // initially assume V[0] = both tangents
 
 	for i := 1; i < n; i++ {
-		enext := isLeft(v[i], v[i+1], pt)
-
+		var enext = isLeft(&v[i], &v[i+1], pt)
 		if (eprev <= 0) && (enext > 0) {
-			if !below(pt, v[i], v[rtan]) {
+			if !below(pt, &v[i], &v[rtan]) {
 				rtan = i
 			}
 		} else if (eprev > 0) && (enext <= 0) {
-			if !above(pt, v[i], v[ltan]) {
+			if !above(pt, &v[i], &v[ltan]) {
 				ltan = i
 			}
 		}
-
 		eprev = enext
 	}
 

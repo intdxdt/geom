@@ -75,7 +75,7 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 	for i := 0; !bln && i < len(ln)-1; i++ {
 		for j := 0; !bln && j < len(ln2)-1; j++ {
 			exe = true //execution of segment coords happened
-			d = SegSegDistance(ln[i], ln[i+1], ln2[j], ln2[j+1])
+			d = SegSegDistance(&ln[i], &ln[i+1], &ln2[j], &ln2[j+1])
 			dist = math.MinF64(d, dist)
 			bln = dist == 0.0
 		}
@@ -88,7 +88,7 @@ func (self *LineString) mindist_bruteforce(other *LineString) float64 {
 
 //Computes the distance between wktreg and another linestring
 func dist_as_lines(self, other Geometry) float64 {
-	var dist = math.NaN()
+	var dist = nan
 	var lns1 = self.AsLinear()
 	var lns2 = other.AsLinear()
 

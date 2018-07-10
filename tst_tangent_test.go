@@ -15,24 +15,24 @@ func TestPointToPolyTangent(t *testing.T) {
 	//ply := NewPolygon(hull)
 
 	var i, j int
-	pt0 := NewPointXY(570, 60)
-	pt1 := NewPointXY(780, 320)
-	pt2 := NewPointXY(190, 410)
-	pt3 := NewPointXY(120, 210)
+	pt0 := PointXY(570, 60)
+	pt1 := PointXY(780, 320)
+	pt2 := PointXY(190, 410)
+	pt3 := PointXY(120, 210)
 
 	g.Describe("TangentPointToPoly", func() {
 		g.It("should tangent point to polygon", func() {
-			i, j = TangentPointToPoly(pt0, coords)
+			i, j = TangentPointToPoly(&pt0, coords)
 
 			g.Assert([]int{i, j}).Eql([]int{15, 19})
-			i, j = TangentPointToPoly(pt1, coords)
+			i, j = TangentPointToPoly(&pt1, coords)
 
 			g.Assert([]int{i, j}).Eql([]int{10, 15})
-			i, j = TangentPointToPoly(pt2, coords)
+			i, j = TangentPointToPoly(&pt2, coords)
 
 			g.Assert([]int{i, j}).Eql([]int{0, 10})
 
-			i, j = TangentPointToPoly(pt3, coords)
+			i, j = TangentPointToPoly(&pt3, coords)
 			g.Assert([]int{i, j}).Eql([]int{19, 7})
 		})
 

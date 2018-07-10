@@ -1,13 +1,9 @@
 package geom
 
-import (
-	"github.com/intdxdt/sset"
-)
-
 //intersection of self linestring with other
-func (self *LineString) linear_intersection(other *LineString) []*Point {
-	var ptset = sset.NewSSet(PointCmp)
-	var ptlist []*Point
+func (self *LineString) linear_intersection(other *LineString) []Point {
+	var ptset = NewPtSet()
+	var ptlist []Point
 
 	if self.bbox.Disjoint(other.bbox.MBR) {
 		return ptlist //disjoint
@@ -15,8 +11,8 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 
 	//if root mbrs intersect
 	//var i, q, lnrange, ibox, qbox, qrng
-	var othersegs = make([]*Segment, 0)
-	var selfsegs = make([]*Segment, 0)
+	var selfsegs []*Segment
+	var othersegs []*Segment
 
 	var inrange = self.index.Search(other.bbox.MBR)
 
@@ -38,7 +34,7 @@ func (self *LineString) linear_intersection(other *LineString) []*Point {
 	}
 
 	ptset.ForEach(func(o interface{}, _ int) bool {
-		ptlist = append(ptlist, o.(*Point))
+		ptlist = append(ptlist, o.(Point))
 		return true
 	})
 	return ptlist

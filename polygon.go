@@ -6,7 +6,7 @@ type Polygon struct {
 }
 
 //New polygon from points
-func NewPolygon(coordinates ...[]*Point) *Polygon {
+func NewPolygon(coordinates ...[]Point) *Polygon {
 	var rings = shells(coordinates)
 	return NewPolygonFromRings(rings...)
 }
@@ -26,7 +26,7 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt_geom string) *Polygon {
 	var array = ReadWKT(wkt_geom).ToArray()
-	pts := make([][]*Point, 0)
+	var pts [][]Point
 	for _, v := range array {
 		pts = append(pts, AsPointArray(v))
 	}
@@ -44,7 +44,7 @@ func (self *Polygon) AsLinearRings() []*LinearRing {
 }
 
 //polygon shells
-func shells(coords [][]*Point) []*LinearRing {
+func shells(coords [][]Point) []*LinearRing {
 	var n = len(coords)
 	var rings = make([]*LinearRing, n)
 	for i := 0; i < n; i++ {

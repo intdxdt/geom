@@ -8,17 +8,17 @@ import (
 const bucketSize = 8
 
 type LineString struct {
-	chains      []*MonoMBR
-	coordinates []*Point
-	monosize    int
-	index       *rtree.RTree
-	bbox        *MonoMBR
+	chains      []MonoMBR
+	coordinates []Point
 	length      float64
+	monosize    int
+	bbox        MonoMBR
+	index       *rtree.RTree
 }
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
 //optional clone coords : make a copy of input coordinates
-func NewLineString(coordinates []*Point) *LineString {
+func NewLineString(coordinates []Point) *LineString {
 	var n = len(coordinates)
 	if n < 2 {
 		panic("a linestring must have at least 2 coordinate")
@@ -26,7 +26,7 @@ func NewLineString(coordinates []*Point) *LineString {
 	var mSize = int(math.Log2(float64(n) + 1.0))
 	return (
 		&LineString{
-			chains:      make([]*MonoMBR, 0, mSize),
+			chains:      make([]MonoMBR, 0, mSize),
 			coordinates: coordinates[:n:n],
 			monosize:    mSize,
 			index:       rtree.NewRTree(bucketSize),
@@ -47,8 +47,8 @@ func NewLineStringFromWKT(wkt_geom string) *LineString {
 }
 
 //Point to LineString
-func NewLineStringFromPoint(pt *Point) *LineString {
-	return NewLineString([]*Point{pt.Clone(), pt.Clone()})
+func NewLineStringFromPoint(pt Point) *LineString {
+	return NewLineString([]Point{pt, pt})
 }
 
 //get copy of chains of linestring

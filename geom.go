@@ -2,9 +2,10 @@ package geom
 
 import (
 	"strings"
+	"math"
 	"github.com/intdxdt/mbr"
 )
-
+var nan = math.NaN()
 const (
 	X    = iota
 	Y
@@ -27,7 +28,7 @@ type Geometry interface {
 	BBox() *mbr.MBR
 	AsLinear() []*LineString
 	Intersects(Geometry) bool
-	Intersection(Geometry) []*Point
+	Intersection(Geometry) []Point
 	Distance(Geometry) float64
 	Type() *geoType
 	WKT() string
@@ -47,7 +48,8 @@ func NewGeometry(wkt string) Geometry {
 		if gtype == "polygon" {
 			g = NewPolygonFromWKT(wkt)
 		} else if gtype == "point" {
-			g = NewPointFromWKT(wkt)
+			pt := PointFromWKT(wkt)
+			g = &pt
 		} else if gtype == "linestring" {
 			g = NewLineStringFromWKT(wkt)
 		}

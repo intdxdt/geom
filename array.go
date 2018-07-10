@@ -18,10 +18,10 @@ func (self *LineString) ToArray() [][]float64 {
 }
 
 //As point array
-func AsPointArray(array [][]float64) []*Point {
-	var coords = make([]*Point, len(array))
+func AsPointArray(array [][]float64) []Point {
+	var coords = make([]Point, len(array))
 	for i := range array {
-		coords[i] = NewPoint(array[i][:])
+		coords[i] = CreatePoint(array[i][:])
 	}
 	return coords
 }

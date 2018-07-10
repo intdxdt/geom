@@ -13,7 +13,7 @@ func (self *LinearRing) contains_line(ln *LineString) bool {
 	}
 	var bln = true
 	for i := 0; bln && i < len(ln.coordinates); i++ {
-		bln = self.contains_point(ln.coordinates[i])
+		bln = self.contains_point(&ln.coordinates[i])
 	}
 	return bln
 }

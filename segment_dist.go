@@ -133,7 +133,7 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 			//cPt = sb
 			cPtx, cPty = bx, by
 		} else {
-			//cPt = NewPointXY(sa[X]+u*dx, sa[Y]+u*dy)
+			//cPt = PointXY(sa[X]+u*dx, sa[Y]+u*dy)
 			cPtx, cPty = ax+u*dx, ay+u*dy
 		}
 		//dist = pt.Magnitude(cPt)

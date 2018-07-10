@@ -8,11 +8,11 @@ import (
 
 func TestLinearRing(t *testing.T) {
 	g := goblin.Goblin(t)
-	pts_closed := []*Point{
+	pts_closed := []Point{
 		{5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9},
 	}
 
-	pts_open := []*Point{
+	pts_open := []Point{
 		{5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9},
 	}
 
@@ -29,7 +29,7 @@ func TestLinearRing(t *testing.T) {
 	var ln3 = NewLineStringFromWKT(wkt1)
 	var ln4 = NewLineStringFromWKT(wkt2)
 
-	rng0 := NewLinearRing([]*Point{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}})
+	rng0 := NewLinearRing([]Point{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}})
 
 	//points in relation to ln1
 	pt0 := &Point{2.42747717129387, 4.4873795209295695} //outside
@@ -40,8 +40,8 @@ func TestLinearRing(t *testing.T) {
 	g.Describe("LinearRing", func() {
 		g.It("should test ring", func() {
 			g.Assert(pt0.IsRing()).IsTrue()
-			g.Assert(IsRing([]*Point{pt0})).IsFalse()
-			g.Assert(IsRing([]*Point{pt0, pt0})).IsTrue()
+			g.Assert(IsRing([]Point{*pt0})).IsFalse()
+			g.Assert(IsRing([]Point{*pt0, *pt0})).IsTrue()
 			g.Assert(ln1.LineString.IsRing()).IsTrue()
 			g.Assert(ply0.IsRing()).IsTrue()
 
@@ -95,11 +95,11 @@ func TestLinearRing(t *testing.T) {
 func TestLinearRingArea(t *testing.T) {
 	g := goblin.Goblin(t)
 
-	rng0 := NewLinearRing([]*Point{
+	rng0 := NewLinearRing([]Point{
 		{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7},
 	})
 
-	rng1 := NewLinearRing([]*Point{{3, 1.6}, {3, 2}, {2.4, 2.8}})
+	rng1 := NewLinearRing([]Point{{3, 1.6}, {3, 2}, {2.4, 2.8}})
 
 	g.Describe("LinearRing", func() {
 		g.It("should test area", func() {

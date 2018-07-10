@@ -10,10 +10,6 @@ func (self *LinearRing) Clone() *LinearRing {
 	return &LinearRing{self.LineString.Clone()}
 }
 
-//Clone point
-func (self *Point) Clone() *Point {
-	return NewPoint(self[:])
-}
 
 //Clone polygon
 func (self *Polygon) Clone() *Polygon {

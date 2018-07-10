@@ -7,5 +7,5 @@ func (self *LineString) LenVertices() int {
 
 //vertex at given index
 func (self *LineString) VertexAt(i int) *Point {
-	return self.coordinates[i]
+	return &self.coordinates[i]
 }

@@ -7,15 +7,10 @@ import (
 )
 
 func TestLineStringMono(t *testing.T) {
-	g := goblin.Goblin(t)
-	pts := []*Point{
-		{5.78, 8.07},
-		{6.44, 9.09},
-		{7.87, 9.61},
-	}
-
-	ln := NewLineString(pts)
-	n := ln.LenVertices()
+	var g   = goblin.Goblin(t)
+	var pts = []Point{{5.78, 8.07}, {6.44, 9.09}, {7.87, 9.61}}
+	var ln  = NewLineString(pts)
+	var n   = ln.LenVertices()
 
 	g.Describe("Linestring", func() {
 		g.It("should test mono mbr", func() {
@@ -38,15 +33,15 @@ func TestLineStringMono(t *testing.T) {
 			g.Assert(mbox.i).Eql(ln.bbox.i)
 			g.Assert(mbox.j).Eql(ln.bbox.j)
 
-			mono_boxes := []*MonoMBR{&mbox}
+			mono_boxes := []MonoMBR{mbox}
 			g.Assert(len(mono_boxes)).Equal(1)
 
 			box, mono_boxes := pop_mono_mbr(mono_boxes)
-			g.Assert(box).Eql(&mbox)
+			g.Assert(box).Eql(mbox)
 			g.Assert(len(mono_boxes)).Equal(0)
 
 			box, mono_boxes = pop_mono_mbr(mono_boxes)
-			g.Assert(box == nil).IsTrue()
+			g.Assert(box == MonoMBR{}).IsTrue()
 			g.Assert(len(mono_boxes)).Equal(0)
 		})
 	})

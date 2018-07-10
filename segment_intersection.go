@@ -30,7 +30,7 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
 
 	if ua_0_1 && ub_0_1 {
 		var pt = &InterPoint{
-			Point: NewPointXY(
+			Point: PointXY(
 				sa[X]+ua*(sb[X]-sa[X]),
 				sa[Y]+ua*(sb[Y]-sa[Y]),
 			),
@@ -93,7 +93,7 @@ func coincident_segs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) 
 	for idx := 0; idx < n; idx++ { //O(n)
 		var i, j = idx, idx+1
 		var pt = coords[i]
-		for i < n && coords[i].Equals2D(coords[j].Point) {
+		for i < n && coords[i].Equals2D(&coords[j].Point) {
 			coords[j].Inter = coords[i].Inter | coords[j].Inter
 			last = j == n
 			pt = coords[j]
@@ -113,6 +113,6 @@ func coincident_segs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) 
 //updates coords that are in bounds
 func update_coords_inbounds(bounds *mbr.MBR, point *Point, intpts *[]*InterPoint, vbits VBits) {
 	if bounds.ContainsXY(point[X], point[Y]) {
-		*intpts = append(*intpts, &InterPoint{point.Clone(), vbits})
+		*intpts = append(*intpts, &InterPoint{*point, vbits})
 	}
 }

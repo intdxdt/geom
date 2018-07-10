@@ -7,12 +7,12 @@ import (
 
 func TestGeom(t *testing.T) {
 	g := goblin.Goblin(t)
-	p := NewPointXY(4.0, 5.0)
-	ln := NewLineString([]*Point{{0, 0}, {1, 1}})
+	p := PointXY(4.0, 5.0)
+	ln := NewLineString([]Point{{0, 0}, {1, 1}})
 	var ply *Polygon
 	var pnt *Point
 	var line *LineString
-	var rng = NewLinearRing([]*Point{{0, 0}, {1, 1}})
+	var rng = NewLinearRing([]Point{{0, 0}, {1, 1}})
 	var pt_wkt = "POINT (30 10)"
 	var ln_wkt = "LINESTRING (30 10, 10 30, 40 40)"
 	var ply_wkt = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))"
@@ -28,7 +28,7 @@ func TestGeom(t *testing.T) {
 		})
 
 		g.It("it should test NullGeometry", func() {
-			g.Assert(IsNullGeometry(p)).IsFalse()
+			g.Assert(IsNullGeometry(&p)).IsFalse()
 			g.Assert(IsNullGeometry(ln)).IsFalse()
 			g.Assert(IsNullGeometry(pnt)).IsTrue()
 			g.Assert(IsNullGeometry(ply)).IsTrue()

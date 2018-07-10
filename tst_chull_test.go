@@ -3,16 +3,15 @@ package geom
 import (
 	"testing"
 	"github.com/intdxdt/math"
-	"github.com/intdxdt/sset"
 	"github.com/franela/goblin"
 )
 
 func TestCHull(t *testing.T) {
 	g := goblin.Goblin(t)
 
-	var empty_hull = make([]*Point, 0)
+	var empty_hull []Point
 	hullEql := func(g *goblin.G, hull, expects Coordinates) {
-		hs := sset.NewSSet(PointCmp)
+		hs := NewPtSet()
 		g.Assert(hull.Len()).Equal(expects.Len())
 		for _, pt := range hull {
 			hs.Add(pt)
@@ -22,13 +21,13 @@ func TestCHull(t *testing.T) {
 		}
 	}
 
-	var data = make([]*Point, 0)
+	var data []Point
 	for i := 0; i < 100; i++ {
-		data = append(data, NewPointXY(math.Floor(float64(i)/10.0), float64(i%10)))
+		data = append(data, PointXY(math.Floor(float64(i)/10.0), float64(i%10)))
 	}
 
 	g.Describe("convex & simple hull", func() {
-		var sqr = []*Point{
+		var sqr = []Point{
 			{33.52991674117594, 27.137460594059416},
 			{33.52991674117594, 30.589750223527805},
 			{36.44941148514852, 30.589750223527805},
@@ -40,14 +39,14 @@ func TestCHull(t *testing.T) {
 			var hull = ConvexHull(data)
 			var ply = NewPolygon(data)
 			var ln = NewLineString(data)
-			var ch = []*Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
+			var ch = []Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
 			var ch_array = [][]float64{{0, 0, 0}, {9, 0, 0}, {9, 9, 0}, {0, 9, 0}, {0, 0, 0}}
 
 			g.Assert(ch).Eql(hull)
 			g.Assert(ply.ConvexHull().Shell.ToArray()).Eql(ch_array)
 			g.Assert(ln.ConvexHull().Shell.ToArray()).Eql(ch_array)
 
-			var pt = []*Point{{33.52991674117594, 27.137460594059416}}
+			var pt = []Point{{33.52991674117594, 27.137460594059416}}
 			g.Assert(len(ConvexHull(pt))).Equal(1)
 		})
 
@@ -73,78 +72,78 @@ func TestCHull(t *testing.T) {
 			ch0 := SimpleHull(coords0)
 			ch1 := SimpleHull(coords1)
 
-			exp0 := []*Point{{409, 189}, {429, 235}, {395, 289}, {366.14493191082227, 293.7217384145927}, {340, 298}, {409, 189}}
-			exp1 := []*Point{{479, 184}, {504, 231}, {601, 254}, {638, 223}, {479, 184}}
+			exp0 := []Point{{409, 189}, {429, 235}, {395, 289}, {366.14493191082227, 293.7217384145927}, {340, 298}, {409, 189}}
+			exp1 := []Point{{479, 184}, {504, 231}, {601, 254}, {638, 223}, {479, 184}}
 
 			hullEql(g, ch0, exp0)
 			hullEql(g, ch1, exp1)
 		})
 
 		g.It("chull of zero point is empty", func() {
-			hullEql(g, ConvexHull([]*Point{}), empty_hull)
-			hullEql(g, SimpleHull([]*Point{}), empty_hull)
+			hullEql(g, ConvexHull([]Point{}), empty_hull)
+			hullEql(g, SimpleHull([]Point{}), empty_hull)
 		})
 		g.It("chull of one point is empty", func() {
-			hullEql(g, ConvexHull([]*Point{{200, 200}}), []*Point{{200, 200}})
-			hullEql(g, SimpleHull([]*Point{{200, 200}}), []*Point{{200, 200}})
+			hullEql(g, ConvexHull([]Point{{200, 200}}), []Point{{200, 200}})
+			hullEql(g, SimpleHull([]Point{{200, 200}}), []Point{{200, 200}})
 		})
 		g.It("chull of  two points is empty", func() {
-			hullEql(g, ConvexHull([]*Point{{200, 200}, {760, 300}}, false), []*Point{{200, 200}, {760, 300}})
-			hullEql(g, SimpleHull([]*Point{{200, 200}, {760, 300}}, false), []*Point{{200, 200}, {760, 300}})
+			hullEql(g, ConvexHull([]Point{{200, 200}, {760, 300}}, false), []Point{{200, 200}, {760, 300}})
+			hullEql(g, SimpleHull([]Point{{200, 200}, {760, 300}}, false), []Point{{200, 200}, {760, 300}})
 		})
 		g.It("chull for three points", func() {
-			ch := ConvexHull([]*Point{{200, 200}, {760, 300}, {500, 500}})
-			exp := []*Point{{760, 300}, {200, 200}, {500, 500}}
+			var ch = ConvexHull([]Point{{200, 200}, {760, 300}, {500, 500}})
+			var exp = []Point{{760, 300}, {200, 200}, {500, 500}}
 			hullEql(g, ch, exp)
 		})
 		g.It("chull for four points", func() {
-			ch := ConvexHull([]*Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}})
-			exp := []*Point{{760, 300}, {200, 200}, {500, 500}}
+			var ch = ConvexHull([]Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}})
+			var exp = []Point{{760, 300}, {200, 200}, {500, 500}}
 			hullEql(g, ch, exp)
 		})
 		g.It("chull returns a polygon", func() {
-			coords := []*Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}}
-			ply := NewPolygon(coords)
-			hull := NewPolygon(ConvexHull(coords))
+			var coords = []Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}}
+			var ply = NewPolygon(coords)
+			var hull = NewPolygon(ConvexHull(coords))
 			g.Assert(hull.Area() > 0).IsTrue()
 			g.Assert(ply.Area() == hull.Area()).IsTrue()
 		})
 
 		g.It("handles points with duplicate ordinates", func() {
-			ch := ConvexHull([]*Point{{-10, -10}, {10, 10}, {10, -10}, {-10, 10}})
-			exp := []*Point{{10, 10}, {10, -10}, {-10, -10}, {-10, 10}}
+			var ch = ConvexHull([]Point{{-10, -10}, {10, 10}, {10, -10}, {-10, 10}})
+			var exp = []Point{{10, 10}, {10, -10}, {-10, -10}, {-10, 10}}
 			hullEql(g, ch, exp)
 		})
 
 		g.It("handles overlapping upper and lower hulls", func() {
-			ch := ConvexHull([]*Point{{0, -10}, {0, 10}, {0, 0}, {10, 0}, {-10, 0}})
-			exp := []*Point{{10, 0}, {0, -10}, {-10, 0}, {0, 10}}
+			var ch = ConvexHull([]Point{{0, -10}, {0, 10}, {0, 0}, {10, 0}, {-10, 0}})
+			var exp = []Point{{10, 0}, {0, -10}, {-10, 0}, {0, 10}}
 			hullEql(g, ch, exp)
 		})
 		// Cases below taken from http://uva.onlinejudge.org/external/6/681.html
 		g.It("computes chull for  a set of 6 points with non-trivial hull", func() {
-			var poly = []*Point{{60, 20}, {250, 140}, {180, 170}, {79, 140}, {50, 60}, {60, 20}}
+			var poly = []Point{{60, 20}, {250, 140}, {180, 170}, {79, 140}, {50, 60}, {60, 20}}
 			ch := ConvexHull(poly)
-			var exp = []*Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}}
+			var exp = []Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}}
 			hullEql(g, ch, exp)
 		})
 
 		g.It("chull for  a set of 12 points with non-trivial hull", func() {
-			var poly = []*Point{{50, 60}, {60, 20}, {70, 45}, {100, 70},
-			                    {125, 90}, {200, 113}, {250, 140}, {180, 170}, {105, 140},
-			                    {79, 140}, {60, 85}, {50, 60}}
-			var expectedHull = []*Point{{250, 140}, {60, 20}, {50, 60},
-			                            {79, 140}, {180, 170}}
+			var poly = []Point{{50, 60}, {60, 20}, {70, 45}, {100, 70},
+				{125, 90}, {200, 113}, {250, 140}, {180, 170}, {105, 140},
+				{79, 140}, {60, 85}, {50, 60}}
+			var expectedHull = []Point{{250, 140}, {60, 20}, {50, 60},
+				{79, 140}, {180, 170}}
 			ch := ConvexHull(poly)
 			hullEql(g, ch, expectedHull)
 		})
 
 		g.It("chull for a set of 15 points with non-trivial hull", func() {
-			var poly = []*Point{{30, 30}, {50, 60}, {60, 20}, {70, 45}, {86, 39},
-			                    {112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
-			                    {47, 76}, {36, 40}, {33, 35}, {30, 30}}
-			var expectedHull = []*Point{{300, 200}, {250, 50}, {60, 20}, {30, 30},
-			                            {47, 76}, {76, 150}, {130, 240}}
+			var poly = []Point{{30, 30}, {50, 60}, {60, 20}, {70, 45}, {86, 39},
+				{112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
+				{47, 76}, {36, 40}, {33, 35}, {30, 30}}
+			var expectedHull = []Point{{300, 200}, {250, 50}, {60, 20}, {30, 30},
+				{47, 76}, {76, 150}, {130, 240}}
 			hullEql(g, ConvexHull(poly), expectedHull)
 		})
 	})
