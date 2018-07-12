@@ -2,17 +2,17 @@ package geom
 
 //intersection of self linestring with other
 func (self *LineString) linear_intersection(other *LineString) []Point {
-	var ptset = NewPtSet()
 	var ptlist []Point
+	var ptset = NewPtSet()
 
-	if self.bbox.Disjoint(other.bbox.MBR) {
+	if self.bbox.Disjoint(&other.bbox.MBR) {
 		return ptlist //disjoint
 	}
 
 	//if root mbrs intersect
 	//var i, q, lnrange, ibox, qbox, qrng
-	var selfsegs []*Segment
-	var othersegs []*Segment
+	var selfsegs   []*Segment
+	var othersegs  []*Segment
 
 	var inrange = self.index.Search(other.bbox.MBR)
 
@@ -23,11 +23,11 @@ func (self *LineString) linear_intersection(other *LineString) []Point {
 		lnrange := other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
 			qbox := lnrange[q].GetItem().(*MonoMBR)
-			qrng, ok := ibox.MBR.Intersection(qbox.MBR)
+			qrng, ok := ibox.MBR.Intersection(&qbox.MBR)
 
 			if ok {
-				self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
-				other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+				self.segs_inrange(&selfsegs, &qrng, ibox.i, ibox.j)
+				other.segs_inrange(&othersegs, &qrng, qbox.i, qbox.j)
 				self.segseg_intersection(selfsegs, othersegs, ptset, true)
 			}
 		}
@@ -60,10 +60,10 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
 		for q := 0; !bln && q < len(lnrange); q++ {
 
 			qbox := lnrange[q].GetItem().(*MonoMBR)
-			qrng, _ := ibox.Intersection(qbox.MBR)
+			qrng, _ := ibox.Intersection(&qbox.MBR)
 
-			self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
-			other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+			self.segs_inrange(&selfsegs, &qrng, ibox.i, ibox.j)
+			other.segs_inrange(&othersegs, &qrng, qbox.i, qbox.j)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
 				bln = self.segseg_intersects(selfsegs, othersegs)

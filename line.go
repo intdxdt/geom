@@ -52,10 +52,10 @@ func NewLineStringFromPoint(pt Point) *LineString {
 }
 
 //get copy of chains of linestring
-func (self *LineString) MonoChains() []*MonoMBR {
-	chains := make([]*MonoMBR, len(self.chains))
+func (self *LineString) MonoChains() []MonoMBR {
+	chains := make([]MonoMBR, len(self.chains))
 	for i := range self.chains {
-		chains[i] = self.chains[i].Clone()
+		chains[i] = self.chains[i]
 	}
 	return chains
 }

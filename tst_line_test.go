@@ -85,9 +85,9 @@ func TestLineString(t *testing.T) {
 		})
 
 		g.It("should test envelope", func() {
-			box := mbr.NewMBR(pts[0][X], pts[0][Y], pts[0][X], pts[0][Y])
+			box := mbr.CreateMBR(pts[0][X], pts[0][Y], pts[0][X], pts[0][Y])
 			for _, v := range pts[1:] {
-				box.ExpandIncludeXY(v.X(), v.Y())
+				box.ExpandIncludeXY(v[X], v[Y])
 			}
 			g.Assert(ln.Envelope()).Eql(box)
 		})
@@ -132,7 +132,7 @@ func TestLineStringRelate(t *testing.T) {
 
 	g.Describe("Linestring - Relate", func() {
 		g.It("should linestring relate", func() {
-			g.Assert(lna.Envelope().Equals(lna.bbox.MBR)).IsTrue()
+			g.Assert(lna.bbox.Equals(&lna.bbox.MBR)).IsTrue()
 			g.Assert(lna.Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Geometry().Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Intersects(ln_null)).IsFalse()

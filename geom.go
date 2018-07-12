@@ -2,7 +2,7 @@ package geom
 
 import (
 	"strings"
-	"math"
+	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
 )
 var nan = math.NaN()
@@ -21,11 +21,12 @@ const (
 	GeoType_Polygon
 )
 
+var feq = math.FloatEqual
 //geometry constructor
 type GeometryFn func([]*Point) Geometry
 
 type Geometry interface {
-	BBox() *mbr.MBR
+	BBox() mbr.MBR
 	AsLinear() []*LineString
 	Intersects(Geometry) bool
 	Intersection(Geometry) []Point

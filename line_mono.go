@@ -6,18 +6,13 @@ import (
 )
 
 type MonoMBR struct {
-	*mbr.MBR
+	mbr.MBR
 	i int
 	j int
 }
 
 //clone  mono mbr
-func (box *MonoMBR) Clone() *MonoMBR {
-	return &MonoMBR{box.MBR.Clone(), box.i, box.j}
-}
-
-//clone  mono mbr
-func (box *MonoMBR) BBox() *mbr.MBR {
+func (box *MonoMBR) BBox() mbr.MBR {
 	return box.MBR
 }
 
@@ -28,7 +23,7 @@ func (box *MonoMBR) update_index(i, j int) {
 }
 
 //new monotone mbr
-func new_mono_mbr(box *mbr.MBR) MonoMBR {
+func new_mono_mbr(box mbr.MBR) MonoMBR {
 	return MonoMBR{box, null, null}
 }
 
@@ -48,10 +43,9 @@ func (self *LineString) process_chains(i, j int) *LineString {
 	}
 
 	v0 = &self.coordinates[i]
-	var box = mbr.NewMBR(v0[X], v0[Y], v0[X], v0[Y])
+	var box = mbr.CreateMBR(v0[X], v0[Y], v0[X], v0[Y])
 
 	self.bbox = new_mono_mbr(box)
-	box = box.Clone()
 	var mono = new_mono_mbr(box)
 
 	self.xy_monobox(&mono, i, i)
@@ -87,7 +81,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 
 			prev_x, prev_y = cur_x, cur_y
 			p0, p1 := self.coordinates[i-1], self.coordinates[i]
-			box := mbr.NewMBR(p0[X], p0[Y], p1[X], p1[Y])
+			box := mbr.CreateMBR(p0[X], p0[Y], p1[X], p1[Y])
 
 			mono = new_mono_mbr(box)
 			self.xy_monobox(&mono, i-1, i)
@@ -108,7 +102,7 @@ func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
 			mono.i, mono.j = i, j
 		}
 
-		self.bbox.ExpandIncludeMBR(mono.MBR)
+		self.bbox.ExpandIncludeMBR(&mono.MBR)
 		if self.bbox.i == null {
 			self.bbox.i, self.bbox.j = mono.i, mono.j
 		} else {

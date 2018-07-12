@@ -26,10 +26,10 @@ func QuadrantRelation(g, other Geometry) string {
 
 func quadrants(g, other Geometry) []Geometry {
 	var nw, nn, ne, ww, ii, ee, sw, ss, se Geometry
-	var box = g.BBox().Clone()
-	var other_mbr = other.BBox().Clone()
+	var box = g.BBox()
+	var other_mbr = other.BBox()
 
-	box.ExpandIncludeMBR(other_mbr)
+	box.ExpandIncludeMBR(&other_mbr)
 	box.ExpandByDelta(1e2, 1e2)
 
 	var mat [][]Point

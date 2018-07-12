@@ -10,7 +10,7 @@ func (pt *Point) Intersection(other Geometry) []Point {
 
 	if p, ok := IsPoint(other); ok {
 		if pt.Equals2D(p) {
-			res = append(res, PointXY(pt.X(), pt.Y()))
+			res = append(res, *pt)
 		}
 	} else if ln, ok := IsLineString(other); ok {
 		res = pt.AsLineString().Intersection(ln)
@@ -98,7 +98,9 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point 
 	var ptset = NewPtSet()
 
 	var res []Point
-	var bln = self.BBox().Intersects(shell.BBox())
+	var selfBox = self.BBox()
+	var shellBox = shell.BBox()
+	var bln = selfBox.Intersects(&shellBox)
 
 	if bln {
 		spts := self.linear_intersection(shell.LineString)

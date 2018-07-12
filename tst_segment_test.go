@@ -27,6 +27,7 @@ func TestSegment(t *testing.T) {
 			var i  = &Point{0.925118053504632, -1.233490738006176}
 			var k  = &Point{2, 2}
 			var n  = &Point{1, 5}
+			n.BBox()
 
 			seg_ab := NewSegment(&a, &b)
 			ln_ab := NewLineString([]Point{a, b})
@@ -41,7 +42,9 @@ func TestSegment(t *testing.T) {
 			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
 			g.Assert(seg_ab.IsSimple()).IsTrue()
 			g.Assert(seg_ab.Type().IsLineString()).IsFalse()
-			g.Assert(seg_ab.BBox().Equals(mbr.NewMBR(0, 0, -3, 4))).IsTrue()
+			var box = mbr.CreateMBR(0, 0, -3, 4)
+			var seg_ab_box = seg_ab.BBox()
+			g.Assert(seg_ab_box.Equals(&box)).IsTrue()
 			g.Assert(seg_ab.AsLinear()).Eql([]*LineString{ln_ab})
 			g.Assert(seg_ab.WKT()).Eql(ln_ab.WKT())
 			g.Assert(seg_ab.Intersects(k)).IsFalse()
@@ -60,7 +63,7 @@ func TestSegment(t *testing.T) {
 			g.Assert(seg_ab.Intersection(seg_ak)).Eql([]Point{a})
 			g.Assert(seg_ab.Distance(seg_ak)).Equal(0.0)
 			fmt.Println(seg_ab.Distance(seg_kn))
-			g.Assert(math.FloatEqual(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
+			g.Assert(feq(seg_ab.Distance(seg_kn), 2.8)).IsTrue()
 
 			pts := seg_ab.SegSegIntersection(seg_de)
 			g.Assert(pts[0].Point).Equal(Point{-1.5, 2})

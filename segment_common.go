@@ -1,10 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
 )
-
 
 type VBits uint8
 
@@ -23,7 +21,7 @@ const (
 
 //clamp to zero if float is near zero
 func snap_to_zero(v float64) float64 {
-	if math.FloatEqual(v, 0.0) {
+	if feq(v, 0.0) {
 		v = 0.0
 	}
 	return v
@@ -31,15 +29,15 @@ func snap_to_zero(v float64) float64 {
 
 //clamp to zero or one
 func snap_to_zero_or_one(v float64) float64 {
-	if math.FloatEqual(v, 0.0) {
+	if feq(v, 0.0) {
 		v = 0.0
-	} else if math.FloatEqual(v, 1.0) {
+	} else if feq(v, 1.0) {
 		v = 1.0
 	}
 	return v
 }
 
 //envelope of segment
-func BBox(a, b *Point) *mbr.MBR {
-	return mbr.NewMBR(a[X], a[Y], b[X], b[Y])
+func BBox(a, b *Point) mbr.MBR {
+	return mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
 }

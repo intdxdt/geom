@@ -5,13 +5,13 @@ import (
 )
 
 //builds rtree index of chains
-func (self *LineString) build_index()*LineString {
+func (self *LineString) build_index() *LineString {
 	if !self.index.IsEmpty() {
 		self.index.Clear()
 	}
-	data := make([]rtree.BoxObj, len(self.chains))
+	var data = make([]rtree.BoxObj, 0, len(self.chains))
 	for i := range self.chains {
-		data[i] = &self.chains[i]
+		data = append(data, &self.chains[i])
 	}
 	self.index.Load(data) //bulkload
 	return self

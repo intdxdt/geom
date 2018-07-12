@@ -14,7 +14,7 @@ func TestLineStringMono(t *testing.T) {
 
 	g.Describe("Linestring", func() {
 		g.It("should test mono mbr", func() {
-			bounds := mbr.NewMBR(
+			bounds := mbr.CreateMBR(
 				pts[0][X], pts[0][Y],
 				pts[n-1][X], pts[n-1][Y],
 			)

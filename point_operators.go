@@ -2,17 +2,17 @@ package geom
 
 //Add creates a new point by adding to other point
 func (a *Point) Add(x, y float64) Point {
-	return Pt(a[X]+x, a[Y]+y)
+	return Point{a[X]+x, a[Y]+y}
 }
 
 //Sub creates a new point by adding to other point
 func (a *Point) Sub(x, y float64) Point {
-	return Pt(a[X]-x, a[Y]-y)
+	return Point{a[X]-x, a[Y]-y}
 }
 
 //KProduct create new point by multiplying point by a scaler  k
 func (pt *Point) KProduct(k float64) Point {
-	return Pt(k*pt[X], k*pt[Y])
+	return Point{k*pt[X], k*pt[Y]}
 }
 
 //Dot Product of two points as vectors

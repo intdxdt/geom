@@ -2,7 +2,6 @@ package geom
 
 import (
 	"sort"
-	"github.com/intdxdt/math"
 )
 
 type Coordinates []Point
@@ -20,7 +19,7 @@ func (s Coordinates) Swap(i, j int) {
 //less - 2d compare - sort interface
 func (s Coordinates) Less(i, j int) bool {
 	return (s[i][0] < s[j][0]) || (
-		math.FloatEqual(s[i][0], s[j][0]) && s[i][1] < s[j][1])
+		feq(s[i][0], s[j][0]) && s[i][1] < s[j][1])
 }
 
 //2D sort

@@ -25,6 +25,7 @@ func PointXYZ(x, y, z float64) Point {
 //New constructor of Point
 func CreatePoint(array []float64) Point {
 	var pt = Point{}
+	pt.BBox()
 	var n = math.MinInt(len(pt), len(array))
 	for i := 0; i < n; i++ {
 		pt[i] = array[i]
@@ -40,29 +41,13 @@ func PointFromWKT(wkt_geom string) Point {
 
 //Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
-	return math.FloatEqual(self[X], 0.0) && math.FloatEqual(self[Y], 0.0)
+	return IsZero(self[X], self[Y])
 }
 
 //is null
 func (self *Point) IsNull() bool {
-	return math.IsNaN(self[X]) || math.IsNaN(self[Y])
+	return IsNull(self[X], self[Y])
 }
-
-//X gets the x coordinate of a point same as point[0]
-func (self *Point) X() float64 {
-	return self[X]
-}
-
-//Y gets the y coordinate of a point , same as wktreg[1]
-func (self *Point) Y() float64 {
-	return self[Y]
-}
-
-//Z gets the z coordinate of a point , same as wktreg[2]
-func (self *Point) Z() float64 {
-	return self[Z]
-}
-
 
 //As line strings
 func (self *Point) AsLineString() *LineString {

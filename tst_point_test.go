@@ -26,7 +26,8 @@ func TestPoint(t *testing.T) {
 	g.Describe("geom.point", func() {
 		g.It("loads wkt as point", func() {
 			g.Assert(p1.Type().IsPoint()).IsTrue()
-			g.Assert(p1.Envelope().Area()).Equal(0.0)
+			var p1Box = p1.BBox()
+			g.Assert(p1Box.Area()).Equal(0.0)
 
 			g.Assert(p1.Area()).Equal(0.0)
 			g.Assert(PointFromWKT(p1.WKT())).Eql(p1)
@@ -40,20 +41,20 @@ func TestPoint(t *testing.T) {
 			g.Assert(p1.Equals2D(&p1)).IsTrue()
 			//g.Assert(p1.Coordinates().Equals2D(p2)).IsTrue()
 
-			g.Assert(p1.X()).Equal(4.0)
-			g.Assert(p1.Y()).Equal(5.0)
-			g.Assert(p1.Z()).Equal(0.0)
+			g.Assert(p1[X]).Equal(4.0)
+			g.Assert(p1[Y]).Equal(5.0)
+			g.Assert(p1[Z]).Equal(0.0)
 
-			g.Assert(p5.X()).Equal(4.0)
-			g.Assert(p5.Y()).Equal(0.0)
+			g.Assert(p5[X]).Equal(4.0)
+			g.Assert(p5[Y]).Equal(0.0)
 
-			g.Assert(p3.X()).Equal(p1.X())
-			g.Assert(p3.Y()).Equal(p1.Y())
+			g.Assert(p3[X]).Equal(p1[X])
+			g.Assert(p3[Y]).Equal(p1[Y])
 
 			//3.9, 4.9, 9.8
-			g.Assert(p9.X()).Equal(3.9)
-			g.Assert(p9.Y()).Equal(4.9)
-			g.Assert(p9.Z()).Equal(9.8)
+			g.Assert(p9[X]).Equal(3.9)
+			g.Assert(p9[Y]).Equal(4.9)
+			g.Assert(p9[Z]).Equal(9.8)
 			g.Assert(p9.Equals2D(&p10)).IsTrue()
 			g.Assert(p9.Equals2D(&p11)).IsTrue()
 
@@ -61,7 +62,6 @@ func TestPoint(t *testing.T) {
 
 		g.It("point relate", func() {
 			pc := p1
-
 			g.Assert(p1.Equals2D(&pc)).IsTrue()
 			g.Assert(p1.Compare(&pc)).Equal(0)
 			g.Assert(p1.Compare(&p2)).Equal(0)
@@ -113,7 +113,7 @@ func TestPoint(t *testing.T) {
 		g.It("wkt string", func() {
 			a := Point{3.87, 7.45}
 			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
-			g.Assert(a.BBox()).Equal(NewMBR(3.87, 7.45, 3.87, 7.45))
+			g.Assert(a.BBox()).Equal(CreateMBR(3.87, 7.45, 3.87, 7.45))
 			g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45, 0}, {3.87, 7.45, 0}, {3.87, 7.45, 0}})
 		})
 	})

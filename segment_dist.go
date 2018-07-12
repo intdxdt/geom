@@ -111,8 +111,8 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 	var px, py = pt[X], pt[Y]
 	//var dab = sb.Sub(sa)
 	var dx, dy = bx-ax, by-ay
-	var isz_x = math.FloatEqual(dx, 0)
-	var isz_y = math.FloatEqual(dy, 0)
+	var isz_x = feq(dx, 0)
+	var isz_y = feq(dy, 0)
 
 	if isz_x && isz_y {
 		//line with zero length

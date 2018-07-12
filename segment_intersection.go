@@ -76,11 +76,11 @@ func coincident_segs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) 
 	if a == 0 && b == 0 {
 		var selfBox = BBox(sa, sb)
 		var otherBox = BBox(oa, ob)
-		if selfBox.Intersects(otherBox) {
-			update_coords_inbounds(otherBox, sa, &coords, SelfA)
-			update_coords_inbounds(otherBox, sb, &coords, SelfB)
-			update_coords_inbounds(selfBox, oa, &coords, OtherA)
-			update_coords_inbounds(selfBox, ob, &coords, OtherB)
+		if selfBox.Intersects(&otherBox) {
+			update_coords_inbounds(&otherBox, sa, &coords, SelfA)
+			update_coords_inbounds(&otherBox, sb, &coords, SelfB)
+			update_coords_inbounds(&selfBox, oa, &coords, OtherA)
+			update_coords_inbounds(&selfBox, ob, &coords, OtherB)
 		}
 	}
 	//lexical sort
