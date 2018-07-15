@@ -26,7 +26,7 @@ var feq = math.FloatEqual
 type GeometryFn func([]*Point) Geometry
 
 type Geometry interface {
-	BBox() mbr.MBR
+	BBox() *mbr.MBR
 	AsLinear() []*LineString
 	Intersects(Geometry) bool
 	Intersection(Geometry) []Point

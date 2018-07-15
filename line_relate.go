@@ -1,43 +1,53 @@
 package geom
 
+import (
+	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/rtree"
+	"github.com/intdxdt/sset"
+)
+
 //intersection of self linestring with other
 func (self *LineString) linear_intersection(other *LineString) []Point {
 	var ptlist []Point
-	var ptset = NewPtSet()
+	var ptset = sset.NewSSet(ptCmp)
 
-	if self.bbox.Disjoint(&other.bbox.MBR) {
+	if self.bbox.Disjoint(other.bbox.MBR) {
 		return ptlist //disjoint
 	}
 
 	//if root mbrs intersect
 	//var i, q, lnrange, ibox, qbox, qrng
-	var selfsegs   []*Segment
-	var othersegs  []*Segment
-
+	var ok bool
+	var qrng *mbr.MBR
+	var qbox, ibox *MonoMBR
+	var selfsegs []*Segment
+	var othersegs []*Segment
+	var lnrange []*rtree.Obj
 	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; i < len(inrange); i++ {
 		//cur self box
-		ibox := inrange[i].GetItem().(*MonoMBR)
+		ibox = inrange[i].Object.(*MonoMBR)
 		//search ln using ibox
-		lnrange := other.index.Search(ibox.MBR)
+		lnrange = other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
-			qbox := lnrange[q].GetItem().(*MonoMBR)
-			qrng, ok := ibox.MBR.Intersection(&qbox.MBR)
+			qbox = lnrange[q].Object.(*MonoMBR)
+			qrng, ok = ibox.MBR.Intersection(qbox.MBR)
 
 			if ok {
-				self.segs_inrange(&selfsegs, &qrng, ibox.i, ibox.j)
-				other.segs_inrange(&othersegs, &qrng, qbox.i, qbox.j)
-				self.segseg_intersection(selfsegs, othersegs, ptset, true)
+				self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
+				other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+				self.segsegIntersection(selfsegs, othersegs, ptset)
 			}
 		}
 	}
 
-	ptset.ForEach(func(o interface{}, _ int) bool {
-		ptlist = append(ptlist, o.(Point))
-		return true
-	})
-	return ptlist
+	var vals = ptset.Values()
+	var pts = make([]Point, 0, len(vals))
+	for i := range vals {
+		pts = append(pts, vals[i].(Point))
+	}
+	return pts
 }
 
 //Checks if line intersects other line
@@ -45,25 +55,25 @@ func (self *LineString) linear_intersection(other *LineString) []Point {
 func (self *LineString) intersects_linestring(other *LineString) bool {
 	var bln = false
 	//if root mbrs intersect
-	var othersegs = make([]*Segment, 0)
-	var selfsegs = make([]*Segment, 0)
-
-	var query = other.bbox.MBR
-	var inrange = self.index.Search(query)
+	var othersegs []*Segment
+	var selfsegs []*Segment
+	var lnrange []*rtree.Obj
+	var qrng *mbr.MBR
+	var qbox, ibox *MonoMBR
+	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; !bln && i < len(inrange); i++ {
 		//search ln using ibox
-		ibox := inrange[i].GetItem().(*MonoMBR)
-		query = ibox.BBox()
-		lnrange := other.index.Search(query)
+		ibox = inrange[i].Object.(*MonoMBR)
+		lnrange = other.index.Search(ibox.MBR)
 
 		for q := 0; !bln && q < len(lnrange); q++ {
 
-			qbox := lnrange[q].GetItem().(*MonoMBR)
-			qrng, _ := ibox.Intersection(&qbox.MBR)
+			qbox = lnrange[q].Object.(*MonoMBR)
+			qrng, _ = ibox.Intersection(qbox.MBR)
 
-			self.segs_inrange(&selfsegs, &qrng, ibox.i, ibox.j)
-			other.segs_inrange(&othersegs, &qrng, qbox.i, qbox.j)
+			self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
+			other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
 				bln = self.segseg_intersects(selfsegs, othersegs)
@@ -76,9 +86,9 @@ func (self *LineString) intersects_linestring(other *LineString) bool {
 //line intersect polygon rings
 func (self *LineString) intersects_polygon(lns []*LineString) bool {
 	var bln, intersects_hole, in_hole bool
-	var rings = make([]*LinearRing, len(lns))
-	for i, ln := range lns {
-		rings[i] = &LinearRing{ln}
+	var rings = make([]*LinearRing, 0, len(lns))
+	for i := range lns {
+		rings = append(rings, &LinearRing{lns[i]})
 	}
 	var shell = rings[0]
 

@@ -22,7 +22,5 @@ func (self *LineString) String() string {
 
 func (self *LineString) WKT() string {
 	var coords = CoordinatesAsFloat2D(self.coordinates)
-	return WriteWKT(
-		NewWKTParserObj(GeoType_LineString, coords),
-	)
+	return WriteWKT(NewWKTParserObj(GeoType_LineString, coords))
 }

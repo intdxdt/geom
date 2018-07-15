@@ -113,7 +113,7 @@ func TestPoint(t *testing.T) {
 		g.It("wkt string", func() {
 			a := Point{3.87, 7.45}
 			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
-			g.Assert(a.BBox()).Equal(CreateMBR(3.87, 7.45, 3.87, 7.45))
+			g.Assert(a.BBox()).Equal(New(3.87, 7.45, 3.87, 7.45))
 			g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45, 0}, {3.87, 7.45, 0}, {3.87, 7.45, 0}})
 		})
 	})

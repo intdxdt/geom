@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/sset"
 )
 
 func TestCHull(t *testing.T) {
@@ -11,7 +12,7 @@ func TestCHull(t *testing.T) {
 
 	var empty_hull []Point
 	hullEql := func(g *goblin.G, hull, expects Coordinates) {
-		hs := NewPtSet()
+		hs := sset.NewSSet(ptCmp)
 		g.Assert(hull.Len()).Equal(expects.Len())
 		for _, pt := range hull {
 			hs.Add(pt)

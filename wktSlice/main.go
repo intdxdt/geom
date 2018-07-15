@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sort"
 	"bytes"
-	"github.com/intdxdt/stack"
 	"strconv"
 	"time"
 )
@@ -26,17 +25,17 @@ const (
 )
 
 type Shell [][]float64
-type Holes []*Shell
+type Holes []Shell
 type WKTParserObj struct {
-	shell *Shell
-	holes *Holes
+	shell Shell
+	holes Holes
 	gtype int
 }
 
 type Token struct {
+	children []*Token
 	i        int
 	j        int
-	children []*Token
 }
 
 type Tokens []*Token
@@ -57,6 +56,7 @@ func (s Tokens) Less(i, j int) bool {
 }
 
 func main() {
+	fmt.Println("...")
 	//defer profile.Start().Stop()
 	//var wkt = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10), (20 30, 35 35, 30 20, 20 30))"
 	//var wkt = "MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35),(30 20, 20 15, 20 25, 30 20)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35),(30 20, 20 15, 20 25, 30 20)))"
@@ -70,7 +70,7 @@ func main() {
 
 	//var name, tokens = buildTokens(wktBytes)
 	//tokens = aggregateTokens(tokens)
-	//var parseObj = parseWKT(name, wktBytes, tokens)
+	//var parseObj = ReadWKT(name, wktBytes, tokens)
 	//fmt.Println(parseObj)
 
 	//fmt.Println(string(wktBytes[tokens[0].i+1 : tokens[0].j]))
@@ -79,22 +79,23 @@ func main() {
 	//for _, ch := range coords {
 	//	fmt.Println(string(ch))
 	//}
-	bench_gb(10000)
+	benchGB(10000)
 	fmt.Println(bln)
 }
 
 func buildTokens(stream []byte) ([]byte, []*Token) {
 	var tokens []*Token
-	var stk = stack.NewStack()
+	var stack []*Token
 	var namespace bool
 	var name []byte
+	var s *Token
 
 	for i, o := range stream {
 		if o == '(' {
 			namespace = true
-			stk = stk.Push(&Token{i: i})
+			stack = append(stack, &Token{i: i})
 		} else if o == ')' {
-			var s = stk.Pop().(*Token)
+			s = popToken(&stack)
 			s.j = i
 			tokens = append(tokens, s)
 		}
@@ -112,7 +113,7 @@ func buildTokens(stream []byte) ([]byte, []*Token) {
 func aggregateTokens(tokens []*Token) []*Token {
 	var bln = false
 	bln, tokens = aggregateSequence(tokens)
-	if bln {
+	if bln && len(tokens) > 1 {
 		for _, tok := range tokens {
 			_, tok.children = aggregateSequence(tok.children)
 		}
@@ -121,10 +122,15 @@ func aggregateTokens(tokens []*Token) []*Token {
 }
 
 func aggregateSequence(tokens []*Token) (bool, []*Token) {
+	if len(tokens) <= 1 {
+		return false, tokens
+	}
+
 	sort.Sort(Tokens(tokens))
-	var heads []*Token
 	var head *Token
+	var heads []*Token
 	var aggregate = false
+
 	for _, tok := range tokens {
 		if head == nil {
 			head = tok
@@ -142,41 +148,23 @@ func aggregateSequence(tokens []*Token) (bool, []*Token) {
 	return aggregate, heads
 }
 
-func tokenCoordinates(wktbytes []byte, tokens []*Token) []interface{} {
-	var tokenCoords []interface{}
-	for _, tok := range tokens {
-		var chBytes [][]byte
-		if len(tok.children) == 0 {
-			chBytes = append(chBytes, wktbytes[tok.i+1:tok.j])
-		} else {
-			for _, ch := range tok.children {
-				chBytes = append(chBytes, wktbytes[ch.i+1:ch.j])
-			}
-		}
-		tokenCoords = append(tokenCoords, chBytes)
-	}
-
-	return tokenCoords
-}
-
-func parseWKT(name []byte, wkt []byte, tokens []*Token) *WKTParserObj {
+// tokenCoordinates
+func ReadWKT(wkt string) WKTParserObj {
+	var wktBytes = []byte(wkt)
+	var name, tokens = buildTokens(wktBytes)
+	tokens = aggregateTokens(tokens)
 	name = bytes.ToLower(name)
-	var obj = &WKTParserObj{nil, nil, GeoType_Unkown}
+
+	var obj = WKTParserObj{gtype: GeoType_Unkown}
 	if bytes.Equal(name, wktEmpty) || bytes.Equal(name, nil) {
 		return obj
 	}
-	var parser func([]byte, *Token, *WKTParserObj)
-
 	if bytes.Equal(name, wktPolygon) {
-		obj.gtype, parser = GeoType_Polygon, wktPolygonParser
+		obj = wktPolygonParser(GeoType_Polygon, wktBytes, tokens[0])
 	} else if bytes.Equal(name, wktLinestring) {
-		obj.gtype, parser = GeoType_LineString, wktLinestringParser
+		obj = wktLinestringParser(GeoType_LineString, wktBytes, tokens[0])
 	} else if bytes.Equal(name, wktPoint) {
-		obj.gtype, parser = GeoType_Point, wktPointParser
-	}
-
-	if obj.gtype != GeoType_Unkown {
-		parser(wkt, tokens[0], obj)
+		obj = wktPointParser(GeoType_Point, wktBytes, tokens[0])
 	}
 	return obj
 }
@@ -196,45 +184,26 @@ func parseF64(str []byte) float64 {
 }
 
 //Parse point
-func wktPointParser(wkt []byte, tok *Token, obj *WKTParserObj) {
+func wktPointParser(typeId int, wkt []byte, tok *Token) WKTParserObj {
+	var obj = WKTParserObj{gtype: typeId}
 	var ptbytes = wkt[tok.i+1 : tok.j]
 	var coord = bytes.Split(ptbytes, wktSpace)
-	var pt = []float64{parseF64(coord[0]), parseF64(coord[1])}
-	obj.shell, obj.holes = &Shell{pt}, nil
+	obj.shell = Shell{[]float64{
+		parseF64(coord[0]),
+		parseF64(coord[1]),
+	}}
+	return obj
 }
 
 //parse linestring
-func wktLinestringParser(wkt []byte, tok *Token, obj *WKTParserObj) {
-	//var lnbytes = wkt[tok.i+1 : tok.j]
-	//var numToks = numTokens(lnbytes)
-	//fmt.Println(numDims(lnbytes))
-	//fmt.Println(parseNums(lnbytes, numToks))
-	obj.shell, obj.holes = parseString(wkt, tok), nil
-}
-
-//parse linestring
-func parseString(wkt []byte, tok *Token) *Shell {
-	var lnbytes = wkt[tok.i+1 : tok.j]
-	//var numToks = numTokens(lnbytes)
-	//fmt.Println(numDims(lnbytes))
-	//fmt.Println(parseNums(lnbytes, numToks))
-	var ptTokens = bytes.Split(lnbytes, wktComma)
-	var coord [][]byte
-	var shell = make(Shell, 0, len(ptTokens))
-
-	for _, ptbytes := range ptTokens {
-		coord = bytes.Split(bytes.TrimSpace(ptbytes), wktSpace)
-		shell = append(shell, []float64{
-			parseF64(coord[0]),
-			parseF64(coord[1]),
-		})
-	}
-	return &shell
+func wktLinestringParser(typeId int, wkt []byte, tok *Token) WKTParserObj {
+	return WKTParserObj{gtype: typeId, shell: parseString(wkt, tok)}
 }
 
 //parse polygon
-func wktPolygonParser(wkt []byte, token *Token, obj *WKTParserObj) {
-	var shell *Shell
+func wktPolygonParser(typeId int, wkt []byte, token *Token) WKTParserObj {
+	var shell Shell
+	var obj = WKTParserObj{gtype: typeId}
 	var n = len(token.children)
 	var holes = make(Holes, 0, n-1)
 	for i, tok := range token.children {
@@ -244,10 +213,24 @@ func wktPolygonParser(wkt []byte, token *Token, obj *WKTParserObj) {
 			holes = append(holes, parseString(wkt, tok))
 		}
 	}
-	obj.shell, obj.holes = shell, &holes
+	obj.shell, obj.holes = shell, holes
+	return obj
 }
 
-func numTokens(stream []byte) []int {
+//parse linestring
+func parseString(wkt []byte, tok *Token) Shell {
+	var wktStr = wkt[tok.i+1 : tok.j]
+	var indices = numberIndices(wktStr)
+	var dim = dimension(wktStr)
+	var lns = parseNums(wktStr, indices)
+	var shell = make(Shell, 0, len(lns)/dim)
+	for i := 0; i < len(lns); i += dim {
+		shell = append(shell, lns[i:i+dim])
+	}
+	return shell
+}
+
+func numberIndices(stream []byte) []int {
 	var indices []int
 	var idx, i, j = -1, -1, -1
 	var n = len(stream)
@@ -271,15 +254,15 @@ func numTokens(stream []byte) []int {
 	return indices
 }
 
-func parseNums(lnbytes []byte, indices []int) []float64 {
+func parseNums(strBytes []byte, indices []int) []float64 {
 	var coordinates = make([]float64, 0, len(indices)/2)
 	for i := 0; i < len(indices); i += 2 {
-		coordinates = append(coordinates, parseF64(lnbytes[indices[i]:indices[i+1]]))
+		coordinates = append(coordinates, parseF64(strBytes[indices[i]:indices[i+1]]))
 	}
 	return coordinates
 }
 
-func numDims(stream []byte) int {
+func dimension(stream []byte) int {
 	var idx, i, j = -1, -1, -1
 	var dim, n = 1, len(stream)
 	for idx < n {
@@ -305,7 +288,19 @@ func numDims(stream []byte) int {
 	return dim
 }
 
-func bench_gb(N int) {
+func popToken(tokens *[]*Token) *Token {
+	var v *Token
+	var a = *tokens
+	var n = len(a) - 1
+	if n < 0 {
+		return nil
+	}
+	v, a[n] = a[n], nil
+	*tokens = a[:n]
+	return v
+}
+
+func benchGB(N int) {
 	var shapely_bench = func() bool {
 		var gb_wkt = "POLYGON ((189 154, 192 155, 193 154, 194 151, 194 150, 196 151, 199 151, 200 150, 203 149, 204 149, 205 149, 206 149, 209 150, 211 149, 212 149, 212 152, 212 155, 213 156, 213 156, 213 159, 214 159, 216 161, 216 161, 216 163, 217 163, 218 166, 218 166, 217 163, 217 162, 218 162, 218 163, 220 165, 218 167, 218 167, 215 168, 214 170, 214 171, 215 170, 217 168, 220 168, 221 168, 222 170, 223 172, 223 174, 224 176, 223 178, 223 179, 223 179, 223 180, 222 180, 222 180, 221 178, 222 177, 222 174, 221 174, 220 172, 218 172, 218 174, 220 174, 218 174, 220 176, 220 178, 217 180, 221 179, 221 180, 222 181, 221 182, 218 183, 218 183, 217 182, 214 184, 214 187, 214 189, 211 191, 210 191, 210 190, 209 189, 207 189, 206 189, 207 189, 209 191, 209 191, 210 191, 207 192, 205 191, 204 191, 204 191, 204 192, 204 194, 204 195, 206 195, 206 198, 206 199, 206 200, 206 202, 206 203, 210 206, 209 207, 207 211, 209 212, 210 212, 210 213, 207 212, 207 213, 206 213, 207 215, 209 216, 209 218, 210 222, 209 226, 211 226, 209 231, 207 232, 206 234, 205 237, 205 240, 202 246, 201 247, 200 247, 200 247, 200 248, 201 249, 201 248, 201 250, 202 251, 201 254, 200 254, 201 253, 199 254, 199 253, 199 253, 196 254, 194 251, 192 253, 193 251, 192 251, 192 251, 191 251, 192 253, 191 253, 190 254, 189 255, 189 255, 190 254, 190 253, 190 251, 189 251, 189 249, 189 251, 189 253, 189 253, 188 255, 185 254, 187 253, 185 253, 185 253, 185 254, 184 254, 183 254, 179 254, 177 255, 177 255, 176 255, 174 255, 176 256, 177 257, 176 257, 176 258, 172 258, 172 260, 171 260, 170 260, 169 259, 169 260, 168 260, 169 261, 167 262, 166 264, 166 264, 162 265, 161 264, 161 264, 162 262, 163 261, 160 262, 158 261, 158 262, 159 262, 160 264, 160 265, 160 265, 158 267, 157 267, 156 267, 155 267, 155 267, 154 268, 154 270, 154 269, 151 269, 150 272, 149 272, 149 270, 147 270, 147 272, 146 272, 146 272, 144 270, 143 272, 141 270, 141 272, 140 272, 140 271, 140 273, 139 273, 139 273, 139 273, 138 272, 138 273, 137 273, 137 273, 136 272, 137 270, 136 269, 136 270, 135 270, 134 270, 134 272, 133 272, 133 272, 132 272, 132 270, 129 272, 130 272, 128 272, 128 271, 127 272, 127 271, 127 271, 129 269, 132 269, 134 267, 134 267, 128 269, 127 269, 128 268, 129 267, 136 266, 136 266, 136 265, 136 265, 135 264, 135 262, 135 264, 134 266, 126 266, 126 267, 124 267, 123 267, 122 267, 122 267, 122 267, 122 266, 123 267, 123 266, 123 265, 123 265, 125 265, 126 264, 125 264, 125 262, 127 261, 127 262, 127 261, 129 261, 128 261, 130 259, 133 259, 134 259, 132 259, 129 260, 128 260, 127 260, 127 260, 122 262, 122 261, 121 261, 121 260, 122 259, 121 258, 119 259, 118 260, 118 258, 117 258, 117 256, 119 256, 121 256, 119 255, 119 255, 121 254, 121 254, 126 251, 127 250, 127 251, 127 251, 128 249, 129 249, 132 249, 128 248, 127 248, 127 249, 126 248, 123 249, 122 248, 121 248, 119 248, 121 249, 121 249, 118 248, 119 249, 117 249, 116 248, 116 248, 116 247, 117 247, 116 246, 117 246, 117 247, 118 247, 118 245, 119 245, 121 244, 123 244, 123 245, 125 246, 126 244, 125 243, 126 242, 126 244, 127 246, 129 246, 129 246, 129 246, 132 246, 132 245, 128 245, 128 243, 129 244, 129 243, 130 240, 128 239, 128 239, 133 238, 134 237, 135 238, 135 237, 134 237, 134 237, 135 235, 136 235, 138 236, 138 235, 141 236, 147 234, 147 235, 148 235, 149 234, 151 234, 151 234, 154 234, 150 233, 149 233, 149 232, 148 231, 147 231, 147 232, 144 235, 143 234, 141 236, 140 235, 141 234, 139 234, 137 234, 137 233, 136 232, 137 234, 134 234, 134 235, 129 234, 128 234, 132 234, 135 231, 136 229, 138 229, 138 227, 139 226, 139 224, 141 223, 140 223, 138 223, 138 223, 139 222, 143 217, 146 217, 147 217, 147 217, 149 217, 147 217, 149 217, 149 217, 150 217, 150 217, 150 216, 151 215, 150 215, 149 215, 149 214, 150 213, 150 213, 150 212, 148 212, 146 213, 139 213, 138 213, 138 211, 138 211, 137 213, 137 213, 137 212, 137 211, 137 210, 137 210, 138 210, 137 209, 137 210, 137 209, 137 209, 137 209, 137 209, 136 210, 135 210, 134 209, 133 209, 133 207, 133 207, 135 206, 135 206, 135 206, 135 206, 133 206, 133 206, 133 206, 133 206, 132 206, 132 207, 129 206, 128 205, 127 206, 127 205, 126 205, 127 203, 129 204, 128 203, 128 202, 127 201, 126 201, 128 201, 128 200, 132 201, 129 198, 134 198, 134 196, 134 194, 136 193, 138 194, 139 193, 138 193, 139 192, 138 192, 139 191, 139 191, 139 190, 136 190, 135 190, 134 190, 134 190, 134 188, 136 189, 136 189, 136 189, 136 187, 136 187, 136 188, 136 187, 136 187, 135 184, 135 183, 136 183, 135 183, 136 182, 135 182, 135 183, 134 182, 134 182, 134 182, 135 181, 134 181, 135 180, 134 180, 135 179, 135 179, 133 178, 133 179, 133 179, 133 180, 132 180, 132 180, 132 181, 132 182, 130 182, 132 178, 132 178, 130 177, 132 177, 132 177, 134 174, 134 177, 135 178, 135 179, 134 178, 134 178, 136 179, 136 177, 136 178, 136 177, 136 177, 136 176, 136 174, 138 176, 143 176, 144 178, 146 177, 147 177, 147 178, 148 179, 148 179, 148 180, 148 180, 149 181, 149 181, 151 178, 154 178, 156 180, 157 179, 157 179, 158 180, 160 181, 161 181, 160 180, 160 180, 161 179, 162 179, 161 178, 161 178, 162 178, 162 178, 161 177, 160 178, 159 177, 161 176, 161 174, 161 174, 163 174, 162 173, 163 172, 163 173, 167 173, 168 171, 168 170, 170 168, 170 168, 171 168, 170 168, 168 168, 167 168, 167 168, 167 168, 166 168, 163 170, 163 168, 166 168, 166 168, 163 168, 163 168, 161 168, 160 168, 157 166, 158 165, 157 165, 158 165, 158 163, 160 162, 165 163, 163 162, 162 162, 163 162, 166 163, 162 160, 163 160, 167 160, 166 159, 166 159, 167 159, 168 159, 167 159, 166 158, 166 159, 165 158, 165 156, 167 156, 166 156, 165 154, 166 154, 166 152, 167 154, 167 152, 168 152, 168 152, 168 152, 168 151, 169 150, 171 150, 171 150, 171 150, 171 151, 172 150, 174 150, 174 148, 174 147, 176 148, 176 149, 177 149, 177 150, 177 150, 178 150, 177 150, 178 150, 178 150, 178 149, 177 149, 177 147, 178 147, 178 147, 178 150, 179 150, 180 151, 180 152, 181 151, 180 148, 180 150, 180 149, 180 148, 179 148, 179 147, 180 147, 181 146, 182 147, 182 149, 183 151, 183 151, 183 152, 181 155, 182 155, 182 155, 181 155, 180 157, 182 155, 184 154, 184 154, 184 151, 183 148, 184 148, 183 147, 184 147, 184 147, 184 147, 187 146, 187 146, 187 147, 189 147, 187 146, 187 145, 187 145, 187 144, 185 144, 185 144, 189 144, 190 145, 191 146, 195 148, 195 149, 191 151, 189 154))"
 		var ln_wkt = []string{
@@ -315,15 +310,8 @@ func bench_gb(N int) {
 		}
 		var bln bool
 		for _, wkt := range ln_wkt {
-			var wktBytes = []byte(wkt)
-			var name, tokens = buildTokens(wktBytes)
-			tokens = aggregateTokens(tokens)
-			var lnObj = parseWKT(name, wktBytes, tokens)
-
-			wktBytes = []byte(gb_wkt)
-			name, tokens = buildTokens(wktBytes)
-			tokens = aggregateTokens(tokens)
-			var polyObj = parseWKT(name, wktBytes, tokens)
+			var lnObj   = ReadWKT(wkt)
+			var polyObj = ReadWKT(gb_wkt)
 			bln = (lnObj.shell != nil) && (polyObj.shell != nil) || bln
 		}
 		return bln

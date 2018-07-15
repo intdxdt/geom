@@ -4,9 +4,8 @@ import "bytes"
 
 //polygon as  string
 func (self *Polygon) String() string {
-	//NewWKTParserObj
-	var aslines = self.AsLinear()
 	var buf bytes.Buffer
+	var aslines = self.AsLinear()
 	var n = len(aslines) - 1
 	buf.WriteString("[")
 	for i, ln := range aslines {
@@ -21,16 +20,10 @@ func (self *Polygon) String() string {
 
 //polygon as  string
 func (self *Polygon) WKT() string {
-	//NewWKTParserObj
-	self_holes := self.Holes
-	rings := make([][][]float64, len(self_holes)+1)
-
-	rings[0] = CoordinatesAsFloat2D(self.Shell.coordinates)
-	for i := 0; i < len(self_holes); i++ {
-		rings[i+1] = CoordinatesAsFloat2D(self_holes[i].coordinates)
+	var rings = make([][][]float64, 0, len(self.Holes)+1)
+	rings = append(rings, CoordinatesAsFloat2D(self.Shell.coordinates))
+	for i := range self.Holes {
+		rings = append(rings, CoordinatesAsFloat2D(self.Holes[i].coordinates))
 	}
-
-	return WriteWKT(
-		NewWKTParserObj(GeoType_Polygon, rings...),
-	)
+	return WriteWKT(NewWKTParserObj(GeoType_Polygon, rings...))
 }

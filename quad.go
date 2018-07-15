@@ -29,7 +29,7 @@ func quadrants(g, other Geometry) []Geometry {
 	var box = g.BBox()
 	var other_mbr = other.BBox()
 
-	box.ExpandIncludeMBR(&other_mbr)
+	box.ExpandIncludeMBR(other_mbr)
 	box.ExpandByDelta(1e2, 1e2)
 
 	var mat [][]Point

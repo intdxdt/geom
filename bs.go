@@ -1,10 +1,5 @@
 package geom
 
-//Int cmp
-func intCmp(a, b interface{}) int {
-	return a.(int) - b.(int)
-}
-
 //compare points as items - x | y ordering
 func ptCmp(oa, ob interface{}) int {
 	var a, b = oa.(Point), ob.(Point)
@@ -19,52 +14,4 @@ func ptCmp(oa, ob interface{}) int {
 		r = -1
 	}
 	return r
-}
-
-//binary search assumes the array is sorted
-func bsInts(array []int, key int, ij ...int) int {
-	var low  = 0
-	var high = len(array) - 1
-	if len(ij) > 0 {
-		low = ij[0]
-		high = ij[1]
-	}
-
-	var mid, v int
-	for low <= high {
-		mid = low + ((high - low) >> 1)
-		v = intCmp(array[mid], key)
-		if v < 0 {
-			low = mid + 1 //too low
-		} else if v > 0 {
-			high = mid - 1 //too high
-		} else {
-			return mid //found
-		}
-	}
-	return -(low + 1) //key not found
-}
-
-//binary search assumes the array is sorted
-func bsPts(array []Point, key *Point, ij ...int) int {
-	var low  = 0
-	var high = len(array) - 1
-	if len(ij) > 0 {
-		low = ij[0]
-		high = ij[1]
-	}
-
-	var mid, v int
-	for low <= high {
-		mid = low + ((high - low) >> 1)
-		v = ptCmp(&array[mid], key)
-		if v < 0 {
-			low = mid + 1 //too low
-		} else if v > 0 {
-			high = mid - 1 //too high
-		} else {
-			return mid //found
-		}
-	}
-	return -(low + 1) //key not found
 }

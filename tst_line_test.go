@@ -33,8 +33,9 @@ func TestLineString(t *testing.T) {
 			g.Assert(ln.IsRing()).IsTrue()
 			g.Assert(math.Round(ln.Area(), 5)).Equal(1.0)
 			g.Assert(ln.len(len(ln.coordinates)-1, 0) == ln.Length()).IsTrue()
-			g.Assert(ln.chain_length(&ln.chains[0])).Equal(ln.chain_length(&ln.chains[1]))
-			g.Assert(ln.chain_length(&ln.chains[2])).Equal(ln.chain_length(&ln.chains[3]))
+			var chains = ln.MonoChains()
+			g.Assert(ln.chain_length(chains[0])).Equal(ln.chain_length(chains[1]))
+			g.Assert(ln.chain_length(chains[2])).Equal(ln.chain_length(chains[3]))
 			g.Assert(cln.Length() == 4.0).IsTrue()
 
 			g.Assert(ln3.Area()).Equal(0.0)
@@ -85,7 +86,7 @@ func TestLineString(t *testing.T) {
 		})
 
 		g.It("should test envelope", func() {
-			box := mbr.CreateMBR(pts[0][X], pts[0][Y], pts[0][X], pts[0][Y])
+			box := mbr.New(pts[0][X], pts[0][Y], pts[0][X], pts[0][Y])
 			for _, v := range pts[1:] {
 				box.ExpandIncludeXY(v[X], v[Y])
 			}
@@ -132,7 +133,7 @@ func TestLineStringRelate(t *testing.T) {
 
 	g.Describe("Linestring - Relate", func() {
 		g.It("should linestring relate", func() {
-			g.Assert(lna.bbox.Equals(&lna.bbox.MBR)).IsTrue()
+			g.Assert(lna.bbox.Equals(lna.bbox.MBR)).IsTrue()
 			g.Assert(lna.Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Geometry().Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Intersects(ln_null)).IsFalse()

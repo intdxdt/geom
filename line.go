@@ -8,11 +8,11 @@ import (
 const bucketSize = 8
 
 type LineString struct {
-	chains      []MonoMBR
+	chains      []*MonoMBR
 	coordinates []Point
 	length      float64
 	monosize    int
-	bbox        MonoMBR
+	bbox        *MonoMBR
 	index       *rtree.RTree
 }
 
@@ -26,7 +26,7 @@ func NewLineString(coordinates []Point) *LineString {
 	var mSize = int(math.Log2(float64(n) + 1.0))
 	return (
 		&LineString{
-			chains:      make([]MonoMBR, 0, mSize),
+			chains:      make([]*MonoMBR, 0, mSize),
 			coordinates: coordinates[:n:n],
 			monosize:    mSize,
 			index:       rtree.NewRTree(bucketSize),
@@ -52,10 +52,10 @@ func NewLineStringFromPoint(pt Point) *LineString {
 }
 
 //get copy of chains of linestring
-func (self *LineString) MonoChains() []MonoMBR {
-	chains := make([]MonoMBR, len(self.chains))
+func (self *LineString) MonoChains() []*MonoMBR {
+	var chains = make([]*MonoMBR, 0, len(self.chains))
 	for i := range self.chains {
-		chains[i] = self.chains[i]
+		chains = append(chains, self.chains[i])
 	}
 	return chains
 }

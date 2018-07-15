@@ -23,27 +23,26 @@ func WriteWKT(obj *WKTParserObj) string {
 }
 
 //str point
-func str_point(shell *Shell) string {
-	var s string = "EMPTY"
-	if shell != nil && len(*shell) > 0 {
-		sh := *shell
-		s = "(" + coord_str(sh[0]) + ")"
+func str_point(shell Shell) string {
+	var s  = "EMPTY"
+	if shell != nil && len(shell) > 0 {
+		s = "(" + coord_str(shell[0]) + ")"
 	}
 	return s
 }
 
 //str polyline
-func str_polyline(shell *Shell) string {
-	var s string = "EMPTY"
+func str_polyline(shell Shell) string {
+	var s  = "EMPTY"
 	if shell == nil {
 		return s
 	}
-	var sh = *shell
-	n := len(sh)
+
+	var n = len(shell)
 	if n > 0 {
-		lnstr := make([]string, n)
+		var lnstr = make([]string, n)
 		for i := 0; i < n; i++ {
-			lnstr[i] = coord_str(sh[i])
+			lnstr[i] = coord_str(shell[i])
 		}
 		s = "(" + strings.Join(lnstr, ", ") + ")"
 	}
@@ -52,18 +51,16 @@ func str_polyline(shell *Shell) string {
 
 //str polygon
 func str_polygon(obj *WKTParserObj) string {
-	shell := str_polyline(obj.shell)
 	var n int
-	var holes Holes
-	if obj.holes != nil {
-		holes = *obj.holes
-		n = len(holes)
+	var shell = str_polyline(obj.shell)
+	if len(obj.holes) > 0 {
+		n = len(obj.holes)
 	}
-	rings := make([]string, n+1)
+	var rings = make([]string, n+1)
 	rings[0] = shell
 	if n > 0 {
 		for i := 0; i < n; i++ {
-			rings[i+1] = str_polyline(holes[i])
+			rings[i+1] = str_polyline(obj.holes[i])
 		}
 	}
 	return strings.Join(rings, ",")

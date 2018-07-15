@@ -1,5 +1,7 @@
 package geom
 
+import "github.com/intdxdt/sset"
+
 //Checks if pt intersection other geometry
 func (pt *Point) Intersection(other Geometry) []Point {
 	var res []Point
@@ -64,7 +66,7 @@ func (self *Polygon) Intersection(other Geometry) []Point {
 	} else if ln, ok := IsLineString(other); ok {
 		res = ln.Intersection(self)
 	} else if ply, ok := IsPolygon(other); ok {
-		ptset := NewPtSet()
+		ptset := sset.NewSSet(ptCmp)
 		//other intersect self
 		lns := ply.AsLinear()
 		for _, ln := range lns {
@@ -95,12 +97,9 @@ func (self *Polygon) Intersection(other Geometry) []Point {
 //line intersect polygon rings
 func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point {
 	var shell = rings[0]
-	var ptset = NewPtSet()
-
+	var ptset = sset.NewSSet(ptCmp)
 	var res []Point
-	var selfBox = self.BBox()
-	var shellBox = shell.BBox()
-	var bln = selfBox.Intersects(&shellBox)
+	var bln = self.bbox.MBR.Intersects(shell.bbox.MBR)
 
 	if bln {
 		spts := self.linear_intersection(shell.LineString)

@@ -9,9 +9,9 @@ func (self *LineString) build_index() *LineString {
 	if !self.index.IsEmpty() {
 		self.index.Clear()
 	}
-	var data = make([]rtree.BoxObj, 0, len(self.chains))
+	var data = make([]*rtree.Obj, 0, len(self.chains))
 	for i := range self.chains {
-		data = append(data, &self.chains[i])
+		data = append(data, rtree.Object(i, self.chains[i].MBR, self.chains[i]))
 	}
 	self.index.Load(data) //bulkload
 	return self

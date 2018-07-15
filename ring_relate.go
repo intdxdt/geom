@@ -8,7 +8,7 @@ func (self *LinearRing) contains_point(pnt *Point) bool {
 
 //Contains line
 func (self *LinearRing) contains_line(ln *LineString) bool {
-	if self.bbox.Disjoint(&ln.bbox.MBR) { //disjoint
+	if self.bbox.Disjoint(ln.bbox.MBR) { //disjoint
 		return false
 	}
 	var bln = true
