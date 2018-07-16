@@ -6,8 +6,9 @@ import (
 
 //Compute angle at point
 func (self *Point) AngleAtPoint(a, b *Point) float64 {
-	var sa, sb = a.Sub(self[X], self[Y]), b.Sub(self[X], self[Y])
+	var ax, ay = a.Sub(self[X], self[Y])
+	var bx, by = b.Sub(self[X], self[Y])
 	return math.Abs(math.Atan2(
-		CrossProduct(sa, sb), DotProduct(sa, sb),
+		CrossProduct(ax, ay, bx, by), DotProduct(ax, ay, bx, by),
 	))
 }

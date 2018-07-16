@@ -145,16 +145,20 @@ func wktType(stream string) []byte {
 }
 
 func aggregateTokens(tokens []*wktToken) []*wktToken {
-	var bln = false
-	bln, tokens = aggregateSequence(tokens)
-	if bln && len(tokens) > 1 {
-		for _, tok := range tokens {
-			_, tok.children = aggregateSequence(tok.children)
-		}
-	}
+	//var bln = false
+	//bln, tokens = aggregateSequence(tokens)
+	_, tokens = aggregateSequence(tokens)
+	//useful for muti-wkt types
+	//if bln && len(tokens) > 1 {
+	//	for _, tok := range tokens {
+	//		_, tok.children = aggregateSequence(tok.children)
+	//	}
+	//}
 	return tokens
 }
 
+//Aggregate sequence - single wkt type - Point, LineString, Polygon
+//Does not support Multi-WKT types
 func aggregateSequence(tokens []*wktToken) (bool, []*wktToken) {
 	if len(tokens) <= 1 {
 		return false, tokens
@@ -173,10 +177,9 @@ func aggregateSequence(tokens []*wktToken) (bool, []*wktToken) {
 			if head.i < tok.i && tok.j < head.j {
 				head.children = append(head.children, tok)
 				aggregate = true
-			} else {
-				head = tok
-				heads = append(heads, head)
 			}
+			//use this branch for multi-wkt type
+			//else {head = tok;heads = append(heads, head)}
 		}
 	}
 	return aggregate, heads
@@ -221,7 +224,10 @@ func wktPointParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
 
 //parse linestring
 func wktLinestringParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
-	return &WKTParserObj{gtype: typeId, shell: parseString(wkt, tok)}
+	return &WKTParserObj{
+		gtype: typeId,
+		shell: parseString(wkt, tok),
+	}
 }
 
 //parse polygon
@@ -230,6 +236,7 @@ func wktPolygonParser(typeId int, wkt []byte, token *wktToken) *WKTParserObj {
 	var obj = &WKTParserObj{gtype: typeId}
 	var n = len(token.children)
 	var holes = make(Holes, 0, n-1)
+
 	for i, tok := range token.children {
 		if i == 0 {
 			shell = parseString(wkt, tok)
@@ -248,6 +255,7 @@ func parseString(wkt []byte, tok *wktToken) Shell {
 	var dim = dimension(wktStr)
 	var lns = parseNums(wktStr, indices)
 	var shell = make(Shell, 0, len(lns)/dim)
+
 	for i := 0; i < len(lns); i += dim {
 		shell = append(shell, lns[i:i+dim])
 	}
@@ -258,6 +266,7 @@ func numberIndices(stream []byte) []int {
 	var indices []int
 	var idx, i, j = -1, -1, -1
 	var n = len(stream)
+
 	for idx < n {
 		idx++
 		if idx >= n {
@@ -286,6 +295,7 @@ func parseNums(strBytes []byte, indices []int) []float64 {
 	return coordinates
 }
 
+//Detects dimension 2&3 in wkt string
 func dimension(stream []byte) int {
 	var idx, i, j = -1, -1, -1
 	var dim, n = 1, len(stream)
@@ -294,20 +304,33 @@ func dimension(stream []byte) int {
 		if idx >= n {
 			break
 		}
+
+		//fmt.Println(string(stream[idx]))
 		if stream[idx] == ' ' || stream[idx] == ',' {
 			continue
 		}
+
 		if i == -1 {
 			i, j = idx, idx
 			for j < n && !(stream[j] == ' ' || stream[j] == ',') {
 				j++
 			}
-			if stream[j] == ',' {
-				break
+			for j < n && stream[j] == ' ' {
+				j++
 			}
+
+			if j >= n || stream[j] == ',' {
+				break
+			} else {
+				j--
+			}
+
 			dim++
 			idx, i, j = j, -1, -1
 		}
+	}
+	if dim == 1 {
+		dim = -1
 	}
 	return dim
 }

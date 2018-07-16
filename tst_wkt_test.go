@@ -77,6 +77,13 @@ func TestWKT(t *testing.T) {
 			g.Assert(obj.shell == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
+			var notImplemented = "MultiPoint ((3 4), (5 6))"
+			obj = readWKT(notImplemented, GeoTypeUnknown)
+			g.Assert(obj.gtype).Eql(GeoTypeUnknown)
+			g.Assert(obj.GeometryType()).Eql(GeoTypeUnknown)
+			g.Assert(obj.shell == nil).Eql(true)
+			g.Assert(obj.holes == nil).Eql(true)
+
 			var gtype = wktType("polygon empty")
 			g.Assert(string(gtype) == "polygon").IsTrue()
 			gtype = wktType(unknownLn)
@@ -132,6 +139,24 @@ func TestWKT(t *testing.T) {
 			poly_obj := readWKT(cpoly, GeoTypePolygon)
 			g.Assert(ln_obj.ToArray()[0]).Eql(ln_array)
 			g.Assert(poly_obj.ToArray()).Eql(poly_array)
+		})
+	})
+
+	g.Describe("WKT utils", func() {
+		g.It("tests wkt to array", func() {
+			g.Timeout(1 * time.Hour)
+			var tokens []*wktToken
+			var v = popToken(&tokens)
+			g.Assert(v == nil).IsTrue()
+			g.Assert(dimension([]byte(" ")) == -1).IsTrue()
+			g.Assert(dimension([]byte(" 3.142 ")) == -1).IsTrue()
+			g.Assert(dimension([]byte("3.78   4.17 ")) == 2).IsTrue()
+			g.Assert(dimension([]byte("   3.78    4.17   ")) == 2).IsTrue()
+			g.Assert(dimension([]byte("   3.78    4.17   ,    3.78    4.17   ")) == 2).IsTrue()
+			g.Assert(dimension([]byte(" 3.142 4.45 5.78 ")) == 3).IsTrue()
+			g.Assert(dimension([]byte("3.36 4.78 5.67 , 1.12 1.34 2.47")) == 3).IsTrue()
+			g.Assert(dimension([]byte("3.112 4.27 3.35, 5.12 6.14 2.57")) == 3).IsTrue()
+			g.Assert(dimension([]byte(" 3.78 4.17   ,  3.18 4.11 ")) == 2).IsTrue()
 		})
 	})
 }

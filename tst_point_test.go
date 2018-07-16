@@ -1,10 +1,10 @@
 package geom
 
 import (
+	"testing"
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
-	"testing"
-	. "github.com/intdxdt/mbr"
+	"github.com/intdxdt/mbr"
 )
 
 func TestPoint(t *testing.T) {
@@ -97,14 +97,16 @@ func TestPoint(t *testing.T) {
 
 	g.Describe("Point operators", func() {
 		g.It("add ", func() {
-			a, b := &Point{3., 0.}, &Point{0., 4.}
-			g.Assert(a.Add(b[0], b[1])).Equal(Point{3., 4.})
+			var a, b = Point{3., 0.}, Point{0., 4.}
+			var x, y = a.Add(b[0], b[1])
+			g.Assert(Point{x, y}).Equal(Point{3., 4.})
 		})
 
 		g.It("sub & neg ", func() {
-			a, b := &Point{3., 4.}, &Point{4, 5}
-			nb := b.Neg()
-			g.Assert(a.Sub(b[0], b[1])).Equal(Point{-1.0, -1.0})
+			var a, b = &Point{3., 4.}, &Point{4, 5}
+			var nb = b.Neg()
+			var ax, ay = a.Sub(b[0], b[1])
+			g.Assert(Point{ax, ay}).Equal(Point{-1.0, -1.0})
 			g.Assert(nb).Equal(Point{-4, -5})
 		})
 	})
@@ -113,7 +115,7 @@ func TestPoint(t *testing.T) {
 		g.It("wkt string", func() {
 			a := Point{3.87, 7.45}
 			g.Assert(a.WKT()).Equal("POINT (3.87 7.45)")
-			g.Assert(a.BBox()).Equal(New(3.87, 7.45, 3.87, 7.45))
+			g.Assert(a.BBox()).Equal(mbr.New(3.87, 7.45, 3.87, 7.45))
 			g.Assert(a.ConvexHull().Shell.ToArray()).Equal([][]float64{{3.87, 7.45, 0}, {3.87, 7.45, 0}, {3.87, 7.45, 0}})
 		})
 	})
@@ -151,7 +153,7 @@ func TestMagDist(t *testing.T) {
 			g.Assert((&pt).Magnitude(&z)).Equal(5.0)
 			g.Assert(a.Distance(&b)).Equal(5.0)
 			pt = PointXY(3, 4)
-			g.Assert((&pt).SquareMagnitude(&z)).Equal(25.0)
+			g.Assert((&pt).MagnitudeSquare(&z)).Equal(25.0)
 			g.Assert(a.SquareDistance(&b)).Equal(25.0)
 
 			pt = PointXY(4.587, 0.)

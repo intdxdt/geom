@@ -11,22 +11,12 @@ func Component(m, d float64) (float64, float64) {
 }
 
 //Dot Product of two points as vectors
-func DotProduct(v, o Point) float64 {
-	return DotProductXY(v[X], v[Y], o[X], o[Y])
-}
-
-//Dot Product of two points as vectors
-func DotProductXY(vx, vy, ox, oy float64) float64 {
+func DotProduct(vx, vy, ox, oy float64) float64 {
 	return (vx * ox) + (vy * oy)
 }
 
 //Unit vector of point
-func Unit(v *Point) (float64, float64) {
-	return UnitXY(v[X], v[Y])
-}
-
-//Unit vector of point
-func UnitXY(x, y float64) (float64, float64) {
+func UnitVector(x, y float64) (float64, float64) {
 	var m = MagnitudeXY(x, y)
 	if feq(m, 0) {
 		m = math.EPSILON
@@ -41,8 +31,8 @@ func Project(u, onv *Point) float64 {
 
 //Projects  u on to v, using x and y compoents of u and v
 func ProjectXY(ux, uy, onvX, onvY float64) float64 {
-	var cx, cy = UnitXY(onvX, onvY)
-	return DotProductXY(ux, uy, cx, cy)
+	var cx, cy = UnitVector(onvX, onvY)
+	return DotProduct(ux, uy, cx, cy)
 }
 
 //2D cross product of AB and AC vectors given A, B, and C as points,
@@ -56,8 +46,8 @@ func Orientation2D(a, b, c *Point) float64 {
 //2D cross product of AB and AC vectors,
 //i.e. z-component of their 3D cross product.
 //negative cw and positive if ccw
-func CrossProduct(ab, ac Point) float64 {
-	return (ab[X] * ac[Y]) - (ab[Y] * ac[X])
+func CrossProduct(ax, ay, bx, by float64) float64 {
+	return (ax * by) - (ay * bx)
 }
 
 //Computes vector magnitude given x an dy component
@@ -67,7 +57,7 @@ func MagnitudeXY(dx, dy float64) float64 {
 
 //Computes vector magnitude given x an dy component
 func MagnitudeSquareXY(dx, dy float64) float64 {
-	return (dx * dx) + (dy * dy)
+	return math.Hypot2(dx, dy)
 }
 
 //Checks if catesian coordinate is null ( has NaN )
@@ -124,8 +114,8 @@ func Extend(x, y, magnitude, angle float64, fromEnd bool) (float64, float64) {
 
 //Deflect_vector computes vector deflection given deflection angle and
 // side of vector to deflect from (from_end)
-func Deflect(v *Point, mag, deflAngle float64, fromEnd bool) (float64, float64) {
-	return Extend(v[X], v[Y], mag, math.Pi - deflAngle, fromEnd)
+func Deflect(vx, vy, mag, deflAngle float64, fromEnd bool) (float64, float64) {
+	return Extend(vx, vy, mag, math.Pi-deflAngle, fromEnd)
 }
 
 //KProduct scales x and y components by constant  k
