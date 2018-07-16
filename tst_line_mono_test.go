@@ -25,11 +25,11 @@ func TestLineStringMono(t *testing.T) {
 			g.Assert(ln.Envelope()).Eql(mbox.BBox())
 			g.Assert(ln.Envelope()).Eql(mbox.Clone().BBox())
 
-			mbox.update_index(-1, n)
+			mbox.updateIndex(-1, n)
 			g.Assert(mbox.i).Eql(ln.bbox.i - 1)
 			g.Assert(mbox.j).Eql(ln.bbox.j + 1)
 
-			mbox.update_index(-1+1, n-1)
+			mbox.updateIndex(-1+1, n-1)
 			g.Assert(mbox.i).Eql(ln.bbox.i)
 			g.Assert(mbox.j).Eql(ln.bbox.j)
 

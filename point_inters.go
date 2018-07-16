@@ -1,9 +1,9 @@
 package geom
 
 import (
+	"fmt"
 	"bytes"
 	"github.com/intdxdt/math"
-	"fmt"
 )
 
 type InterPoint struct {

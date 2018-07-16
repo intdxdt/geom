@@ -30,7 +30,7 @@ func NewLineString(coordinates []Point) *LineString {
 			coordinates: coordinates[:n:n],
 			monosize:    mSize,
 			index:       rtree.NewRTree(bucketSize),
-		}).process_chains(0, n-1).build_index()
+		}).processChains(0, n-1).buildIndex()
 }
 
 //New line string from array
@@ -51,6 +51,19 @@ func NewLineStringFromPoint(pt Point) *LineString {
 	return NewLineString([]Point{pt, pt})
 }
 
+//builds rtree index of chains
+func (self *LineString) buildIndex() *LineString {
+	if !self.index.IsEmpty() {
+		self.index.Clear()
+	}
+	var data = make([]*rtree.Obj, 0, len(self.chains))
+	for i := range self.chains {
+		data = append(data, rtree.Object(i, self.chains[i].MBR, self.chains[i]))
+	}
+	self.index.Load(data) //bulkload
+	return self
+}
+
 //get copy of chains of linestring
 func (self *LineString) MonoChains() []*MonoMBR {
 	var chains = make([]*MonoMBR, 0, len(self.chains))
@@ -59,3 +72,21 @@ func (self *LineString) MonoChains() []*MonoMBR {
 	}
 	return chains
 }
+
+//ConvexHull computes slice of vertices as points forming convex hull
+func (self *LineString) ConvexHull() *Polygon {
+	return NewPolygon(ConvexHull(self.coordinates))
+}
+
+//number of vertices
+func (self *LineString) LenVertices() int {
+	return len(self.coordinates)
+}
+
+//vertex at given index
+func (self *LineString) VertexAt(i int) *Point {
+	return &self.coordinates[i]
+}
+
+
+

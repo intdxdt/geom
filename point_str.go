@@ -25,6 +25,6 @@ func (self *Point) String() string {
 }
 
 //coordinate string
-func coord_str(pt []float64) string {
+func coordStr(pt []float64) string {
 	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y])
 }

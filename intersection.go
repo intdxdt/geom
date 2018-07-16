@@ -38,11 +38,11 @@ func (self *LineString) Intersection(other Geometry) []Point {
 	}
 
 	if pt, ok := IsPoint(other); ok {
-		res = self.linear_intersection(pt.AsLineString())
+		res = self.linearIntersection(pt.AsLineString())
 	} else if seg, ok := IsSegment(other); ok {
-		res = self.linear_intersection(seg.AsLineString())
+		res = self.linearIntersection(seg.AsLineString())
 	} else if ln, ok := IsLineString(other); ok {
-		res = self.linear_intersection(ln)
+		res = self.linearIntersection(ln)
 	} else if ply, ok := IsPolygon(other); ok {
 		res = self.intersection_polygon_rings(ply.AsLinearRings())
 	}
@@ -102,13 +102,13 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point 
 	var bln = self.bbox.MBR.Intersects(shell.bbox.MBR)
 
 	if bln {
-		spts := self.linear_intersection(shell.LineString)
+		spts := self.linearIntersection(shell.LineString)
 		for idx := range spts {
 			ptset.Add(spts[idx])
 		}
 		//inside shell, does it touch hole boundary ?
 		for i := 1; i < len(rings); i++ {
-			hpts := self.linear_intersection(rings[i].LineString)
+			hpts := self.linearIntersection(rings[i].LineString)
 			for idx := range hpts {
 				ptset.Add(hpts[idx])
 			}
@@ -116,10 +116,10 @@ func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point 
 		//check for all vertices
 		for idx := range self.coordinates {
 			var pt = self.coordinates[idx]
-			if shell.contains_point(&pt) {
+			if shell.containsPoint(&pt) {
 				inhole := false
 				for i := 1; !inhole && i < len(rings); i++ {
-					inhole = rings[i].contains_point(&pt)
+					inhole = rings[i].containsPoint(&pt)
 				}
 				if !inhole {
 					ptset.Add(pt)

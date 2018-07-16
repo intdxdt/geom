@@ -7,7 +7,7 @@ import (
 )
 
 //intersection of self linestring with other
-func (self *LineString) linear_intersection(other *LineString) []Point {
+func (self *LineString) linearIntersection(other *LineString) []Point {
 	var ptlist []Point
 	var ptset = sset.NewSSet(ptCmp)
 
@@ -52,7 +52,7 @@ func (self *LineString) linear_intersection(other *LineString) []Point {
 
 //Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
-func (self *LineString) intersects_linestring(other *LineString) bool {
+func (self *LineString) intersectsLinestring(other *LineString) bool {
 	var bln = false
 	//if root mbrs intersect
 	var othersegs []*Segment
@@ -96,7 +96,7 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 	//if false, check if shell contains line
 	if !bln {
 
-		bln = shell.contains_line(self)
+		bln = shell.containsLine(self)
 		//inside shell, does it touch hole boundary ?
 		for i := 1; bln && !intersects_hole && i < len(rings); i++ {
 			intersects_hole = self.Intersects(rings[i].LineString)
@@ -105,7 +105,7 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 		if bln && !intersects_hole {
 			//check if completely contained in hole
 			for i := 1; !in_hole && i < len(rings); i++ {
-				in_hole = rings[i].contains_line(self)
+				in_hole = rings[i].containsLine(self)
 			}
 		}
 		bln = bln && !in_hole

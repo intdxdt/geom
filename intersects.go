@@ -38,7 +38,7 @@ func (self *LineString) Intersects(other Geometry) bool {
 	} else if ispoly {
 		bln = self.intersects_polygon(other_lns)
 	} else if isline || isseg || ispoint {
-		bln = self.intersects_linestring(shell)
+		bln = self.intersectsLinestring(shell)
 	}
 
 	return bln

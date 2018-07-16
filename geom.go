@@ -43,8 +43,8 @@ type geoType struct {
 	gtype int
 }
 
-//New geometry
-func NewGeometry(wkt string) Geometry {
+//Read geometry from WKT
+func ReadGeometry(wkt string) Geometry {
 	var g Geometry
 	wkt = strings.ToLower(wkt_string(wkt))
 	var gtype = wktType(wkt)
@@ -60,30 +60,8 @@ func NewGeometry(wkt string) Geometry {
 	return g
 }
 
-//Read wkt as geometry
-//func ReadGeometry(wkt string) Geometry {
-//	var g Geometry
-//	var typeId = wktType([]byte(wkt))
-//	var obj = readWKT(wkt, typeId)
-//
-//	if obj.gtype == GeoTypePolygon {
-//		var pts [][]Point
-//		for _, v := range obj.ToArray() {
-//			pts = append(pts, AsPointArray(v))
-//		}
-//		g = NewPolygon(pts...)
-//	} else if obj.gtype == GeoTypeLineString {
-//		g = NewLineStringFromArray(obj.ToArray()[0])
-//	} else if obj.gtype == GeoTypePoint {
-//		var pt = CreatePoint(obj.ToArray()[0][0][:])
-//		g = &pt
-//	}
-//
-//	return g
-//}
-
 //New geoType
-func new_geoType(gtype int) *geoType {
+func newGeoType(gtype int) *geoType {
 	return &geoType{gtype}
 }
 

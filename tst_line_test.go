@@ -58,10 +58,10 @@ func TestLineString(t *testing.T) {
 		})
 
 		g.It("should be slice of array", func() {
-			ln.build_index()
+			ln.buildIndex()
 			g.Assert(ln.ToArray()).Eql(pt_array)
 			g.Assert(cln.ToArray()).Eql(pt_array)
-			ln.build_index()
+			ln.buildIndex()
 			g.Assert(ln.ToArray()).Eql(pt_array)
 		})
 
@@ -70,10 +70,10 @@ func TestLineString(t *testing.T) {
 	g.Describe("Linestring - Coords", func() {
 
 		g.It("should be slice of points", func() {
-			ln.build_index()
+			ln.buildIndex()
 			g.Assert(ln.Coordinates()).Eql(pts)
 			g.Assert(cln.Coordinates()).Eql(pts)
-			ln.build_index()
+			ln.buildIndex()
 			g.Assert(ln.Coordinates()).Eql(pts)
 		})
 

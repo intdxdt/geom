@@ -15,14 +15,14 @@ func TestQuadrantRelation(t *testing.T) {
 
 	g.Describe("Quadrant Relation", func() {
 		g.It("quad relation", func() {
-			var ln = NewGeometry(line_wkt)
-			var const_obj = NewGeometry("POINT ( 453.0094189163016 742.5680104803437 )") //FFTFFTFFT
+			var ln = ReadGeometry(line_wkt)
+			var const_obj = ReadGeometry("POINT ( 453.0094189163016 742.5680104803437 )") //FFTFFTFFT
 			g.Assert(QuadrantRelation(ln, const_obj)).Equal("FFTFFTFFT")
 
-			const_obj = NewGeometry("POINT ( 670.4391564889743 687.1652408103838 )") //TTTTFTTTT | TTTTFTTTT
+			const_obj = ReadGeometry("POINT ( 670.4391564889743 687.1652408103838 )") //TTTTFTTTT | TTTTFTTTT
 			g.Assert(QuadrantRelation(ln, const_obj)).Equal("TTTTFTTTT")
 
-			const_obj = NewGeometry(poly_complx_wkt) // FTFFTTFFF | FTFFTTFFF
+			const_obj = ReadGeometry(poly_complx_wkt) // FTFFTTFFF | FTFFTTFFF
 			g.Assert(QuadrantRelation(ln, const_obj)).Equal("FTFFTTFFF")
 
 		})

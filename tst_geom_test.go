@@ -19,9 +19,9 @@ func TestGeom(t *testing.T) {
 
 	g.Describe("Geometry", func() {
 		g.It("it should test new geometry ", func() {
-			pt := NewGeometry(pt_wkt)
-			ln := NewGeometry(ln_wkt)
-			ply := NewGeometry(ply_wkt)
+			pt := ReadGeometry(pt_wkt)
+			ln := ReadGeometry(ln_wkt)
+			ply := ReadGeometry(ply_wkt)
 			g.Assert(pt.Type().IsPoint()).IsTrue()
 			g.Assert(ln.Type().IsLineString()).IsTrue()
 			g.Assert(ply.Type().IsPolygon()).IsTrue()

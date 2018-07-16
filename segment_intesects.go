@@ -8,7 +8,7 @@ import (
 //vertices sa, sb, oa, ob
 func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 	var bln = false
-	var a, b, d = segseg_abd(sa[:], sb[:], oa[:], ob[:])
+	var a, b, d = segsegABD(sa[:], sb[:], oa[:], ob[:])
 
 	//snap to zero if near -0 or 0
 	a = snap_to_zero(a)
@@ -22,8 +22,8 @@ func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 		return bln
 	}
 	//intersection along the the seg or extended seg
-	ua := snap_to_zero_or_one(a / d)
-	ub := snap_to_zero_or_one(b / d)
+	var ua = snap_to_zero_or_one(a / d)
+	var ub = snap_to_zero_or_one(b / d)
 	return (0 <= ua && ua <= 1) && (0 <= ub && ub <= 1)
 }
 

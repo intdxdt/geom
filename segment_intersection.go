@@ -9,7 +9,7 @@ import (
 //vertices lna0, lna1 and lnb0, lnb1
 func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
 	var coords []*InterPoint
-	var a, b, d = segseg_abd(sa[:], sb[:], oa[:], ob[:])
+	var a, b, d = segsegABD(sa[:], sb[:], oa[:], ob[:])
 
 	//snap to zero if near -0 or 0
 	a = snap_to_zero(a)
@@ -18,7 +18,7 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
 
 	// Are the line coincident?
 	if d == 0 {
-		return coincident_segs(sa, sb, oa, ob, coords, a, b)
+		return coincidentSegs(sa, sb, oa, ob, coords, a, b)
 	}
 
 	// is the intersection along the the segments
@@ -41,7 +41,7 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
 	return coords
 }
 
-func segseg_abd(sa, sb, oa, ob []float64) (float64, float64, float64) {
+func segsegABD(sa, sb, oa, ob []float64) (float64, float64, float64) {
 	var x1, y1, x2, y2, x3, y3, x4, y4, d, a, b float64
 
 	x1, y1 = sa[X], sa[Y]
@@ -72,15 +72,15 @@ func interRelation(ua, ub float64) VBits {
 	return sa | sb | oa | ob
 }
 
-func coincident_segs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) []*InterPoint {
+func coincidentSegs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) []*InterPoint {
 	if a == 0 && b == 0 {
 		var selfBox = BBox(sa, sb)
 		var otherBox = BBox(oa, ob)
 		if selfBox.Intersects(otherBox) {
-			update_coords_inbounds(otherBox, sa, &coords, SelfA)
-			update_coords_inbounds(otherBox, sb, &coords, SelfB)
-			update_coords_inbounds(selfBox, oa, &coords, OtherA)
-			update_coords_inbounds(selfBox, ob, &coords, OtherB)
+			updateCoordsInbounds(otherBox, sa, &coords, SelfA)
+			updateCoordsInbounds(otherBox, sb, &coords, SelfB)
+			updateCoordsInbounds(selfBox, oa, &coords, OtherA)
+			updateCoordsInbounds(selfBox, ob, &coords, OtherB)
 		}
 	}
 	//lexical sort
@@ -111,7 +111,7 @@ func coincident_segs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) 
 }
 
 //updates coords that are in bounds
-func update_coords_inbounds(bounds *mbr.MBR, point *Point, intpts *[]*InterPoint, vbits VBits) {
+func updateCoordsInbounds(bounds *mbr.MBR, point *Point, intpts *[]*InterPoint, vbits VBits) {
 	if bounds.ContainsXY(point[X], point[Y]) {
 		*intpts = append(*intpts, &InterPoint{*point, vbits})
 	}

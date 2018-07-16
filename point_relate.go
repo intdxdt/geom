@@ -7,14 +7,11 @@ import (
 
 //Equals evaluates whether two points are the same
 func (pt *Point) Equals2D(o *Point) bool {
-	return feq(pt[X], o[X]) &&
-		feq(pt[Y], o[Y])
+	return feq(pt[X], o[X]) && feq(pt[Y], o[Y])
 }
 
 func (pt *Point) Equals3D(o *Point) bool {
-	return feq(pt[X], o[X]) &&
-		feq(pt[Y], o[Y]) &&
-		feq(pt[Z], o[Z])
+	return feq(pt[X], o[X]) && feq(pt[Y], o[Y]) && feq(pt[Z], o[Z])
 }
 
 //Disjoint evaluates whether points are not coincident
@@ -26,12 +23,10 @@ func (pt *Point) Disjoint(o *Point) bool {
 func (self *Point) Compare(o *Point) int {
 	var d = self[X] - o[X]
 	if feq(d, 0.0) {
-		//x's are close enougth to each other
 		d = self[Y] - o[Y]
 	}
 
 	if feq(d, 0.0) {
-		//check if close enougth ot zero
 		return 0
 	} else if d < 0 {
 		return -1

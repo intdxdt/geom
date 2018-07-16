@@ -17,9 +17,8 @@ func (box *MonoMBR) BBox() *mbr.MBR {
 }
 
 //update mono chain index
-func (box *MonoMBR) update_index(i, j int) {
-	box.i = i
-	box.j = j
+func (box *MonoMBR) updateIndex(i, j int) {
+	box.i, box.j = i, j
 }
 
 //new monotone mbr
@@ -30,7 +29,7 @@ func new_mono_mbr(box *mbr.MBR) *MonoMBR {
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
-func (self *LineString) process_chains(i, j int) *LineString {
+func (self *LineString) processChains(i, j int) *LineString {
 	var dx, dy float64
 	var cur_x, cur_y, prev_x, prev_y int
 	var mono_limit = self.monosize
@@ -47,7 +46,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 	self.bbox = new_mono_mbr(box)
 	var mono = new_mono_mbr(box)
 
-	self.xy_monobox(mono, i, i)
+	self.xyMonobox(mono, i, i)
 	self.chains = append(self.chains, mono)
 
 	var mono_size = 0
@@ -57,8 +56,8 @@ func (self *LineString) process_chains(i, j int) *LineString {
 
 		self.length += math.Hypot(dx, dy)
 
-		cur_x = xy_sign(dx)
-		cur_y = xy_sign(dy)
+		cur_x = xySign(dx)
+		cur_y = xySign(dy)
 
 		if prev_x == null {
 			prev_x = cur_x
@@ -71,16 +70,16 @@ func (self *LineString) process_chains(i, j int) *LineString {
 		//((cur_x + prev_x > 0) && (prev_y + cur_y > 0))
 		mono_size += 1
 		if prev_x == cur_x && prev_y == cur_y && mono_size <= mono_limit {
-			self.xy_monobox(mono, i, null)
+			self.xyMonobox(mono, i, null)
 		} else {
 			mono_size = 1
 
 			prev_x, prev_y = cur_x, cur_y
 			var p0, p1 = self.coordinates[i-1], self.coordinates[i]
-			var box    = mbr.New(p0[X], p0[Y], p1[X], p1[Y])
+			var box = mbr.New(p0[X], p0[Y], p1[X], p1[Y])
 
 			mono = new_mono_mbr(box)
-			self.xy_monobox(mono, i-1, i)
+			self.xyMonobox(mono, i-1, i)
 			self.chains = append(self.chains, mono)
 		}
 	}
@@ -88,7 +87,7 @@ func (self *LineString) process_chains(i, j int) *LineString {
 }
 
 //compute bbox of x or y mono chain
-func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
+func (self *LineString) xyMonobox(mono *MonoMBR, i, j int) {
 	if i != null {
 		mono.ExpandIncludeXY(self.coordinates[i][X], self.coordinates[i][Y])
 		if j == null {
@@ -109,7 +108,7 @@ func (self *LineString) xy_monobox(mono *MonoMBR, i, j int) {
 }
 
 //find the sign of value -1, 0 , 1
-func xy_sign(v float64) int {
+func xySign(v float64) int {
 	var i int
 	if v > 0 {
 		i = 1

@@ -33,6 +33,21 @@ func NewPolygonFromWKT(wkt_geom string) *Polygon {
 	return NewPolygon(pts...)
 }
 
+//get geometry type
+func (self *Polygon) Type() *geoType {
+	return newGeoType(GeoTypePolygon)
+}
+
+//get geometry interface
+func (self *Polygon) Geometry() Geometry {
+	return self
+}
+
+//ConvexHull computes slice of vertices as points forming convex hull
+func (self *Polygon) ConvexHull() *Polygon {
+	return NewPolygon(ConvexHull(self.Shell.coordinates))
+}
+
 //As line strings
 func (self *Polygon) AsLinearRings() []*LinearRing {
 	var rings = make([]*LinearRing, len(self.Holes)+1)

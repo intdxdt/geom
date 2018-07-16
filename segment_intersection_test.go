@@ -1,7 +1,6 @@
 package geom
 
 import (
-	"fmt"
 	"time"
 	"testing"
 	"github.com/franela/goblin"
@@ -10,12 +9,6 @@ import (
 func segment(ln string) *Segment {
 	var coords = NewLineStringFromWKT(ln).Coordinates()
 	return NewSegment(&coords[0], &coords[1])
-}
-
-func printPts(pts []*InterPoint) {
-	for _, p := range pts {
-		fmt.Println(p.WKT())
-	}
 }
 
 func TestToSegmentIntersection(t *testing.T) {

@@ -3,7 +3,7 @@ package geom
 
 //GeomType
 func (self *Segment) Type() *geoType {
-	return new_geoType(GeoTypeSegment)
+	return newGeoType(GeoTypeSegment)
 }
 
 

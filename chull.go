@@ -21,8 +21,8 @@ func ConvexHull(points []Point, clone_coords ...bool) []Point {
 
 	Coordinates(pnts).Sort()
 
-	var lower = make(Coordinates, 0)
-	var upper = make(Coordinates, 0)
+	var lower = make(Coordinates, 0, N/2)
+	var upper = make(Coordinates, 0, N/2)
 	lower = build_hull(lower, pnts, 0, 1, N)
 	upper = build_hull(upper, pnts, N-1, -1, -1)
 	_, upper = upper.Pop()
@@ -93,8 +93,8 @@ func SimpleHull(coords []Point, clone_coords ...bool) []Point {
 	for i := 3; i < n; i++ {
 		// process the rest of vertices
 		// test if next vertex is inside the deque hull
-		if //is left
-		coords[i].SideOf(&dQ[bot], &dQ[bot+1]).IsLeft() &&
+		//is left
+		if coords[i].SideOf(&dQ[bot], &dQ[bot+1]).IsLeft() &&
 			coords[i].SideOf(&dQ[top-1], &dQ[top]).IsLeft() {
 			continue // skip an interior vertex
 		}
