@@ -2,7 +2,7 @@ package geom
 
 //get geometry type
 func (self *Point) Type() *geoType {
-	return new_geoType(GeoType_Point)
+	return new_geoType(GeoTypePoint)
 }
 
 //get geometry interface

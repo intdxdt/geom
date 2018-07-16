@@ -2,54 +2,17 @@ package geom
 
 import (
 	"bytes"
-	"regexp"
 	"strconv"
 	"strings"
+	"sort"
 )
 
-var re_typeStr = wktRegex{
-	regexp.MustCompile(`^\s*(?P<type>[A-Za-z]+)\s*\(\s*(?P<coords>.*)\s*\)\s*$`),
-}
-
-var re_emptyTypeStr = wktRegex{
-	regexp.MustCompile(`^\s*(?P<type>[A-Za-z]+)\s*EMPTY\s*$`),
-}
-
-var re_spaces = wktRegex{regexp.MustCompile(`\s+`)}
-var re_parenComma = wktRegex{regexp.MustCompile(`\)\s*,\s*\(`)}
-var re_trimParens = wktRegex{regexp.MustCompile(`^\s*\(?(.*?)\)?\s*$`)}
-
-type wktRegex struct {
-	*regexp.Regexp
-}
-
-//wkt type and coordiantes
-func (wktreg *wktRegex) wkt_type_coords(wkt string) map[string]string {
-	wkt = strings.TrimSpace(wkt)
-	var captures = make(map[string]string)
-	captures["wkt"], captures["type"], captures["coords"] = "", "", ""
-
-	if is_empty_wkt(wkt) {
-		wktreg = &re_emptyTypeStr
-	}
-	var match = wktreg.FindStringSubmatch(wkt)
-	if match != nil {
-		for i, name := range wktreg.SubexpNames() {
-			if i == 0 || name == "" {
-				if i == 0 {
-					captures["wkt"] = match[i]
-				}
-				continue
-			}
-			var val = match[i]
-			if name == "type" {
-				val = strings.ToLower(val)
-			}
-			captures[name] = val
-		}
-	}
-	return captures
-}
+var wktEmpty = []byte("empty")
+var wktPolygon = []byte("polygon")
+var wktLinestring = []byte("linestring")
+var wktPoint = []byte("point")
+var wktComma = []byte{','}
+var wktSpace = []byte{' '}
 
 type Shell [][]float64
 type Holes []Shell
@@ -77,11 +40,11 @@ func (self *WKTParserObj) GeometryType() int {
 
 //To array of coodinates of wkt string
 func (self *WKTParserObj) ToArray() [][][]float64 {
-	coords := make([][][]float64, 0)
-	sh := self.shell
-	if self.gtype == GeoType_Point || self.gtype == GeoType_LineString {
+	var coords = make([][][]float64, 0)
+	var sh = self.shell
+	if self.gtype == GeoTypePoint || self.gtype == GeoTypeLineString {
 		coords = append(coords, sh)
-	} else if self.gtype == GeoType_Polygon {
+	} else if self.gtype == GeoTypePolygon {
 		coords = append(coords, sh)
 		for _, sh = range self.holes {
 			coords = append(coords, sh)
@@ -114,126 +77,249 @@ func NewWKTParserObj(gtype int, coords ...[][]float64) *WKTParserObj {
 }
 
 //Read wkt string
-func ReadWKT(wkt string) *WKTParserObj {
-	wkt = wkt_string(wkt)
-	var parser func(string, *WKTParserObj)
-	var matches = re_typeStr.wkt_type_coords(wkt)
-	var obj = &WKTParserObj{nil, nil, GeoType_Unkown}
-
-	mtype, coords := matches["type"], matches["coords"]
-
-	if mtype == "polygon" {
-		obj.gtype, parser = GeoType_Polygon, wkt_polygon_parser
-	} else if mtype == "linestring" {
-		obj.gtype, parser = GeoType_LineString, wkt_linestring_parser
-	} else if mtype == "point" {
-		obj.gtype, parser = GeoType_Point, wkt_point_parser
+func readWKT(wkt string, typeId int) *WKTParserObj {
+	var wktBytes = bytes.ToLower([]byte(wkt_string(wkt)))
+	if isEmptyWKT(wktBytes) {
+		return &WKTParserObj{gtype: typeId}
 	}
 
-	if coords != "" && obj.gtype != GeoType_Unkown {
-		parser(coords, obj)
+	var tokens = aggregateTokens(buildTokens(wktBytes))
+	var obj = &WKTParserObj{gtype: GeoTypeUnknown}
+	if typeId == GeoTypeUnknown {
+		return obj
 	}
+
+	if typeId == GeoTypePolygon {
+		obj = wktPolygonParser(typeId, wktBytes, tokens[0])
+	} else if typeId == GeoTypeLineString {
+		obj = wktLinestringParser(typeId, wktBytes, tokens[0])
+	} else if typeId == GeoTypePoint {
+		obj = wktPointParser(typeId, wktBytes, tokens[0])
+	}
+
 	return obj
 }
 
-//Read wkt as geometry
-func ReadGeometry(wkt string) Geometry {
-	var g Geometry
-	var obj = ReadWKT(wkt)
+func buildTokens(stream []byte) []*wktToken {
+	var tokens []*wktToken
+	var stack []*wktToken
+	var s *wktToken
 
-	if obj.gtype == GeoType_Polygon {
-		var pts [][]Point
-		for _, v := range obj.ToArray() {
-			pts = append(pts, AsPointArray(v))
+	for i, o := range stream {
+		if o == '(' {
+			stack = append(stack, &wktToken{i: i})
+		} else if o == ')' {
+			s = popToken(&stack)
+			s.j = i
+			tokens = append(tokens, s)
 		}
-		g = NewPolygon(pts...)
-	} else if obj.gtype == GeoType_LineString {
-		g = NewLineStringFromArray(obj.ToArray()[0])
-	} else if obj.gtype == GeoType_Point {
-		var pt = CreatePoint(obj.ToArray()[0][0][:])
-		g = &pt
+	}
+	return tokens
+}
+
+func wktType(stream string) []byte {
+	if strings.Index(stream, "empty") != -1 {
+		var gtype = "unknown"
+		var subs = strings.Split(stream, "empty")
+		if len(subs) > 1 {
+			gtype = strings.TrimSpace(subs[0])
+		}
+		return []byte(gtype)
 	}
 
-	return g
+	var char byte
+	var name = make([]byte, 0, 16)
+
+	for i := range stream {
+		char = stream[i]
+		if char == '(' {
+			break
+		}
+
+		if char != ' ' {
+			name = append(name, stream[i])
+		}
+	}
+
+	return bytes.ToLower(name)
+}
+
+func aggregateTokens(tokens []*wktToken) []*wktToken {
+	var bln = false
+	bln, tokens = aggregateSequence(tokens)
+	if bln && len(tokens) > 1 {
+		for _, tok := range tokens {
+			_, tok.children = aggregateSequence(tok.children)
+		}
+	}
+	return tokens
+}
+
+func aggregateSequence(tokens []*wktToken) (bool, []*wktToken) {
+	if len(tokens) <= 1 {
+		return false, tokens
+	}
+
+	sort.Sort(wktTokens(tokens))
+	var head *wktToken
+	var heads []*wktToken
+	var aggregate = false
+
+	for _, tok := range tokens {
+		if head == nil {
+			head = tok
+			heads = append(heads, head)
+		} else {
+			if head.i < tok.i && tok.j < head.j {
+				head.children = append(head.children, tok)
+				aggregate = true
+			} else {
+				head = tok
+				heads = append(heads, head)
+			}
+		}
+	}
+	return aggregate, heads
 }
 
 //wkt string
 func wkt_string(wkt string) string {
 	var buffer bytes.Buffer
-	tokens := strings.Split(wkt, "\n")
+	var tokens = strings.Split(wkt, "\n")
 	for _, token := range tokens {
 		buffer.WriteString(strings.TrimSpace(token))
 	}
 	return buffer.String()
 }
 
-//Parse point
-func wkt_point_parser(wkt_coords string, obj *WKTParserObj) {
-	//var coords = str.trim().split(this.regExes.spaces)
-	var coords = strings.TrimSpace(wkt_coords)
-	var coord = re_spaces.Split(coords, -1)
-	var pt = []float64{
-		wkt_parse_float(coord[X]),
-		wkt_parse_float(coord[Y]),
-	}
-	obj.shell, obj.holes = Shell{pt}, nil
-}
-
-//parse linestring
-func wkt_linestring_parser(wkt_coords string, obj *WKTParserObj) {
-	var coords = strings.TrimSpace(wkt_coords)
-	var shell = wkt_string_coords(coords)
-	obj.shell, obj.holes = shell, nil
-}
-
-//parse polygon
-func wkt_polygon_parser(wkt_coords string, obj *WKTParserObj) {
-	var coords = strings.TrimSpace(wkt_coords)
-	var rings = re_parenComma.Split(coords, -1)
-	var n = len(rings)
-	var holes = make(Holes, n-1)
-	var shell Shell
-
-	for i := 0; i < n; i++ {
-		ring := re_trimParens.ReplaceAllString(rings[i], "$1")
-		comps := wkt_string_coords(ring)
-		if i == 0 {
-			shell = comps
-		}
-		if i > 0 {
-			holes[i-1] = comps
-		}
-	}
-	obj.shell, obj.holes = shell, holes
-}
-
-//string coords
-func wkt_string_coords(str string) Shell {
-	var points = strings.Split(strings.TrimSpace(str), ",")
-	var n = len(points)
-	var comps = make(Shell, n)
-
-	for i := 0; i < n; i++ {
-		coords := re_spaces.Split(strings.TrimSpace(points[i]), -1)
-		pt := []float64{
-			wkt_parse_float(coords[X]),
-			wkt_parse_float(coords[Y]),
-		}
-		comps[i] = pt
-	}
-	return comps
+//checks for the emptiness of wkt string
+func isEmptyWKT(wkt []byte) bool {
+	return bytes.Index(wkt, wktEmpty) != -1
 }
 
 //parse float
-func wkt_parse_float(str string) float64 {
-	x, err := strconv.ParseFloat(str, 64)
+func parseF64(str []byte) float64 {
+	var x, err = strconv.ParseFloat(string(str), 64)
 	if err != nil {
 		panic("unable to convert to float")
 	}
 	return x
 }
 
-//checks for the emptiness of wkt string
-func is_empty_wkt(wkt string) bool {
-	return strings.Index(wkt, "EMPTY") != -1
+//Parse point
+func wktPointParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
+	var wktStr = wkt[tok.i+1 : tok.j]
+	var indices = numberIndices(wktStr)
+	var dim = len(indices) / 2
+	var lns = parseNums(wktStr, indices)
+	var shell = make(Shell, 0, len(lns)/dim)
+	for i := 0; i < len(lns); i += dim {
+		shell = append(shell, lns[i:i+dim])
+	}
+	return &WKTParserObj{gtype: typeId, shell: shell}
+}
+
+//parse linestring
+func wktLinestringParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
+	return &WKTParserObj{gtype: typeId, shell: parseString(wkt, tok)}
+}
+
+//parse polygon
+func wktPolygonParser(typeId int, wkt []byte, token *wktToken) *WKTParserObj {
+	var shell Shell
+	var obj = &WKTParserObj{gtype: typeId}
+	var n = len(token.children)
+	var holes = make(Holes, 0, n-1)
+	for i, tok := range token.children {
+		if i == 0 {
+			shell = parseString(wkt, tok)
+		} else {
+			holes = append(holes, parseString(wkt, tok))
+		}
+	}
+	obj.shell, obj.holes = shell, holes
+	return obj
+}
+
+//parse linestring
+func parseString(wkt []byte, tok *wktToken) Shell {
+	var wktStr = wkt[tok.i+1 : tok.j]
+	var indices = numberIndices(wktStr)
+	var dim = dimension(wktStr)
+	var lns = parseNums(wktStr, indices)
+	var shell = make(Shell, 0, len(lns)/dim)
+	for i := 0; i < len(lns); i += dim {
+		shell = append(shell, lns[i:i+dim])
+	}
+	return shell
+}
+
+func numberIndices(stream []byte) []int {
+	var indices []int
+	var idx, i, j = -1, -1, -1
+	var n = len(stream)
+	for idx < n {
+		idx++
+		if idx >= n {
+			break
+		}
+		if stream[idx] == ' ' || stream[idx] == ',' {
+			continue
+		}
+		if i == -1 {
+			i, j = idx, idx
+			for j < n && !(stream[j] == ' ' || stream[j] == ',') {
+				j++
+			}
+			indices = append(indices, i, j)
+			idx, i, j = j, -1, -1
+		}
+	}
+	return indices
+}
+
+func parseNums(strBytes []byte, indices []int) []float64 {
+	var coordinates = make([]float64, 0, len(indices)/2)
+	for i := 0; i < len(indices); i += 2 {
+		coordinates = append(coordinates, parseF64(strBytes[indices[i]:indices[i+1]]))
+	}
+	return coordinates
+}
+
+func dimension(stream []byte) int {
+	var idx, i, j = -1, -1, -1
+	var dim, n = 1, len(stream)
+	for idx < n {
+		idx++
+		if idx >= n {
+			break
+		}
+		if stream[idx] == ' ' || stream[idx] == ',' {
+			continue
+		}
+		if i == -1 {
+			i, j = idx, idx
+			for j < n && !(stream[j] == ' ' || stream[j] == ',') {
+				j++
+			}
+			if stream[j] == ',' {
+				break
+			}
+			dim++
+			idx, i, j = j, -1, -1
+		}
+	}
+	return dim
+}
+
+func popToken(tokens *[]*wktToken) *wktToken {
+	var v *wktToken
+	var a = *tokens
+	var n = len(a) - 1
+	if n < 0 {
+		return nil
+	}
+	v, a[n] = a[n], nil
+	*tokens = a[:n]
+	return v
 }

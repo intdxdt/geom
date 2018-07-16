@@ -7,13 +7,13 @@ import (
 //write wkt
 func WriteWKT(obj *WKTParserObj) string {
 	var s string
-	if obj.gtype == GeoType_Point {
+	if obj.gtype == GeoTypePoint {
 		s = "POINT " + str_point(obj.shell)
-	} else if obj.gtype == GeoType_LineString {
+	} else if obj.gtype == GeoTypeLineString {
 		s = "LINESTRING " + str_polyline(obj.shell)
-	} else if obj.gtype == GeoType_Polygon {
-		wkt := str_polygon(obj)
-		if is_empty_wkt(wkt) {
+	} else if obj.gtype == GeoTypePolygon {
+		var wkt = str_polygon(obj)
+		if wkt == "EMPTY" {
 			s = "POLYGON " + wkt
 		} else {
 			s = "POLYGON (" + wkt + ")"
@@ -24,7 +24,7 @@ func WriteWKT(obj *WKTParserObj) string {
 
 //str point
 func str_point(shell Shell) string {
-	var s  = "EMPTY"
+	var s = "EMPTY"
 	if shell != nil && len(shell) > 0 {
 		s = "(" + coord_str(shell[0]) + ")"
 	}
@@ -33,7 +33,7 @@ func str_point(shell Shell) string {
 
 //str polyline
 func str_polyline(shell Shell) string {
-	var s  = "EMPTY"
+	var s = "EMPTY"
 	if shell == nil {
 		return s
 	}

@@ -2,7 +2,7 @@ package geom
 
 //get geometry type
 func (self *LineString) Type() *geoType {
-	return new_geoType(GeoType_LineString)
+	return new_geoType(GeoTypeLineString)
 }
 
 //get geometry interface

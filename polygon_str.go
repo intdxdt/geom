@@ -25,5 +25,5 @@ func (self *Polygon) WKT() string {
 	for i := range self.Holes {
 		rings = append(rings, CoordinatesAsFloat2D(self.Holes[i].coordinates))
 	}
-	return WriteWKT(NewWKTParserObj(GeoType_Polygon, rings...))
+	return WriteWKT(NewWKTParserObj(GeoTypePolygon, rings...))
 }

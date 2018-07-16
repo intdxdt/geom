@@ -25,10 +25,10 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt_geom string) *Polygon {
-	var array = ReadWKT(wkt_geom).ToArray()
+	var array = readWKT(wkt_geom, GeoTypePolygon).ToArray()
 	var pts [][]Point
-	for _, v := range array {
-		pts = append(pts, AsPointArray(v))
+	for i := range array {
+		pts = append(pts, AsPointArray(array[i]))
 	}
 	return NewPolygon(pts...)
 }

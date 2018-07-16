@@ -25,7 +25,7 @@ func PointXYZ(x, y, z float64) Point {
 //New constructor of Point
 func CreatePoint(array []float64) Point {
 	var pt = Point{}
-	pt.BBox()
+
 	var n = math.MinInt(len(pt), len(array))
 	for i := 0; i < n; i++ {
 		pt[i] = array[i]
@@ -36,7 +36,7 @@ func CreatePoint(array []float64) Point {
 //create a new linestring from wkt string
 //empty wkt will raise an exception
 func PointFromWKT(wkt_geom string) Point {
-	return CreatePoint(ReadWKT(wkt_geom).ToArray()[0][0][:])
+	return CreatePoint(readWKT(wkt_geom, GeoTypePoint).ToArray()[0][0][:])
 }
 
 //Is point zero in 2d - origin

@@ -1,11 +1,14 @@
 package geom
 
 import (
-	"strings"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
+	"bytes"
+	"strings"
 )
+
 var nan = math.NaN()
+
 const (
 	X    = iota
 	Y
@@ -14,14 +17,15 @@ const (
 )
 
 const (
-	GeoType_Unkown     = iota - 1
-	GeoType_Point
-	GeoType_Segment
-	GeoType_LineString
-	GeoType_Polygon
+	GeoTypeUnknown    = iota - 1
+	GeoTypePoint
+	GeoTypeSegment
+	GeoTypeLineString
+	GeoTypePolygon
 )
 
 var feq = math.FloatEqual
+
 //geometry constructor
 type GeometryFn func([]*Point) Geometry
 
@@ -42,21 +46,41 @@ type geoType struct {
 //New geometry
 func NewGeometry(wkt string) Geometry {
 	var g Geometry
-	var match = re_typeStr.FindStringSubmatch(wkt)
+	wkt = strings.ToLower(wkt_string(wkt))
+	var gtype = wktType(wkt)
 
-	if len(match) > 1 {
-		gtype := strings.ToLower(match[1])
-		if gtype == "polygon" {
-			g = NewPolygonFromWKT(wkt)
-		} else if gtype == "point" {
-			pt := PointFromWKT(wkt)
-			g = &pt
-		} else if gtype == "linestring" {
-			g = NewLineStringFromWKT(wkt)
-		}
+	if bytes.Equal(gtype, wktPolygon) {
+		g = NewPolygonFromWKT(wkt)
+	} else if bytes.Equal(gtype, wktPoint) {
+		var pt = PointFromWKT(wkt)
+		g = &pt
+	} else if bytes.Equal(gtype, wktLinestring) {
+		g = NewLineStringFromWKT(wkt)
 	}
 	return g
 }
+
+//Read wkt as geometry
+//func ReadGeometry(wkt string) Geometry {
+//	var g Geometry
+//	var typeId = wktType([]byte(wkt))
+//	var obj = readWKT(wkt, typeId)
+//
+//	if obj.gtype == GeoTypePolygon {
+//		var pts [][]Point
+//		for _, v := range obj.ToArray() {
+//			pts = append(pts, AsPointArray(v))
+//		}
+//		g = NewPolygon(pts...)
+//	} else if obj.gtype == GeoTypeLineString {
+//		g = NewLineStringFromArray(obj.ToArray()[0])
+//	} else if obj.gtype == GeoTypePoint {
+//		var pt = CreatePoint(obj.ToArray()[0][0][:])
+//		g = &pt
+//	}
+//
+//	return g
+//}
 
 //New geoType
 func new_geoType(gtype int) *geoType {
@@ -64,26 +88,26 @@ func new_geoType(gtype int) *geoType {
 }
 
 //Value
-func(gt *geoType) Value() int{
+func (gt *geoType) Value() int {
 	return gt.gtype
 }
 
 //is polygon
 func (gt *geoType) IsPolygon() bool {
-	return gt.gtype == GeoType_Polygon
+	return gt.gtype == GeoTypePolygon
 }
 
 //is linestring
 func (gt *geoType) IsLineString() bool {
-	return gt.gtype == GeoType_LineString
+	return gt.gtype == GeoTypeLineString
 }
 
 //is linestring
 func (gt *geoType) IsSegment() bool {
-	return gt.gtype == GeoType_Segment
+	return gt.gtype == GeoTypeSegment
 }
 
 //is point
 func (gt *geoType) IsPoint() bool {
-	return gt.gtype == GeoType_Point
+	return gt.gtype == GeoTypePoint
 }
