@@ -24,8 +24,8 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
 
 //create a new linestring from wkt string
 //empty wkt are not allowed
-func NewPolygonFromWKT(wkt_geom string) *Polygon {
-	var array = readWKT(wkt_geom, GeoTypePolygon).ToArray()
+func NewPolygonFromWKT(wkt string) *Polygon {
+	var array = readWKT(wkt, GeoTypePolygon).ToArray()
 	var pts [][]Point
 	for i := range array {
 		pts = append(pts, AsPointArray(array[i]))
@@ -34,8 +34,8 @@ func NewPolygonFromWKT(wkt_geom string) *Polygon {
 }
 
 //get geometry type
-func (self *Polygon) Type() *geoType {
-	return newGeoType(GeoTypePolygon)
+func (self *Polygon) Type() GeoType {
+	return GeoType(GeoTypePolygon)
 }
 
 //get geometry interface
@@ -50,20 +50,19 @@ func (self *Polygon) ConvexHull() *Polygon {
 
 //As line strings
 func (self *Polygon) AsLinearRings() []*LinearRing {
-	var rings = make([]*LinearRing, len(self.Holes)+1)
-	rings[0] = self.Shell
-	for i := 0; i < len(self.Holes); i++ {
-		rings[i+1] = self.Holes[i]
+	var rings = make([]*LinearRing, 0, len(self.Holes)+1)
+	rings = append(rings, self.Shell)
+	for i := range self.Holes {
+		rings = append(rings, self.Holes[i])
 	}
 	return rings
 }
 
 //polygon shells
 func shells(coords [][]Point) []*LinearRing {
-	var n = len(coords)
-	var rings = make([]*LinearRing, n)
-	for i := 0; i < n; i++ {
-		rings[i] = NewLinearRing(coords[i])
+	var rings = make([]*LinearRing, 0, len(coords))
+	for i := range coords {
+		rings = append(rings, NewLinearRing(coords[i]))
 	}
 	return rings
 }

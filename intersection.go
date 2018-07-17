@@ -3,23 +3,26 @@ package geom
 import "github.com/intdxdt/sset"
 
 //Checks if pt intersection other geometry
-func (pt *Point) Intersection(other Geometry) []Point {
+func (pt Point) Intersection(other Geometry) []Point {
 	var res []Point
 	//checks for non-geometry types
 	if IsNullGeometry(other) {
 		return res
 	}
 
-	if p, ok := IsPoint(other); ok {
-		if pt.Equals2D(p) {
-			res = append(res, *pt)
+	other.Type().IsPoint()
+
+	if other.Type().IsPoint() {
+		var p = CastAsPoint(other)
+		if pt.Equals2D(&p) {
+			res = append(res, pt)
 		}
-	} else if ln, ok := IsLineString(other); ok {
-		res = pt.AsLineString().Intersection(ln)
-	} else if seg, ok := IsSegment(other); ok {
-		res = pt.AsLineString().Intersection(seg)
-	} else if ply, ok := IsPolygon(other); ok {
-		res = pt.AsLineString().Intersection(ply)
+	} else if other.Type().IsLineString() {
+		res = pt.AsLineString().Intersection(other.(*LineString))
+	} else if other.Type().IsSegment() {
+		res = pt.AsLineString().Intersection(other.(*Segment))
+	} else if other.Type().IsPolygon() {
+		res = pt.AsLineString().Intersection(other.(*Polygon))
 	}
 	return res
 }
@@ -37,14 +40,15 @@ func (self *LineString) Intersection(other Geometry) []Point {
 		return res
 	}
 
-	if pt, ok := IsPoint(other); ok {
+	if other.Type().IsPoint() {
+		var pt = CastAsPoint(other)
 		res = self.linearIntersection(pt.AsLineString())
-	} else if seg, ok := IsSegment(other); ok {
-		res = self.linearIntersection(seg.AsLineString())
-	} else if ln, ok := IsLineString(other); ok {
-		res = self.linearIntersection(ln)
-	} else if ply, ok := IsPolygon(other); ok {
-		res = self.intersection_polygon_rings(ply.AsLinearRings())
+	} else if other.Type().IsSegment() {
+		res = self.linearIntersection(other.(*Segment).AsLineString())
+	} else if other.Type().IsLineString() {
+		res = self.linearIntersection(other.(*LineString))
+	} else if other.Type().IsPolygon() {
+		res = self.intersectionPolygonRings(other.(*Polygon).AsLinearRings())
 	}
 
 	return res
@@ -58,36 +62,35 @@ func (self *Polygon) Intersection(other Geometry) []Point {
 		return res
 	}
 
-	if pt, ok := IsPoint(other); ok {
-		ln := pt.AsLineString()
-		res = ln.Intersection(self)
-	} else if seg, ok := IsSegment(other); ok {
-		res = seg.Intersection(self)
-	} else if ln, ok := IsLineString(other); ok {
-		res = ln.Intersection(self)
-	} else if ply, ok := IsPolygon(other); ok {
-		ptset := sset.NewSSet(ptCmp)
+	if other.Type().IsPoint() {
+		res = CastAsPoint(other).AsLineString().Intersection(self)
+	} else if other.Type().IsSegment() {
+		res = other.(*Segment).Intersection(self)
+	} else if other.Type().IsLineString() {
+		res = other.(*LineString).Intersection(self)
+	} else if other.Type().IsPolygon() {
+		var ptset = sset.NewSSet(ptCmp)
 		//other intersect self
-		lns := ply.AsLinear()
+		var lns = other.(*Polygon).AsLinear()
 		for _, ln := range lns {
-			pts := ln.Intersection(self)
-			for _, p := range pts {
-				ptset.Add(p)
+			var pts = ln.Intersection(self)
+			for i := range pts {
+				ptset.Add(pts[i])
 			}
 		}
 
 		//self intersects other
 		lns = self.AsLinear()
 		for _, ln := range lns {
-			pts := ln.Intersection(other)
-			for _, p := range pts {
-				ptset.Add(p)
+			var pts = ln.Intersection(other)
+			for i := range pts {
+				ptset.Add(pts[i])
 			}
 		}
 
-		pts := ptset.Values()
-		for _, p := range pts {
-			res = append(res, p.(Point))
+		var pts = ptset.Values()
+		for i := range pts {
+			res = append(res, pts[i].(Point))
 		}
 	}
 
@@ -95,7 +98,7 @@ func (self *Polygon) Intersection(other Geometry) []Point {
 }
 
 //line intersect polygon rings
-func (self *LineString) intersection_polygon_rings(rings []*LinearRing) []Point {
+func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 	var shell = rings[0]
 	var ptset = sset.NewSSet(ptCmp)
 	var res []Point

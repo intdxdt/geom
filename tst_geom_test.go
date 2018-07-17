@@ -6,12 +6,12 @@ import (
 )
 
 func TestGeom(t *testing.T) {
-	g := goblin.Goblin(t)
-	p := PointXY(4.0, 5.0)
-	ln := NewLineString([]Point{{0, 0}, {1, 1}})
+	var g = goblin.Goblin(t)
+	var p = PointXY(4.0, 5.0)
+	var ln = NewLineString([]Point{{0, 0}, {1, 1}})
 	var ply *Polygon
-	var pnt *Point
 	var line *LineString
+	var pnt Point
 	var rng = NewLinearRing([]Point{{0, 0}, {1, 1}})
 	var pt_wkt = "POINT (30 10)"
 	var ln_wkt = "LINESTRING (30 10, 10 30, 40 40)"
@@ -19,9 +19,15 @@ func TestGeom(t *testing.T) {
 
 	g.Describe("Geometry", func() {
 		g.It("it should test new geometry ", func() {
-			pt := ReadGeometry(pt_wkt)
-			ln := ReadGeometry(ln_wkt)
-			ply := ReadGeometry(ply_wkt)
+			var pt = ReadGeometry(pt_wkt)
+			var ln = ReadGeometry(ln_wkt)
+			var ply = ReadGeometry(ply_wkt)
+			var seg = NewSegment(&p, &p)
+			g.Assert(CastAsPoint(pt) == pt).IsTrue()
+			g.Assert(CastAsLineString(ln) == ln).IsTrue()
+			g.Assert(CastAsPolygon(ply) == ply).IsTrue()
+			g.Assert(CastAsSegment(seg) == seg).IsTrue()
+
 			g.Assert(pt.Type().IsPoint()).IsTrue()
 			g.Assert(ln.Type().IsLineString()).IsTrue()
 			g.Assert(ply.Type().IsPolygon()).IsTrue()
@@ -30,7 +36,7 @@ func TestGeom(t *testing.T) {
 		g.It("it should test NullGeometry", func() {
 			g.Assert(IsNullGeometry(&p)).IsFalse()
 			g.Assert(IsNullGeometry(ln)).IsFalse()
-			g.Assert(IsNullGeometry(pnt)).IsTrue()
+			g.Assert(IsNullGeometry(pnt)).IsFalse()
 			g.Assert(IsNullGeometry(ply)).IsTrue()
 			g.Assert(IsNullGeometry(line)).IsTrue()
 

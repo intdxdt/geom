@@ -1,7 +1,7 @@
 package geom
 
 //Point as line strings
-func (self *Point) AsLinear() []*LineString {
+func (self Point) AsLinear() []*LineString {
 	return self.AsLineStrings()
 }
 

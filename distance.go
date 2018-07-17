@@ -5,7 +5,7 @@ import (
 )
 
 //Distance computes distance between two points
-func (self *Point) Distance(other Geometry) float64 {
+func (self Point) Distance(other Geometry) float64 {
 	var dist = math.NaN()
 	if IsNullGeometry(other) {
 		return dist
@@ -13,8 +13,9 @@ func (self *Point) Distance(other Geometry) float64 {
 
 	if self.Intersects(other) {
 		dist = 0.0
-	} else if pt, ok := IsPoint(other); ok {
-		dist = self.Magnitude(pt)
+	} else if other.Type().IsPoint() {
+		var pt = CastAsPoint(other)
+		dist = self.Magnitude(&pt)
 	} else {
 		dist = distAsLines(self, other)
 	}

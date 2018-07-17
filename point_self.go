@@ -1,11 +1,11 @@
 package geom
 
 //get geometry type
-func (self *Point) Type() *geoType {
-	return newGeoType(GeoTypePoint)
+func (self Point) Type() GeoType {
+	return GeoType(GeoTypePoint)
 }
 
 //get geometry interface
 func (self *Point) Geometry() Geometry {
-	return self
+	return *self
 }

@@ -35,8 +35,8 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 			qrng, ok = ibox.MBR.Intersection(qbox.MBR)
 
 			if ok {
-				self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
-				other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+				self.segsInrange(&selfsegs, qrng, ibox.i, ibox.j)
+				other.segsInrange(&othersegs, qrng, qbox.i, qbox.j)
 				self.segsegIntersection(selfsegs, othersegs, ptset)
 			}
 		}
@@ -72,8 +72,8 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 			qbox = lnrange[q].Object.(*MonoMBR)
 			qrng, _ = ibox.Intersection(qbox.MBR)
 
-			self.segs_inrange(&selfsegs, qrng, ibox.i, ibox.j)
-			other.segs_inrange(&othersegs, qrng, qbox.i, qbox.j)
+			self.segsInrange(&selfsegs, qrng, ibox.i, ibox.j)
+			other.segsInrange(&othersegs, qrng, qbox.i, qbox.j)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
 				bln = self.segseg_intersects(selfsegs, othersegs)
@@ -114,7 +114,7 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 }
 
 // Tests whether a collection of segments from line a and line b intersects
-// TODO:Improve from O(n2) - although expects few number of segs from index selection
+// TODO:Improve O(n^2) - although expects few number of segs from index selection
 func (self *LineString) segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
 	var bln = false
 	var na, nb = len(segsa), len(segsb)

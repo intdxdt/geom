@@ -26,7 +26,7 @@ func TestLineString(t *testing.T) {
 	g.Describe("Linestring", func() {
 		g.It("should test length", func() {
 			g.Assert(ln.Type().IsLineString()).IsTrue()
-			g.Assert(ln.Type().Value() == GeoTypeLineString).IsTrue()
+			g.Assert(ln.Type() == GeoTypeLineString).IsTrue()
 			g.Assert(ln.Length() == 4.0).IsTrue()
 
 			g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
@@ -127,7 +127,7 @@ func TestLineStringRelate(t *testing.T) {
 	var plyf = NewPolygonFromWKT(plywktf)
 	var plyg = NewPolygonFromWKT(plywktg)
 
-	var pnt_null *Point
+	var pnt_null Point
 	var ln_null *LineString
 	var ply_null *Polygon
 

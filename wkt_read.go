@@ -20,7 +20,7 @@ type Holes []Shell
 type WKTParserObj struct {
 	shell Shell
 	holes Holes
-	gtype int
+	gtype GeoType
 }
 
 //Shell
@@ -34,7 +34,7 @@ func (self *WKTParserObj) Holes() Holes {
 }
 
 //Geometry Type
-func (self *WKTParserObj) GeometryType() int {
+func (self *WKTParserObj) GeometryType() GeoType {
 	return self.gtype
 }
 
@@ -54,7 +54,7 @@ func (self *WKTParserObj) ToArray() [][][]float64 {
 }
 
 //New WKT parser object
-func NewWKTParserObj(gtype int, coords ...[][]float64) *WKTParserObj {
+func NewWKTParserObj(gtype GeoType, coords ...[][]float64) *WKTParserObj {
 	var shells = make([]Shell, 0, len(coords))
 	for i := range coords {
 		shells = append(shells, Shell(coords[i]))
@@ -77,7 +77,7 @@ func NewWKTParserObj(gtype int, coords ...[][]float64) *WKTParserObj {
 }
 
 //Read wkt string
-func readWKT(wkt string, typeId int) *WKTParserObj {
+func readWKT(wkt string, typeId GeoType) *WKTParserObj {
 	var wktBytes = bytes.ToLower([]byte(wkt_string(wkt)))
 	if isEmptyWKT(wktBytes) {
 		return &WKTParserObj{gtype: typeId}
@@ -210,7 +210,7 @@ func parseF64(str []byte) float64 {
 }
 
 //Parse point
-func wktPointParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
+func wktPointParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	var wktStr = wkt[tok.i+1 : tok.j]
 	var indices = numberIndices(wktStr)
 	var dim = len(indices) / 2
@@ -223,7 +223,7 @@ func wktPointParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
 }
 
 //parse linestring
-func wktLinestringParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
+func wktLinestringParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	return &WKTParserObj{
 		gtype: typeId,
 		shell: parseString(wkt, tok),
@@ -231,7 +231,7 @@ func wktLinestringParser(typeId int, wkt []byte, tok *wktToken) *WKTParserObj {
 }
 
 //parse polygon
-func wktPolygonParser(typeId int, wkt []byte, token *wktToken) *WKTParserObj {
+func wktPolygonParser(typeId GeoType, wkt []byte, token *wktToken) *WKTParserObj {
 	var shell Shell
 	var obj = &WKTParserObj{gtype: typeId}
 	var n = len(token.children)

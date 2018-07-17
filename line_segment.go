@@ -7,7 +7,7 @@ import (
 
 //segments in range
 //xor - altenate segments if nothing is in range of box
-func (self *LineString) segs_inrange(seglist *[]*Segment, box *mbr.MBR, i, j int) {
+func (self *LineString) segsInrange(seglist *[]*Segment, box *mbr.MBR, i, j int) {
 	*seglist = (*seglist)[:0]
 
 	for ; i < j; i++ {

@@ -65,9 +65,9 @@ func TestIntersection(t *testing.T) {
 
 			g.Assert(len(ptA.Intersection(nilG))).Equal(0)
 			g.Assert(len(ptA.Intersection(ply))).Equal(0)
-			g.Assert(len(ply.Intersection(&ptA))).Equal(0)
+			g.Assert(len(ply.Intersection(ptA))).Equal(0)
 
-			g.Assert(len(ply.Intersection(&ptB))).Equal(1)
+			g.Assert(len(ply.Intersection(ptB))).Equal(1)
 			g.Assert(len(ptB.Intersection(ply))).Equal(1)
 
 			g.Assert(len(segAB.Intersection(nilG))).Equal(0)
@@ -76,29 +76,29 @@ func TestIntersection(t *testing.T) {
 			g.Assert(len(segAB.Intersection(ply))).Equal(1)
 
 			g.Assert(len(ptA.Intersection(ln))).Equal(0)
-			g.Assert(len(ln.Intersection(&ptA))).Equal(0)
-			g.Assert(len(segAB.Intersection(&ptA))).Equal(1)
+			g.Assert(len(ln.Intersection(ptA))).Equal(0)
+			g.Assert(len(segAB.Intersection(ptA))).Equal(1)
 			g.Assert(len(ptA.Intersection(segAB))).Equal(1)
 			g.Assert(len(ply.Intersection(segAB))).Equal(1)
 
-			g.Assert(len(ply.Intersection(&ptC))).Equal(1)
+			g.Assert(len(ply.Intersection(ptC))).Equal(1)
 			g.Assert(len(ptC.Intersection(ply))).Equal(1)
 
-			g.Assert(len(ply.Intersection(&ptD))).Equal(1)
+			g.Assert(len(ply.Intersection(ptD))).Equal(1)
 			g.Assert(len(ptD.Intersection(ply))).Equal(1)
 
 			g.Assert(len(ptA.Intersection(nilG))).Equal(0)
-			g.Assert(len(ptA.Intersection(&ptB))).Equal(0)
-			g.Assert(len(ptA.Intersection(&ptA))).Equal(1)
+			g.Assert(len(ptA.Intersection(ptB))).Equal(0)
+			g.Assert(len(ptA.Intersection(ptA))).Equal(1)
 			g.Assert(len(ptA.Intersection(ln2))).Equal(1)
 
 			g.Assert(len(ln2.Intersection(nilG))).Equal(0)
-			g.Assert(len(ln2.Intersection(&ptA))).Equal(1)
-			g.Assert(len(ln2.Intersection(&ptB))).Equal(0)
-			g.Assert(len(ln2.Intersection(&ptE))).Equal(0)
-			g.Assert(len(ln2.Intersection(&ptF))).Equal(0)
-			g.Assert(len(ln2.Intersection(&ptG))).Equal(0)
-			g.Assert(len(ln2.Intersection(&ptH))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptA))).Equal(1)
+			g.Assert(len(ln2.Intersection(ptB))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptE))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptF))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptG))).Equal(0)
+			g.Assert(len(ln2.Intersection(ptH))).Equal(0)
 		})
 
 		g.It("polygon intersection other not segment ", func() {

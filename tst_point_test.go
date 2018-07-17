@@ -8,20 +8,28 @@ import (
 )
 
 func TestPoint(t *testing.T) {
-	g := goblin.Goblin(t)
-	p0 := PointXY(0.0, 0.0)
-	p1 := PointXY(4, 5)
-	p2 := PointXY(4.0, 5.0)
-	p3 := CreatePoint([]float64{4, 5})
-	p4 := CreatePoint([]float64{4, 5.01})
-	p5 := CreatePoint([]float64{4})
-	p6 := Point{4.0, math.NaN()}
-	p7 := PointXY(4.0, 4.9)
-	p8 := PointXY(3.9, 4.9)
+	var g  = goblin.Goblin(t)
+	var p0 = PointXY(0.0, 0.0)
+	var p1 = PointXY(4, 5)
+	var p2 = PointXY(4.0, 5.0)
+	var p3 = CreatePoint([]float64{4, 5})
+	var p4 = CreatePoint([]float64{4, 5.01})
+	var p5 = CreatePoint([]float64{4})
+	var p6 = Point{4.0, math.NaN()}
+	var p7 = PointXY(4.0, 4.9)
+	var p8 = PointXY(3.9, 4.9)
 
-	p9 := PointXYZ(3.9, 4.9, 9.8)
-	p10 := CreatePoint([]float64{3.9, 4.9, 9.8})
-	p11 := CreatePoint([]float64{3.9, 4.9, 9.8, 7.9})
+	var p9  = PointXYZ(3.9, 4.9, 9.8)
+	var p10 = CreatePoint([]float64{3.9, 4.9, 9.8})
+	var p11 = CreatePoint([]float64{3.9, 4.9, 9.8, 7.9})
+
+	//p0.BBox
+	//p0.AsLinear
+	//p0.Intersects
+	//p0.Intersection
+	//p0.Distance
+	//p0.Type
+	//p0.WKT
 
 	g.Describe("geom.point", func() {
 		g.It("loads wkt as point", func() {
@@ -82,15 +90,14 @@ func TestPoint(t *testing.T) {
 
 	g.Describe("Point distance and to polygon ", func() {
 		g.It("sqrt(3**2,4**2) ", func() {
-
-			pt := &Point{3., 0.}
-			g.Assert(pt.Distance(&Point{0., 4.})).Equal(5.0)
+			var pt = Point{3., 0.}
+			g.Assert(pt.Distance(Point{0., 4.})).Equal(5.0)
 			g.Assert(pt.SquareDistance(&Point{0., 4.})).Equal(25.0)
 
 		})
 		g.It("sqrt(2)", func() {
-			pt := &Point{3, 4}
-			g.Assert(pt.Distance(&Point{4, 5})).Equal(math.Sqrt2)
+			var pt = Point{3, 4}
+			g.Assert(pt.Distance(Point{4, 5})).Equal(math.Sqrt2)
 			g.Assert(pt.SquareDistance(&Point{4, 5})).Equal(2.0)
 		})
 	})
@@ -122,11 +129,13 @@ func TestPoint(t *testing.T) {
 
 	g.Describe("point relates", func() {
 		g.It("intersect , equals, isnull ", func() {
-			var p0 *Point
+			var p0 Point
+			var ln_null *LineString
 			g.Assert(p3.Equals2D(&p1)).IsTrue()
-			g.Assert(p3.Intersects(&p1)).IsTrue()
+			g.Assert(p3.Intersects(p1)).IsTrue()
 			g.Assert(p3.Intersects(p1.Geometry())).IsTrue()
 			g.Assert(p3.Intersects(p0)).IsFalse()
+			g.Assert(p3.Intersects(ln_null)).IsFalse()
 			g.Assert(p3.Geometry().Intersects(p0)).IsFalse()
 			g.Assert(p3.Disjoint(&p1)).IsFalse()
 			g.Assert(p3.Disjoint(&p4)).IsTrue()
@@ -150,10 +159,10 @@ func TestMagDist(t *testing.T) {
 				math.Round(3.605551275463989, 8),
 			)
 			pt = PointXY(3, 4)
-			g.Assert((&pt).Magnitude(&z)).Equal(5.0)
-			g.Assert(a.Distance(&b)).Equal(5.0)
+			g.Assert(pt.Magnitude(&z)).Equal(5.0)
+			g.Assert(a.Distance(b)).Equal(5.0)
 			pt = PointXY(3, 4)
-			g.Assert((&pt).MagnitudeSquare(&z)).Equal(25.0)
+			g.Assert(pt.MagnitudeSquare(&z)).Equal(25.0)
 			g.Assert(a.SquareDistance(&b)).Equal(25.0)
 
 			pt = PointXY(4.587, 0.)

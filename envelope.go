@@ -12,14 +12,10 @@ func (self *LineString) BBox() *mbr.MBR {
 	return self.Envelope()
 }
 
-//envelope of point
-func (self *Point) Envelope() *mbr.MBR {
-	return mbr.New(self[X], self[Y], self[X], self[Y])
-}
-
 //bounding box of point
-func (self *Point) BBox() *mbr.MBR {
-	return self.Envelope()
+func (self Point) BBox() *mbr.MBR {
+	var x, y = self[X], self[Y]
+	return mbr.New(x, y, x, y)
 }
 
 //envelope of segment

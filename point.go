@@ -35,8 +35,8 @@ func CreatePoint(array []float64) Point {
 
 //create a new linestring from wkt string
 //empty wkt will raise an exception
-func PointFromWKT(wkt_geom string) Point {
-	return CreatePoint(readWKT(wkt_geom, GeoTypePoint).ToArray()[0][0][:])
+func PointFromWKT(wkt string) Point {
+	return CreatePoint(readWKT(wkt, GeoTypePoint).ToArray()[0][0][:])
 }
 
 //Is point zero in 2d - origin
@@ -50,8 +50,8 @@ func (self *Point) IsNull() bool {
 }
 
 //As line strings
-func (self *Point) AsLineString() *LineString {
-	return NewLineString([]Point{*self, *self})
+func (self Point) AsLineString() *LineString {
+	return NewLineString([]Point{self, self})
 }
 
 //As line strings

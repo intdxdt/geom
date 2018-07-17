@@ -55,14 +55,13 @@ func quadrants(g, other Geometry) []Geometry {
 	   //TODO: ii can be improved by changing ii to convex hull
 	*/
 
-	var _, ispoint = other.(*Point)
 
 	nw = NewPolygon([]Point{mat[2][0], mat[3][0], mat[3][1], mat[2][1], mat[2][0]})
 	ne = NewPolygon([]Point{mat[2][2], mat[3][2], mat[3][3], mat[2][3], mat[2][2]})
 	sw = NewPolygon([]Point{mat[0][0], mat[1][0], mat[1][1], mat[0][1], mat[0][0]})
 	se = NewPolygon([]Point{mat[0][2], mat[1][2], mat[1][3], mat[0][3], mat[0][2]})
 
-	if ispoint {
+	if other.Type().IsPoint() {
 		nn = NewLineString([]Point{mat[2][1], mat[3][1]})
 		ww = NewLineString([]Point{mat[1][0], mat[1][1]})
 		ii = &mat[1][1]

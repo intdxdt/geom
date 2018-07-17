@@ -1,8 +1,8 @@
 package geom
 
 //get geometry type
-func (self *LineString) Type() *geoType {
-	return newGeoType(GeoTypeLineString)
+func (self *LineString) Type() GeoType {
+	return GeoType(GeoTypeLineString)
 }
 
 //get geometry interface

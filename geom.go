@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	GeoTypeUnknown    = iota - 1
+	GeoTypeUnknown    GeoType = iota - 1
 	GeoTypePoint
 	GeoTypeSegment
 	GeoTypeLineString
@@ -35,57 +35,64 @@ type Geometry interface {
 	Intersects(Geometry) bool
 	Intersection(Geometry) []Point
 	Distance(Geometry) float64
-	Type() *geoType
+	Type() GeoType
 	WKT() string
 }
 
-type geoType struct {
-	gtype int
-}
+type GeoType int
 
 //Read geometry from WKT
 func ReadGeometry(wkt string) Geometry {
-	var g Geometry
 	wkt = strings.ToLower(wkt_string(wkt))
+	var g Geometry
 	var gtype = wktType(wkt)
 
 	if bytes.Equal(gtype, wktPolygon) {
 		g = NewPolygonFromWKT(wkt)
 	} else if bytes.Equal(gtype, wktPoint) {
-		var pt = PointFromWKT(wkt)
-		g = &pt
+		g = PointFromWKT(wkt)
 	} else if bytes.Equal(gtype, wktLinestring) {
 		g = NewLineStringFromWKT(wkt)
 	}
 	return g
 }
 
-//New geoType
-func newGeoType(gtype int) *geoType {
-	return &geoType{gtype}
+func CastAsPoint(other Geometry) Point {
+	var pt, ok = other.(Point)
+	if !ok {
+		pt = *(other.(*Point))
+	}
+	return pt
 }
 
-//Value
-func (gt *geoType) Value() int {
-	return gt.gtype
+func CastAsLineString(other Geometry) *LineString {
+	return other.(*LineString)
+}
+
+func CastAsPolygon(other Geometry) *Polygon {
+	return other.(*Polygon)
+}
+
+func CastAsSegment(other Geometry) *Segment {
+	return other.(*Segment)
 }
 
 //is polygon
-func (gt *geoType) IsPolygon() bool {
-	return gt.gtype == GeoTypePolygon
+func (gt GeoType) IsPolygon() bool {
+	return gt == GeoTypePolygon
 }
 
 //is linestring
-func (gt *geoType) IsLineString() bool {
-	return gt.gtype == GeoTypeLineString
+func (gt GeoType) IsLineString() bool {
+	return gt == GeoTypeLineString
 }
 
 //is linestring
-func (gt *geoType) IsSegment() bool {
-	return gt.gtype == GeoTypeSegment
+func (gt GeoType) IsSegment() bool {
+	return gt == GeoTypeSegment
 }
 
 //is point
-func (gt *geoType) IsPoint() bool {
-	return gt.gtype == GeoTypePoint
+func (gt GeoType) IsPoint() bool {
+	return gt == GeoTypePoint
 }

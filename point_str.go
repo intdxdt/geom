@@ -7,7 +7,7 @@ import (
 )
 
 //String creates a wkt string format of point
-func (self *Point) WKT() string {
+func (self Point) WKT() string {
 	var coords = self.ToArray()
 	return WriteWKT(NewWKTParserObj(GeoTypePoint, [][]float64{{coords[X], coords[Y]}}))
 }

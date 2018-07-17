@@ -2,8 +2,8 @@ package geom
 
 
 //GeomType
-func (self *Segment) Type() *geoType {
-	return newGeoType(GeoTypeSegment)
+func (self *Segment) Type() GeoType {
+	return GeoType(GeoTypeSegment)
 }
 
 

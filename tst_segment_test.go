@@ -141,7 +141,7 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.Round(seg_cd.SegSegDistance(seg_ab), 12)).Equal(expects)
 
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_ef), 12)).Equal(0.0)
-			g.Assert(seg_dd.SegSegDistance(seg_ff)).Equal(d.Distance(&f))
+			g.Assert(seg_dd.SegSegDistance(seg_ff)).Equal(d.Distance(f))
 			g.Assert(seg_ff.Length()).Equal(0.0)
 			g.Assert(seg_ff.Distance(seg_jj)).Equal(seg_ff.A.Distance(seg_jj.A))
 			g.Assert(seg_ab.Length()).Equal(seg_ab.A.Distance(seg_ab.B))
@@ -203,12 +203,13 @@ func TestSegDist(t *testing.T) {
 				dists[i] = tvect.DistanceToPoint(&tp)
 			}
 
-			pt1_out := PointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
-			pt2_out := PointFromWKT("POINT (  26.70508112717612 29.46609249326697 )")
-			pnt3_in := PointFromWKT("POINT ( 27.439276564111122 38.76590136111034 )")
-			poly := NewPolygonFromWKT("POLYGON (( 35 10, 45 45, 15 40, 10 20, 35 10 ), ( 20 30, 35 35, 30 20, 20 30 ))")
+			var pt1_out = PointFromWKT("POINT ( 49.8322373906287 49.1670033843562 )")
+			var pt2_out = PointFromWKT("POINT (  26.70508112717612 29.46609249326697 )")
+			var pnt3_in = PointFromWKT("POINT ( 27.439276564111122 38.76590136111034 )")
+			var poly    = NewPolygonFromWKT("POLYGON (( 35 10, 45 45, 15 40, 10 20, 35 10 ), ( 20 30, 35 35, 30 20, 20 30 ))")
+			var lnr     = NewLineStringFromWKT("LINESTRING ( 35 10, 45 45, 15 40, 10 20, 35 10 )")
 			var pt_online = PointXY(45.00000, 45.000000000000000000000000001)
-			ln := poly.Shell.AsLinear()[0]
+			ln      := poly.Shell.AsLinear()[0]
 
 			g.Assert(math.Round(ln.Distance(poly), 12)).Equal(math.Round(0, 12))
 			g.Assert(math.Round(ln.Distance(&pt_online), 12)).Equal(math.Round(0, 12))
@@ -221,15 +222,13 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.Round(pnt3_in.Distance(poly), 12)).Equal(math.Round(0.0, 12))
 			g.Assert(math.Round(poly.Distance(&pnt3_in), 12)).Equal(math.Round(0.0, 12))
 
-			var null_pt *Point
 			var null_poly *Polygon
-			var null_ln *LineString
-			g.Assert(math.IsNaN(poly.Distance(null_pt))).IsTrue()
-			g.Assert(math.IsNaN(pt2_out.Distance(null_pt))).IsTrue()
-			g.Assert(math.IsNaN(ln.Distance(null_pt))).IsTrue()
+			var null_ln   *LineString
+
 			g.Assert(math.IsNaN(pt2_out.Distance(null_poly))).IsTrue()
 			g.Assert(math.IsNaN(poly.Distance(null_poly))).IsTrue()
 			g.Assert(math.IsNaN(poly.Distance(null_ln))).IsTrue()
+			g.Assert(math.IsNaN(lnr.Distance(null_ln))).IsTrue()
 
 			var seg_aa = NewSegment(&a, &a)
 			g.Assert(seg_aa.DistanceToPoint(&a)).Equal(0.0)

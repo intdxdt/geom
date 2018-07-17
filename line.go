@@ -40,9 +40,9 @@ func NewLineStringFromArray(array [][]float64) *LineString {
 
 //create a new linestring from wkt string
 //empty wkt are not allowed
-func NewLineStringFromWKT(wkt_geom string) *LineString {
+func NewLineStringFromWKT(wkt string) *LineString {
 	return NewLineStringFromArray(
-		readWKT(wkt_geom, GeoTypeLineString).ToArray()[0],
+		readWKT(wkt, GeoTypeLineString).ToArray()[0],
 	)
 }
 
