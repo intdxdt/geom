@@ -23,7 +23,7 @@ func TestPolygon(t *testing.T) {
 			ply_inpoly_clone := ply_inpoly.Clone()
 			g.Assert(poly.Type().IsPolygon()).IsTrue()
 			g.Assert(poly.Shell.bbox.Equals(poly.Shell.bbox.MBR)).IsTrue()
-			var box = poly.Envelope()
+			var box = poly.BBox()
 			g.Assert(box.Equals(poly.Shell.bbox.MBR)).IsTrue()
 			g.Assert(poly.Intersects(ply_inpoly)).IsTrue()
 			g.Assert(poly.Geometry().Intersects(ply_inpoly)).IsTrue()

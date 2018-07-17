@@ -90,7 +90,7 @@ func TestLineString(t *testing.T) {
 			for _, v := range pts[1:] {
 				box.ExpandIncludeXY(v[X], v[Y])
 			}
-			g.Assert(ln.Envelope()).Eql(box)
+			g.Assert(ln.BBox()).Eql(box)
 		})
 
 	})

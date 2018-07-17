@@ -22,8 +22,8 @@ func TestLineStringMono(t *testing.T) {
 			mbox := MonoMBR{bounds, 0, n - 1}
 			g.Assert(mbox.i).Eql(ln.bbox.i)
 			g.Assert(mbox.j).Eql(ln.bbox.j)
-			g.Assert(ln.Envelope()).Eql(mbox.BBox())
-			g.Assert(ln.Envelope()).Eql(mbox.Clone().BBox())
+			g.Assert(ln.BBox()).Eql(mbox.BBox())
+			g.Assert(ln.BBox()).Eql(mbox.Clone().BBox())
 
 			mbox.updateIndex(-1, n)
 			g.Assert(mbox.i).Eql(ln.bbox.i - 1)
