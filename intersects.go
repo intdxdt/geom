@@ -25,9 +25,9 @@ func (self *LineString) Intersects(other Geometry) bool {
 	}
 
 	bln := false
-	_, ispoly := IsPolygon(other)
-	_, isline := IsLineString(other)
-	_, isseg := IsSegment(other)
+	_, ispoly  := IsPolygon(other)
+	_, isline  := IsLineString(other)
+	_, isseg   := IsSegment(other)
 	_, ispoint := IsPoint(other)
 
 	other_lns := other.AsLinear()
