@@ -6,14 +6,14 @@ import (
 )
 
 type MonoMBR struct {
-	*mbr.MBR
+	mbr.MBR
 	i int
 	j int
 }
 
 //clone  mono mbr
 func (box *MonoMBR) BBox() *mbr.MBR {
-	return box.MBR
+	return &box.MBR
 }
 
 //update mono chain index
@@ -23,7 +23,7 @@ func (box *MonoMBR) updateIndex(i, j int) {
 
 //new monotone mbr
 func new_mono_mbr(box *mbr.MBR) *MonoMBR {
-	return &MonoMBR{box, null, null}
+	return &MonoMBR{*box, null, null}
 }
 
 //build xymonotone chain, perimeter length,
@@ -96,7 +96,7 @@ func (self *LineString) xyMonobox(mono *MonoMBR, i, j int) {
 			mono.i, mono.j = i, j
 		}
 
-		self.bbox.ExpandIncludeMBR(mono.MBR)
+		self.bbox.ExpandIncludeMBR(&mono.MBR)
 		if self.bbox.i == null {
 			self.bbox.i, self.bbox.j = mono.i, mono.j
 		} else {

@@ -102,7 +102,7 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 	var shell = rings[0]
 	var ptset = sset.NewSSet(ptCmp)
 	var res []Point
-	var bln = self.bbox.MBR.Intersects(shell.bbox.MBR)
+	var bln = self.bbox.MBR.Intersects(&shell.bbox.MBR)
 
 	if bln {
 		spts := self.linearIntersection(shell.LineString)

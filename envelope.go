@@ -4,7 +4,7 @@ import "github.com/intdxdt/mbr"
 
 //bounding box of linestring
 func (self *LineString) BBox() *mbr.MBR {
-	return self.bbox.MBR
+	return &self.bbox.MBR
 }
 
 //bounding box of point
@@ -22,5 +22,5 @@ func (self *Segment) BBox() *mbr.MBR {
 
 //bounding box of linestring
 func (self *Polygon) BBox() *mbr.MBR {
-	return self.Shell.bbox.MBR
+	return &self.Shell.bbox.MBR
 }

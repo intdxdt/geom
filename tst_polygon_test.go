@@ -2,9 +2,9 @@ package geom
 
 import (
 	"fmt"
-	"github.com/franela/goblin"
-	"github.com/intdxdt/math"
 	"testing"
+	"github.com/intdxdt/math"
+	"github.com/franela/goblin"
 )
 
 func TestPolygon(t *testing.T) {
@@ -22,9 +22,9 @@ func TestPolygon(t *testing.T) {
 			ply_inpoly := NewPolygonFromWKT(wkt)
 			ply_inpoly_clone := ply_inpoly.Clone()
 			g.Assert(poly.Type().IsPolygon()).IsTrue()
-			g.Assert(poly.Shell.bbox.Equals(poly.Shell.bbox.MBR)).IsTrue()
+			g.Assert(poly.Shell.bbox.Equals(&poly.Shell.bbox.MBR)).IsTrue()
 			var box = poly.BBox()
-			g.Assert(box.Equals(poly.Shell.bbox.MBR)).IsTrue()
+			g.Assert(box.Equals(&poly.Shell.bbox.MBR)).IsTrue()
 			g.Assert(poly.Intersects(ply_inpoly)).IsTrue()
 			g.Assert(poly.Geometry().Intersects(ply_inpoly)).IsTrue()
 			g.Assert(poly.Intersects(ply_inpoly.Geometry())).IsTrue()

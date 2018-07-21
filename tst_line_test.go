@@ -133,7 +133,7 @@ func TestLineStringRelate(t *testing.T) {
 
 	g.Describe("Linestring - Relate", func() {
 		g.It("should linestring relate", func() {
-			g.Assert(lna.bbox.Equals(lna.bbox.MBR)).IsTrue()
+			g.Assert(lna.bbox.Equals(&lna.bbox.MBR)).IsTrue()
 			g.Assert(lna.Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Geometry().Intersects(pnt_null)).IsFalse()
 			g.Assert(lna.Intersects(ln_null)).IsFalse()

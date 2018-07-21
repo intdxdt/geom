@@ -58,7 +58,7 @@ func (self *LineString) buildIndex() *LineString {
 	}
 	var data = make([]*rtree.Obj, 0, len(self.chains))
 	for i := range self.chains {
-		data = append(data, rtree.Object(i, self.chains[i].MBR, self.chains[i]))
+		data = append(data, rtree.Object(i, &self.chains[i].MBR, self.chains[i]))
 	}
 	self.index.Load(data) //bulkload
 	return self

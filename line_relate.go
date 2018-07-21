@@ -10,7 +10,7 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	var ptlist []Point
 	var ptset = sset.NewSSet(ptCmp)
 
-	if self.bbox.Disjoint(other.bbox.MBR) {
+	if self.bbox.Disjoint(&other.bbox.MBR) {
 		return ptlist //disjoint
 	}
 
@@ -22,16 +22,16 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	var selfsegs []*Segment
 	var othersegs []*Segment
 	var lnrange []*rtree.Obj
-	var inrange = self.index.Search(*other.bbox.MBR)
+	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; i < len(inrange); i++ {
 		//cur self box
 		ibox = inrange[i].Object.(*MonoMBR)
 		//search ln using ibox
-		lnrange = other.index.Search(*ibox.MBR)
+		lnrange = other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
 			qbox = lnrange[q].Object.(*MonoMBR)
-			var qrng, ok = ibox.MBR.Intersection(qbox.MBR)
+			var qrng, ok = ibox.MBR.Intersection(&qbox.MBR)
 
 			if ok {
 				self.segsInrange(&selfsegs, &qrng, ibox.i, ibox.j)
@@ -59,17 +59,17 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 	var lnrange []*rtree.Obj
 	//var qrng *mbr.MBR
 	//var qbox, ibox *MonoMBR
-	var inrange = self.index.Search(*other.bbox.MBR)
+	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; !bln && i < len(inrange); i++ {
 		//search ln using ibox
 		var ibox = inrange[i].Object.(*MonoMBR)
-		lnrange = other.index.Search(*ibox.MBR)
+		lnrange = other.index.Search(ibox.MBR)
 
 		for q := 0; !bln && q < len(lnrange); q++ {
 
 			var qbox = lnrange[q].Object.(*MonoMBR)
-			var qrng, _ = ibox.Intersection(qbox.MBR)
+			var qrng, _ = ibox.Intersection(&qbox.MBR)
 
 			self.segsInrange(&selfsegs, &qrng, ibox.i, ibox.j)
 			other.segsInrange(&othersegs, &qrng, qbox.i, qbox.j)
