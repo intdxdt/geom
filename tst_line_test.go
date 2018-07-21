@@ -34,8 +34,8 @@ func TestLineString(t *testing.T) {
 			g.Assert(math.Round(ln.Area(), 5)).Equal(1.0)
 			g.Assert(ln.len(len(ln.coordinates)-1, 0) == ln.Length()).IsTrue()
 			var chains = ln.MonoChains()
-			g.Assert(ln.chain_length(chains[0])).Equal(ln.chain_length(chains[1]))
-			g.Assert(ln.chain_length(chains[2])).Equal(ln.chain_length(chains[3]))
+			g.Assert(ln.chain_length(&chains[0])).Equal(ln.chain_length(&chains[1]))
+			g.Assert(ln.chain_length(&chains[2])).Equal(ln.chain_length(&chains[3]))
 			g.Assert(cln.Length() == 4.0).IsTrue()
 
 			g.Assert(ln3.Area()).Equal(0.0)
