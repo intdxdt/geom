@@ -76,9 +76,9 @@ func (self *LineString) processChains(i, j int) *LineString {
 
 			prev_x, prev_y = cur_x, cur_y
 			var p0, p1 = self.coordinates[i-1], self.coordinates[i]
-			var box = mbr.New(p0[X], p0[Y], p1[X], p1[Y])
+			var box = mbr.CreateMBR(p0[X], p0[Y], p1[X], p1[Y])
 
-			mono = new_mono_mbr(box)
+			mono = new_mono_mbr(&box)
 			self.xyMonobox(mono, i-1, i)
 			self.chains = append(self.chains, mono)
 		}

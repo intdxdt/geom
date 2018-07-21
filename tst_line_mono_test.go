@@ -14,16 +14,16 @@ func TestLineStringMono(t *testing.T) {
 
 	g.Describe("Linestring", func() {
 		g.It("should test mono mbr", func() {
-			bounds := mbr.New(
+			bounds := mbr.CreateMBR(
 				pts[0][X], pts[0][Y],
 				pts[n-1][X], pts[n-1][Y],
 			)
 
-			mbox := MonoMBR{bounds, 0, n - 1}
+			mbox := MonoMBR{&bounds, 0, n - 1}
 			g.Assert(mbox.i).Eql(ln.bbox.i)
 			g.Assert(mbox.j).Eql(ln.bbox.j)
 			g.Assert(ln.BBox()).Eql(mbox.BBox())
-			g.Assert(ln.BBox()).Eql(mbox.Clone().BBox())
+			g.Assert(ln.BBox()).Eql(mbox.BBox())
 
 			mbox.updateIndex(-1, n)
 			g.Assert(mbox.i).Eql(ln.bbox.i - 1)

@@ -39,5 +39,6 @@ func snap_to_zero_or_one(v float64) float64 {
 
 //envelope of segment
 func BBox(a, b *Point) *mbr.MBR {
-	return mbr.New(a[X], a[Y], b[X], b[Y])
+	var box = mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
+	return &box
 }
