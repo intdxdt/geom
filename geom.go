@@ -38,6 +38,7 @@ type Geometry interface {
 	Distance(Geometry) float64
 	Type() GeoType
 	WKT() string
+	Geometry() Geometry
 }
 
 type GeoType int

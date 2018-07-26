@@ -6,14 +6,15 @@ package geom
 //Interface but is a null geometry.
 func IsNullGeometry(g Geometry) bool {
 	var bln bool
+	//get underlying geometry type with g.Geometry()
 	if g.Type().IsPoint() {
 		bln = false //Point{} is same as Point{0, 0}
 	} else if g.Type().IsSegment() {
-		bln = g.(*Segment) == nil
+		bln = g.Geometry().(*Segment) == nil
 	} else if g.Type().IsLineString() {
-		bln = g.(*LineString) == nil
+		bln = g.Geometry().(*LineString) == nil
 	} else if g.Type().IsPolygon() {
-		bln = g.(*Polygon) == nil
+		bln = g.Geometry().(*Polygon) == nil
 	}
 	return bln
 }

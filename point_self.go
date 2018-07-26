@@ -6,6 +6,6 @@ func (self Point) Type() GeoType {
 }
 
 //get geometry interface
-func (self *Point) Geometry() Geometry {
-	return *self
+func (self Point) Geometry() Geometry {
+	return self
 }
