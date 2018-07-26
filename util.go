@@ -10,11 +10,11 @@ func IsNullGeometry(g Geometry) bool {
 	if g.Type().IsPoint() {
 		bln = false //Point{} is same as Point{0, 0}
 	} else if g.Type().IsSegment() {
-		bln = g.Geometry().(*Segment) == nil
+		bln = CastAsSegment(g) == nil
 	} else if g.Type().IsLineString() {
-		bln = g.Geometry().(*LineString) == nil
+		bln = CastAsLineString(g) == nil
 	} else if g.Type().IsPolygon() {
-		bln = g.Geometry().(*Polygon) == nil
+		bln = CastAsPolygon(g) == nil
 	}
 	return bln
 }

@@ -62,16 +62,16 @@ func (self *Polygon) Intersects(other Geometry) bool {
 		bln = within_bounds && ln.intersects_polygon(rings)
 
 	} else if other.Type().IsPolygon() {
-		var other_poly = other.(*Polygon)
-		if self.Shell.bbox.Disjoint(&other_poly.Shell.bbox.MBR) {
+		var ply = CastAsPolygon(other)
+		if self.Shell.bbox.Disjoint(&ply.Shell.bbox.MBR) {
 			bln = false
 		}
 		var small, big *Polygon
 
-		if self.Shell.bbox.Area() < other_poly.Shell.bbox.Area() {
-			small, big = self, other_poly
+		if self.Shell.bbox.Area() < ply.Shell.bbox.Area() {
+			small, big = self, ply
 		} else {
-			small, big = other_poly, self
+			small, big = ply, self
 		}
 
 		ln = small.Shell.LineString

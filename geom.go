@@ -68,15 +68,15 @@ func CastAsPoint(other Geometry) Point {
 }
 
 func CastAsLineString(other Geometry) *LineString {
-	return other.(*LineString)
+	return other.Geometry().(*LineString)
 }
 
 func CastAsPolygon(other Geometry) *Polygon {
-	return other.(*Polygon)
+	return other.Geometry().(*Polygon)
 }
 
 func CastAsSegment(other Geometry) *Segment {
-	return other.(*Segment)
+	return other.Geometry().(*Segment)
 }
 
 //is polygon

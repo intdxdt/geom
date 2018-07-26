@@ -44,11 +44,11 @@ func (self *LineString) Intersection(other Geometry) []Point {
 		var pt = CastAsPoint(other)
 		res = self.linearIntersection(pt.AsLineString())
 	} else if other.Type().IsSegment() {
-		res = self.linearIntersection(other.(*Segment).AsLineString())
+		res = self.linearIntersection(CastAsSegment(other).AsLineString())
 	} else if other.Type().IsLineString() {
-		res = self.linearIntersection(other.(*LineString))
+		res = self.linearIntersection(CastAsLineString(other))
 	} else if other.Type().IsPolygon() {
-		res = self.intersectionPolygonRings(other.(*Polygon).AsLinearRings())
+		res = self.intersectionPolygonRings(CastAsPolygon(other).AsLinearRings())
 	}
 
 	return res
