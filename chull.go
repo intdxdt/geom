@@ -42,8 +42,7 @@ func build_hull(hb, points Coordinates, start, step, stop int) Coordinates {
 	for i != stop {
 		pnt = &points[i]
 		//pnt.CrossProduct(boundary[n - 2], boundary[n - 1])
-		for n := len(hb); n >= 2 &&
-			pnt.SideOf(&hb[n-2], &hb[n-1]).IsOnOrRight(); n = len(hb) {
+		for n := len(hb); n >= 2 && pnt.SideOf(&hb[n-2], &hb[n-1]).IsOnOrRight(); n = len(hb) {
 			_, hb = hb.Pop()
 		}
 		hb = append(hb, *pnt)

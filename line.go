@@ -2,18 +2,17 @@ package geom
 
 import (
 	"github.com/intdxdt/math"
-	"github.com/intdxdt/rtree"
+		"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/geom/index"
 )
 
-const bucketSize = 8
-
 type LineString struct {
-	chains      []MonoMBR
+	chains      []mono.MBR
 	coordinates []Point
 	length      float64
 	monosize    int
-	bbox        MonoMBR
-	index       *rtree.RTree
+	bbox        mono.MBR
+	index       *index.Index
 }
 
 //New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
@@ -24,15 +23,16 @@ func NewLineString(coordinates []Point) *LineString {
 		panic("a linestring must have at least 2 coordinate")
 	}
 	var mSize = int(math.Log2(float64(n) + 1.0))
-	var ln = LineString{
-			chains:      make([]MonoMBR, 0, mSize),
-			coordinates: coordinates[:n:n],
-			monosize:    mSize,
-			index:       rtree.NewRTree(bucketSize),
-		}
+	var ln = &LineString {
+		chains:      make([]mono.MBR, 0, mSize),
+		coordinates: coordinates[:n:n],
+		monosize:    mSize,
+		index:       index.NewIndex(),
+	}
 	ln.processChains(0, n-1)
 	ln.buildIndex()
-	return &ln
+
+	return ln
 }
 
 //New line string from array
@@ -58,17 +58,13 @@ func (self *LineString) buildIndex() *LineString {
 	if !self.index.IsEmpty() {
 		self.index.Clear()
 	}
-	var data = make([]*rtree.Obj, 0, len(self.chains))
-	for i := range self.chains {
-		data = append(data, rtree.Object(i, self.chains[i].MBR, self.chains[i]))
-	}
-	self.index.Load(data) //bulkload
+	self.index.Load(self.chains) //bulkload
 	return self
 }
 
 //get copy of chains of linestring
-func (self *LineString) MonoChains() []MonoMBR {
-	var chains = make([]MonoMBR, 0, len(self.chains))
+func (self *LineString) MonoChains() []mono.MBR {
+	var chains = make([]mono.MBR, 0, len(self.chains))
 	for i := range self.chains {
 		chains = append(chains, self.chains[i])
 	}
@@ -89,6 +85,3 @@ func (self *LineString) LenVertices() int {
 func (self *LineString) VertexAt(i int) *Point {
 	return &self.coordinates[i]
 }
-
-
-

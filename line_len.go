@@ -1,13 +1,15 @@
 package geom
 
+import "github.com/intdxdt/geom/mono"
+
 //length of line
 func (self *LineString) Length() float64 {
 	return self.len(0, len(self.coordinates)-1)
 }
 
 //compute length of chain
-func (self *LineString) chain_length(chain *MonoMBR) float64 {
-	return self.len(chain.i, chain.j)
+func (self *LineString) chain_length(chain *mono.MBR) float64 {
+	return self.len(chain.I, chain.J)
 }
 
 //length of line from index i to j

@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/rtree"
-	"github.com/intdxdt/sset"
+		"github.com/intdxdt/sset"
+	"github.com/intdxdt/geom/mono"
 )
 
 //intersection of self linestring with other
@@ -18,24 +18,24 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	//var i, q, lnrange, ibox, qbox, qrng
 	//var ok bool
 	//var qrng mbr.MBR
-	//var qbox, ibox *MonoMBR
+	//var qbox, ibox *mono.MBR
 	var selfsegs []*Segment
 	var othersegs []*Segment
-	var lnrange []*rtree.Obj
+	var lnrange []*mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; i < len(inrange); i++ {
 		//cur self box
-		var ibox = inrange[i].Object.(MonoMBR)
+		var ibox = inrange[i]
 		//search ln using ibox
 		lnrange = other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
-			var qbox = lnrange[q].Object.(MonoMBR)
+			var qbox = lnrange[q]
 			var qrng, ok = ibox.MBR.Intersection(&qbox.MBR)
 
 			if ok {
-				self.segsInrange(&selfsegs, &qrng, ibox.i, ibox.j)
-				other.segsInrange(&othersegs, &qrng, qbox.i, qbox.j)
+				self.segsInrange(&selfsegs, &qrng,   ibox.I, ibox.J)
+				other.segsInrange(&othersegs, &qrng, qbox.I, qbox.J)
 				self.segsegIntersection(selfsegs, othersegs, ptset)
 			}
 		}
@@ -56,23 +56,23 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 	//if root mbrs intersect
 	var othersegs []*Segment
 	var selfsegs []*Segment
-	var lnrange []*rtree.Obj
+	var lnrange []*mono.MBR
 	//var qrng *mbr.MBR
-	//var qbox, ibox *MonoMBR
+	//var qbox, ibox *mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; !bln && i < len(inrange); i++ {
 		//search ln using ibox
-		var ibox = inrange[i].Object.(MonoMBR)
+		var ibox = inrange[i]
 		lnrange = other.index.Search(ibox.MBR)
 
 		for q := 0; !bln && q < len(lnrange); q++ {
 
-			var qbox = lnrange[q].Object.(MonoMBR)
+			var qbox = lnrange[q]
 			var qrng, _ = ibox.Intersection(&qbox.MBR)
 
-			self.segsInrange(&selfsegs, &qrng, ibox.i, ibox.j)
-			other.segsInrange(&othersegs, &qrng, qbox.i, qbox.j)
+			self.segsInrange(&selfsegs, &qrng,   ibox.I, ibox.J)
+			other.segsInrange(&othersegs, &qrng, qbox.I, qbox.J)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
 				bln = self.segseg_intersects(selfsegs, othersegs)

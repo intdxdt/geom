@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/geom/mono"
 )
 
 func TestLineStringMono(t *testing.T) {
@@ -19,22 +20,22 @@ func TestLineStringMono(t *testing.T) {
 				pts[n-1][X], pts[n-1][Y],
 			)
 
-			mbox := MonoMBR{bounds, 0, n - 1}
-			g.Assert(mbox.i).Eql(ln.bbox.i)
-			g.Assert(mbox.j).Eql(ln.bbox.j)
+			mbox := mono.MBR{bounds, 0, n - 1}
+			g.Assert(mbox.I).Eql(ln.bbox.I)
+			g.Assert(mbox.J).Eql(ln.bbox.J)
 			g.Assert(ln.BBox()).Eql(mbox.BBox())
 			g.Assert(ln.BBox()).Eql(mbox.BBox())
 			g.Assert(ln.Bounds()).Eql(mbox.MBR)
 
-			mbox.updateIndex(-1, n)
-			g.Assert(mbox.i).Eql(ln.bbox.i - 1)
-			g.Assert(mbox.j).Eql(ln.bbox.j + 1)
+			mbox.UpdateIndex(-1, n)
+			g.Assert(mbox.I).Eql(ln.bbox.I - 1)
+			g.Assert(mbox.J).Eql(ln.bbox.J + 1)
 
-			mbox.updateIndex(-1+1, n-1)
-			g.Assert(mbox.i).Eql(ln.bbox.i)
-			g.Assert(mbox.j).Eql(ln.bbox.j)
+			mbox.UpdateIndex(-1+1, n-1)
+			g.Assert(mbox.I).Eql(ln.bbox.I)
+			g.Assert(mbox.J).Eql(ln.bbox.J)
 
-			mono_boxes := []MonoMBR{mbox}
+			mono_boxes := []mono.MBR{mbox}
 			g.Assert(len(mono_boxes)).Equal(1)
 
 			box, mono_boxes := pop_mono_mbr(mono_boxes)
@@ -42,7 +43,7 @@ func TestLineStringMono(t *testing.T) {
 			g.Assert(len(mono_boxes)).Equal(0)
 
 			box, mono_boxes = pop_mono_mbr(mono_boxes)
-			g.Assert(box == MonoMBR{}).IsTrue()
+			g.Assert(box == mono.MBR{}).IsTrue()
 			g.Assert(len(mono_boxes)).Equal(0)
 		})
 	})
