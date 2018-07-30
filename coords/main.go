@@ -3,6 +3,7 @@ package main
 import (
 	"sort"
 	"github.com/intdxdt/math"
+	"fmt"
 )
 
 var nan = math.NaN()
@@ -12,11 +13,37 @@ type Point [3]float64
 
 var NullPt = Point{nan, nan, nan}
 
-func NewCoordinates(c []Point) {
-	var coords = &Coordinates{_c: c, idxs: make([]int, 0, len(c))}
+func main() {
+	var pts = []Point{{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9, 10}}
+	var a = NewCoordinates(pts)
+	var b = a
+	var r = makeLnrRing(b)
+	setZero(r)
+	fmt.Println(a)
+	fmt.Println(b)
+	fmt.Println(r)
+}
+func setZero(a Coordinates){
+	a._c[0][0] = -9
+	a._c[0][1] = -9
+	a.idxs[0] = -1
+}
+func makeLnrRing(coords Coordinates) Coordinates{
+	var n = len(coords._c) - 1
+	var a, b = coords._c[0], coords._c[n]
+	if !(a[0] == b[0] && a[1] == b[1]) {
+		coords.idxs = coords.idxs[0:len(coords.idxs):len(coords.idxs)]
+		coords.idxs = append(coords.idxs, 0)
+	}
+	return coords
+}
+
+func NewCoordinates(c []Point) Coordinates {
+	var coords = Coordinates{_c: c, idxs: make([]int, 0, len(c))}
 	for i := range coords._c {
 		coords.idxs = append(coords.idxs, i)
 	}
+	return coords
 }
 
 type Coordinates struct {
