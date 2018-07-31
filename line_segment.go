@@ -9,18 +9,11 @@ import (
 //xor - altenate segments if nothing is in range of box
 func (self *LineString) segsInrange(seglist *[]*Segment, box *mbr.MBR, i, j int) {
 	*seglist = (*seglist)[:0]
-
+	var a, b *Point
 	for ; i < j; i++ {
-		inters := box.IntersectsBounds(
-			self.coordinates[i][:],
-			self.coordinates[i+1][:],
-		)
-
-		if inters {
-			*seglist = append(*seglist, &Segment{
-				A: &self.coordinates[i],
-				B: &self.coordinates[i+1],
-			})
+		a, b = self.Coordinates.Pt(i), self.Coordinates.Pt(i+1)
+		if box.IntersectsBounds(a[:], b[:]) {
+			*seglist = append(*seglist, &Segment{A: a, B: b})
 		}
 	}
 }

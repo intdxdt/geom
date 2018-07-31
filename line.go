@@ -2,30 +2,48 @@ package geom
 
 import (
 	"github.com/intdxdt/math"
-		"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/geom/index"
 )
 
 type LineString struct {
 	chains      []mono.MBR
-	coordinates []Point
+	Coordinates Coords
 	length      float64
 	monosize    int
 	bbox        mono.MBR
 	index       *index.Index
 }
 
-//New LineString from a given coordinates {Array} [[x,y], ....[x,y]]
-//optional clone coords : make a copy of input coordinates
+//New LineString from a given Coords {Array} [[x,y], ....[x,y]]
 func NewLineString(coordinates []Point) *LineString {
 	var n = len(coordinates)
 	if n < 2 {
 		panic("a linestring must have at least 2 coordinate")
 	}
 	var mSize = int(math.Log2(float64(n) + 1.0))
-	var ln = &LineString {
+	var ln = &LineString{
 		chains:      make([]mono.MBR, 0, mSize),
-		coordinates: coordinates[:n:n],
+		Coordinates: Coordinates(coordinates),
+		monosize:    mSize,
+		index:       index.NewIndex(),
+	}
+	ln.processChains(0, n-1)
+	ln.buildIndex()
+
+	return ln
+}
+
+//New LineString from a given Coords
+func NewLineStringFromCoords(coordinates Coords) *LineString {
+	var n = coordinates.Len()
+	if n < 2 {
+		panic("a linestring must have at least 2 coordinate")
+	}
+	var mSize = int(math.Log2(float64(n) + 1.0))
+	var ln = &LineString{
+		chains:      make([]mono.MBR, 0, mSize),
+		Coordinates: coordinates,
 		monosize:    mSize,
 		index:       index.NewIndex(),
 	}
@@ -37,7 +55,7 @@ func NewLineString(coordinates []Point) *LineString {
 
 //New line string from array
 func NewLineStringFromArray(array [][]float64) *LineString {
-	return NewLineString(AsPointArray(array))
+	return NewLineStringFromCoords(AsCoordinates(array))
 }
 
 //create a new linestring from wkt string
@@ -51,6 +69,11 @@ func NewLineStringFromWKT(wkt string) *LineString {
 //Point to LineString
 func NewLineStringFromPoint(pt Point) *LineString {
 	return NewLineString([]Point{pt, pt})
+}
+
+//Point at index i
+func (self *LineString) Pt(i int) *Point {
+	return self.Coordinates.Pt(i)
 }
 
 //builds rtree index of chains
@@ -73,15 +96,11 @@ func (self *LineString) MonoChains() []mono.MBR {
 
 //ConvexHull computes slice of vertices as points forming convex hull
 func (self *LineString) ConvexHull() *Polygon {
-	return NewPolygon(ConvexHull(self.coordinates))
+	return NewPolygonFromCoords(ConvexHull(self.Coordinates))
 }
 
 //number of vertices
 func (self *LineString) LenVertices() int {
-	return len(self.coordinates)
+	return self.Coordinates.Len()
 }
 
-//vertex at given index
-func (self *LineString) VertexAt(i int) *Point {
-	return &self.coordinates[i]
-}

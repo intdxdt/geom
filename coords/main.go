@@ -14,14 +14,16 @@ type Point [3]float64
 var NullPt = Point{nan, nan, nan}
 
 func main() {
-	var pts = []Point{{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9, 10}}
+	var pts = []Point{{5, 6}, {7, 8}, {3, 4},  {9, 10}, {1, 2}, }
 	var a = NewCoordinates(pts)
 	var b = a
 	var r = makeLnrRing(b)
 	setZero(r)
+	b.Sort()
 	fmt.Println(a)
 	fmt.Println(b)
 	fmt.Println(r)
+
 }
 func setZero(a Coordinates){
 	a._c[0][0] = -9

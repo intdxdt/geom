@@ -10,15 +10,15 @@ import (
 func TestCHull(t *testing.T) {
 	g := goblin.Goblin(t)
 
-	var empty_hull []Point
-	hullEql := func(g *goblin.G, hull, expects Coordinates) {
+	var empty_hull = Coordinates([]Point{})
+	var hullEql = func(g *goblin.G, hull, expects Coords) {
 		hs := sset.NewSSet(ptCmp)
 		g.Assert(hull.Len()).Equal(expects.Len())
-		for _, pt := range hull {
-			hs.Add(pt)
+		for i := range hull.Idxs {
+			hs.Add(*hull.Pt(i))
 		}
-		for _, pt := range expects {
-			g.Assert(hs.Contains(pt)).IsTrue()
+		for i := range expects.Idxs {
+			g.Assert(hs.Contains(*expects.Pt(i))).IsTrue()
 		}
 	}
 
@@ -37,95 +37,67 @@ func TestCHull(t *testing.T) {
 		}
 
 		g.It("should test convex hull", func() {
-			var hull = ConvexHull(data)
+			var hull = ConvexHull(Coordinates(data))
 			var ply = NewPolygon(data)
 			var ln = NewLineString(data)
 			var ch = []Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
 			var ch_array = [][]float64{{0, 0, 0}, {9, 0, 0}, {9, 9, 0}, {0, 9, 0}, {0, 0, 0}}
 
-			g.Assert(ch).Eql(hull)
+			g.Assert(ch).Eql(hull.Points())
 			g.Assert(ply.ConvexHull().Shell.ToArray()).Eql(ch_array)
 			g.Assert(ln.ConvexHull().Shell.ToArray()).Eql(ch_array)
 
-			var pt = []Point{{33.52991674117594, 27.137460594059416}}
-			g.Assert(len(ConvexHull(pt))).Equal(1)
+			var pt = Coordinates([]Point{{33.52991674117594, 27.137460594059416}})
+			g.Assert(ConvexHull(pt).Len()).Equal(1)
 		})
 
 		g.It("should test convex hull of sqr as sqr", func() {
-			var hull = ConvexHull(sqr)
-			var shull = SimpleHull(sqr)
-			var hpoly = NewPolygon(hull)
-			var shpoly = NewPolygon(shull)
+			var hull = ConvexHull(Coordinates(sqr))
+			var hpoly = NewPolygonFromCoords(hull)
 			var sqrpoly = NewPolygon(sqr)
 
-			g.Assert(len(hull)).Equal(len(sqr) - 1)
+			g.Assert(hull.Len()).Equal(len(sqr) - 1)
 			g.Assert(hpoly.Area()).Equal(sqrpoly.Area())
-			g.Assert(shpoly.Area()).Equal(sqrpoly.Area())
 		})
 
-		g.It("simple hull - init 0, 1, 2", func() {
-			wktL := "POLYGON (( 409 189, 429 235, 395 289, 366.14493191082227 293.7217384145927, 340 298, 354.5470100598068 275.01994063016036, 381.63571099302817 269.17705887748156, 379.0628213878595 250.73801670710623, 405.6493473079356 240.4464582864316, 409 189 ))"
-			wktR := "POLYGON (( 479 184, 504 231, 601 254, 638 223, 594.3279183536367 219.00571157669285, 572.887171643898 225.43793558961448, 552.4235912992449 207.74149982270123, 517.9988600669667 217.71926677410852, 506.4208568437078 198.8514096695384, 479 184 ))"
-
-			var coords0 = NewPolygonFromWKT(wktL).Shell.Coordinates()
-			var coords1 = NewPolygonFromWKT(wktR).Shell.Coordinates()
-
-			ch0 := SimpleHull(coords0)
-			ch1 := SimpleHull(coords1)
-
-			exp0 := []Point{{409, 189}, {429, 235}, {395, 289}, {366.14493191082227, 293.7217384145927}, {340, 298}, {409, 189}}
-			exp1 := []Point{{479, 184}, {504, 231}, {601, 254}, {638, 223}, {479, 184}}
-
-			hullEql(g, ch0, exp0)
-			hullEql(g, ch1, exp1)
-		})
-
-		g.It("chull of zero point is empty", func() {
-			hullEql(g, ConvexHull([]Point{}), empty_hull)
-			hullEql(g, SimpleHull([]Point{}), empty_hull)
-		})
-		g.It("chull of one point is empty", func() {
-			hullEql(g, ConvexHull([]Point{{200, 200}}), []Point{{200, 200}})
-			hullEql(g, SimpleHull([]Point{{200, 200}}), []Point{{200, 200}})
-		})
-		g.It("chull of  two points is empty", func() {
-			hullEql(g, ConvexHull([]Point{{200, 200}, {760, 300}}, false), []Point{{200, 200}, {760, 300}})
-			hullEql(g, SimpleHull([]Point{{200, 200}, {760, 300}}, false), []Point{{200, 200}, {760, 300}})
-		})
-		g.It("chull for three points", func() {
-			var ch = ConvexHull([]Point{{200, 200}, {760, 300}, {500, 500}})
-			var exp = []Point{{760, 300}, {200, 200}, {500, 500}}
+		g.It("chull contruction - empty, one, two, three", func() {
+			hullEql(g, ConvexHull(Coordinates([]Point{})), empty_hull)
+			hullEql(g, ConvexHull(Coordinates([]Point{{200, 200}})), Coordinates([]Point{{200, 200}}))
+			hullEql(g, ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}}), false), Coordinates([]Point{{200, 200}, {760, 300}}))
+			var ch = ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}, {500, 500}}))
+			var exp = Coordinates([]Point{{760, 300}, {200, 200}, {500, 500}})
 			hullEql(g, ch, exp)
 		})
+
 		g.It("chull for four points", func() {
-			var ch = ConvexHull([]Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}})
-			var exp = []Point{{760, 300}, {200, 200}, {500, 500}}
+			var ch = ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}}))
+			var exp = Coordinates([]Point{{760, 300}, {200, 200}, {500, 500}})
 			hullEql(g, ch, exp)
 		})
 		g.It("chull returns a polygon", func() {
 			var coords = []Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}}
 			var ply = NewPolygon(coords)
-			var hull = NewPolygon(ConvexHull(coords))
+			var hull = NewPolygonFromCoords(ConvexHull(Coordinates(coords)))
 			g.Assert(hull.Area() > 0).IsTrue()
 			g.Assert(ply.Area() == hull.Area()).IsTrue()
 		})
 
 		g.It("handles points with duplicate ordinates", func() {
-			var ch = ConvexHull([]Point{{-10, -10}, {10, 10}, {10, -10}, {-10, 10}})
-			var exp = []Point{{10, 10}, {10, -10}, {-10, -10}, {-10, 10}}
+			var ch = ConvexHull(Coordinates([]Point{{-10, -10}, {10, 10}, {10, -10}, {-10, 10}}))
+			var exp = Coordinates([]Point{{10, 10}, {10, -10}, {-10, -10}, {-10, 10}})
 			hullEql(g, ch, exp)
 		})
 
 		g.It("handles overlapping upper and lower hulls", func() {
-			var ch = ConvexHull([]Point{{0, -10}, {0, 10}, {0, 0}, {10, 0}, {-10, 0}})
-			var exp = []Point{{10, 0}, {0, -10}, {-10, 0}, {0, 10}}
+			var ch = ConvexHull(Coordinates([]Point{{0, -10}, {0, 10}, {0, 0}, {10, 0}, {-10, 0}}))
+			var exp = Coordinates([]Point{{10, 0}, {0, -10}, {-10, 0}, {0, 10}})
 			hullEql(g, ch, exp)
 		})
 		// Cases below taken from http://uva.onlinejudge.org/external/6/681.html
 		g.It("computes chull for  a set of 6 points with non-trivial hull", func() {
-			var poly = []Point{{60, 20}, {250, 140}, {180, 170}, {79, 140}, {50, 60}, {60, 20}}
+			var poly = Coordinates([]Point{{60, 20}, {250, 140}, {180, 170}, {79, 140}, {50, 60}, {60, 20}})
 			ch := ConvexHull(poly)
-			var exp = []Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}}
+			var exp = Coordinates([]Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}})
 			hullEql(g, ch, exp)
 		})
 
@@ -133,8 +105,8 @@ func TestCHull(t *testing.T) {
 			var poly = []Point{{50, 60}, {60, 20}, {70, 45}, {100, 70},
 				{125, 90}, {200, 113}, {250, 140}, {180, 170}, {105, 140},
 				{79, 140}, {60, 85}, {50, 60}}
-			var expectedHull = []Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}}
-			ch := ConvexHull(poly)
+			var expectedHull = Coordinates([]Point{{250, 140}, {60, 20}, {50, 60}, {79, 140}, {180, 170}})
+			var ch = ConvexHull(Coordinates(poly))
 			hullEql(g, ch, expectedHull)
 		})
 
@@ -142,8 +114,8 @@ func TestCHull(t *testing.T) {
 			var poly = []Point{{30, 30}, {50, 60}, {60, 20}, {70, 45}, {86, 39},
 				{112, 60}, {200, 113}, {250, 50}, {300, 200}, {130, 240}, {76, 150},
 				{47, 76}, {36, 40}, {33, 35}, {30, 30}}
-			var expectedHull = []Point{{300, 200}, {250, 50}, {60, 20}, {30, 30}, {47, 76}, {76, 150}, {130, 240}}
-			hullEql(g, ConvexHull(poly), expectedHull)
+			var expectedHull = Coordinates([]Point{{300, 200}, {250, 50}, {60, 20}, {30, 30}, {47, 76}, {76, 150}, {130, 240}})
+			hullEql(g, ConvexHull(Coordinates(poly)), expectedHull)
 		})
 	})
 

@@ -47,7 +47,7 @@ func TestPoint(t *testing.T) {
 			g.Assert(p1.IsZero()).IsFalse()
 			g.Assert(p1.Equals2D(&p2)).IsTrue()
 			g.Assert(p1.Equals2D(&p1)).IsTrue()
-			//g.Assert(p1.Coordinates().Equals2D(p2)).IsTrue()
+			//g.Assert(p1.Coords().Equals2D(p2)).IsTrue()
 
 			g.Assert(p1[X]).Equal(4.0)
 			g.Assert(p1[Y]).Equal(5.0)

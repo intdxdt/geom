@@ -7,7 +7,7 @@ import (
 )
 
 func segment(ln string) *Segment {
-	var coords = NewLineStringFromWKT(ln).Coordinates()
+	var coords = NewLineStringFromWKT(ln).Coordinates._c
 	return NewSegment(&coords[0], &coords[1])
 }
 

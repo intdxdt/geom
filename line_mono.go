@@ -15,12 +15,9 @@ func (self *LineString) processChains(i, j int) *LineString {
 	var mono_limit = self.monosize
 
 	prev_x, prev_y = null, null
-	var box = mbr.MBR{
-		self.coordinates[i][X],
-		self.coordinates[i][Y],
-		self.coordinates[i][X],
-		self.coordinates[i][Y],
-	}
+	var a, b *Point
+	a = self.Coordinates.Pt(i)
+	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
 
 	self.bbox = mono.CreateMonoMBR(box)
 	var mbox = mono.CreateMonoMBR(box)
@@ -32,8 +29,9 @@ func (self *LineString) processChains(i, j int) *LineString {
 	var m_index = len(self.chains) - 1
 
 	for i = i + 1; i <= j; i += 1 {
-		dx = self.coordinates[i][X] - self.coordinates[i-1][X]
-		dy = self.coordinates[i][Y] - self.coordinates[i-1][Y]
+		a, b = self.Coordinates.Pt(i-1), self.Coordinates.Pt(i)
+		dx = b[X] - a[X]
+		dy = b[Y] - a[Y]
 
 		self.length += math.Hypot(dx, dy)
 
@@ -55,10 +53,10 @@ func (self *LineString) processChains(i, j int) *LineString {
 		} else {
 			mono_size = 1
 			prev_x, prev_y = cur_x, cur_y
-			var p0, p1 = self.coordinates[i-1], self.coordinates[i]
-			var box = mbr.CreateMBR(p0[X], p0[Y], p1[X], p1[Y])
-
-			mbox = mono.CreateMonoMBR(box)
+			a, b = self.Coordinates.Pt(i-1), self.Coordinates.Pt(i)
+			mbox = mono.CreateMonoMBR(
+				mbr.CreateMBR(a[X], a[Y], b[X], b[Y]),
+			)
 			self.xyMonobox(&mbox, i-1, i)
 			self.chains = append(self.chains, mbox)
 			m_index = len(self.chains) - 1
@@ -70,7 +68,8 @@ func (self *LineString) processChains(i, j int) *LineString {
 //compute bbox of x or y mono chain
 func (self *LineString) xyMonobox(mono *mono.MBR, i, j int) {
 	if i != null {
-		mono.ExpandIncludeXY(self.coordinates[i][X], self.coordinates[i][Y])
+		var pt = self.Coordinates.Pt(i)
+		mono.ExpandIncludeXY(pt[X], pt[Y])
 		if j == null {
 			mono.J = i
 		} else {

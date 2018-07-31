@@ -4,7 +4,7 @@ import "github.com/intdxdt/geom/mono"
 
 //length of line
 func (self *LineString) Length() float64 {
-	return self.len(0, len(self.coordinates)-1)
+	return self.len(0, self.Coordinates.Len()-1)
 }
 
 //compute length of chain
@@ -19,7 +19,9 @@ func (self *LineString) len(i, j int) float64 {
 		i, j = j, i
 	}
 	for ; i < j; i++ {
-		dist += self.coordinates[i].Magnitude(&self.coordinates[i+1])
+		dist += self.Coordinates.Pt(i).Magnitude(
+			self.Coordinates.Pt(i + 1),
+		)
 	}
 	return dist
 }

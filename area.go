@@ -18,14 +18,14 @@ func (self *LineString) Area() float64 {
 
 //Area of linear ring
 func (self *LinearRing) Area() float64 {
-	var coords = self.LineString.coordinates
-	var n = len(coords)
+	var coords = self.LineString.Coordinates
+	var n = coords.Len()
 	var a, b *Point
 	var area = 0.0
-	b = &coords[n-1]
+	b = coords.Pt(n-1)
 	for i := 0; i < n; i++ {
 		a = b
-		b = &coords[i]
+		b = coords.Pt(i)
 		area += a[Y]*b[X] - a[X]*b[Y]
 	}
 	return math.Abs(area * 0.5)

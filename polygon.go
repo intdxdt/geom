@@ -7,8 +7,16 @@ type Polygon struct {
 
 //New polygon from points
 func NewPolygon(coordinates ...[]Point) *Polygon {
-	var rings = shells(coordinates)
+	var coords = make([]Coords, 0, len(coordinates))
+	for i := range coordinates {
+		coords = append(coords, Coordinates(coordinates[i]))
+	}
+	var rings = shells(coords)
 	return NewPolygonFromRings(rings...)
+}
+//New polygon from points
+func NewPolygonFromCoords(coordinates ...Coords) *Polygon {
+	return NewPolygonFromRings(shells(coordinates)...)
 }
 
 //New Polygon from rings
@@ -26,11 +34,11 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt string) *Polygon {
 	var array = readWKT(wkt, GeoTypePolygon).ToArray()
-	var pts [][]Point
+	var pts []Coords
 	for i := range array {
-		pts = append(pts, AsPointArray(array[i]))
+		pts = append(pts, AsCoordinates(array[i]))
 	}
-	return NewPolygon(pts...)
+	return NewPolygonFromCoords(pts...)
 }
 
 //get geometry type
@@ -45,7 +53,7 @@ func (self *Polygon) Geometry() Geometry {
 
 //ConvexHull computes slice of vertices as points forming convex hull
 func (self *Polygon) ConvexHull() *Polygon {
-	return NewPolygon(ConvexHull(self.Shell.coordinates))
+	return NewPolygonFromCoords(ConvexHull(self.Shell.Coordinates))
 }
 
 //As line strings
@@ -59,7 +67,7 @@ func (self *Polygon) AsLinearRings() []*LinearRing {
 }
 
 //polygon shells
-func shells(coords [][]Point) []*LinearRing {
+func shells(coords []Coords) []*LinearRing {
 	var rings = make([]*LinearRing, 0, len(coords))
 	for i := range coords {
 		rings = append(rings, NewLinearRing(coords[i]))

@@ -8,7 +8,7 @@ type wktToken struct {
 
 type wktTokens []*wktToken
 
-//len of coordinates - sort interface
+//len of Coords - sort interface
 func (s wktTokens) Len() int {
 	return len(s)
 }

@@ -32,7 +32,7 @@ func TestLineString(t *testing.T) {
 			g.Assert(pt_lnstr.Length() == 0.0).IsTrue()
 			g.Assert(ln.IsRing()).IsTrue()
 			g.Assert(math.Round(ln.Area(), 5)).Equal(1.0)
-			g.Assert(ln.len(len(ln.coordinates)-1, 0) == ln.Length()).IsTrue()
+			g.Assert(ln.len(ln.Coordinates.Len()-1, 0) == ln.Length()).IsTrue()
 			var chains = ln.MonoChains()
 			g.Assert(ln.chain_length(&chains[0])).Equal(ln.chain_length(&chains[1]))
 			g.Assert(ln.chain_length(&chains[2])).Equal(ln.chain_length(&chains[3]))
@@ -43,7 +43,7 @@ func TestLineString(t *testing.T) {
 
 		})
 
-		g.It("should throw if empty coordinates", func(done goblin.Done) {
+		g.It("should throw if empty Coords - 1", func(done goblin.Done) {
 			defer func() {
 				r := recover()
 				if r != nil {
@@ -53,8 +53,19 @@ func TestLineString(t *testing.T) {
 				}
 				done()
 			}()
-			var pts []Point
-			NewLineString(pts)
+			NewLineString([]Point{})
+		})
+		g.It("should throw if empty Coords - 2", func(done goblin.Done) {
+			defer func() {
+				r := recover()
+				if r != nil {
+					g.Assert(r != nil).Equal(true)
+				} else {
+					g.Fail("did not throw")
+				}
+				done()
+			}()
+			NewLineStringFromCoords(Coordinates([]Point{}))
 		})
 
 		g.It("should be slice of array", func() {
@@ -71,17 +82,15 @@ func TestLineString(t *testing.T) {
 
 		g.It("should be slice of points", func() {
 			ln.buildIndex()
-			g.Assert(ln.Coordinates()).Eql(pts)
-			g.Assert(cln.Coordinates()).Eql(pts)
+			g.Assert(ln.Coordinates.Points()).Eql(pts)
+			g.Assert(cln.Coordinates.Points()).Eql(pts)
 			ln.buildIndex()
-			g.Assert(ln.Coordinates()).Eql(pts)
+			g.Assert(ln.Coordinates.Points()).Eql(pts)
 		})
 
 		g.It("should test coords indexing", func() {
-			g.Assert(ln.coordinates[0]).Eql(pts[0])
-			g.Assert(ln.VertexAt(ln.LenVertices() - 1).Equals2D(
-				&pts[len(pts)-1],
-			)).IsTrue()
+			g.Assert(*ln.Coordinates.Pt(0)).Eql(pts[0])
+			g.Assert(ln.Pt(ln.LenVertices() - 1).Equals2D(&pts[len(pts)-1])).IsTrue()
 			g.Assert(ln.LenVertices()).Eql(len(pts))
 		})
 

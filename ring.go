@@ -7,15 +7,16 @@ type LinearRing struct {
 }
 
 //new linear ring
-func NewLinearRing(coordinates []Point) *LinearRing {
-	var n = len(coordinates)
-	var coords = coordinates[:n:n]
+func NewLinearRing(coords Coords) *LinearRing {
+	var n = coords.Len()
 	if n > 1 {
 		if !IsRing(coords) {
-			coords = append(coords, coords[0])
+			var n = coords.Len()
+			coords.Idxs = coords.Idxs[:n:n] //trigger a copy on append
+			coords.Idxs = append(coords.Idxs, coords.Idxs[0])
 		}
 	}
-	return &LinearRing{NewLineString(coords)}
+	return &LinearRing{NewLineStringFromCoords(coords)}
 }
 
 //Contains point
@@ -30,8 +31,8 @@ func (self *LinearRing) containsLine(ln *LineString) bool {
 		return false
 	}
 	var bln = true
-	for i := 0; bln && i < len(ln.coordinates); i++ {
-		bln = self.containsPoint(&ln.coordinates[i])
+	for i := 0; bln && i < ln.Coordinates.Len(); i++ {
+		bln = self.containsPoint(ln.Pt(i))
 	}
 	return bln
 }
@@ -59,8 +60,8 @@ func (self *LinearRing) completelyInRing(p *Point) bool {
 	var crossings = 0 // number of segment/ray crossings
 	for i = 1; i < self.LenVertices(); i++ {
 		i1 = i - 1
-		p1 = &self.coordinates[i]
-		p2 = &self.coordinates[i1]
+		p1 = self.Pt(i)
+		p2 = self.Pt(i1)
 
 		if ((p1[Y] > p[Y]) && (p2[Y] <= p[Y])) || ((p2[Y] > p[Y]) && (p1[Y] <= p[Y])) {
 			x1, y1 = p1[X]-p[X], p1[Y]-p[Y]

@@ -7,11 +7,11 @@ import (
 //linestring as string
 func (self *LineString) String() string {
 	var buf bytes.Buffer
-	var coords = self.coordinates
-	var n = len(coords) - 1
+	var coords = self.Coordinates
+	var n = coords.Len() - 1
 	buf.WriteString("[")
-	for i, p := range coords {
-		buf.WriteString(p.String())
+	for i := range coords.Idxs {
+		buf.WriteString(coords.Pt(i).String())
 		if i < n {
 			buf.WriteString(",")
 		}
@@ -21,6 +21,6 @@ func (self *LineString) String() string {
 }
 
 func (self *LineString) WKT() string {
-	var coords = CoordinatesAsFloat2D(self.coordinates)
+	var coords = CoordinatesAsFloat2D(self.Coordinates)
 	return WriteWKT(NewWKTParserObj(GeoTypeLineString, coords))
 }

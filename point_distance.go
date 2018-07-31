@@ -12,7 +12,7 @@ func (self *Point) Magnitude(o *Point) float64 {
 }
 
 //Computes the square vector magnitude of pt as vector: x , y as components
-//This has a potential overflow problem based on coordinates of pt x^2 + y^2
+//This has a potential overflow problem based on Coords of pt x^2 + y^2
 func (self *Point) MagnitudeSquare(o *Point) float64 {
 	return MagnitudeSquareXY(o[X]-self[X], o[Y]-self[Y])
 

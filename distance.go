@@ -71,11 +71,11 @@ func (self *LineString) line_line_dist(other *LineString) float64 {
 func (self *LineString) mindistBruteforce(other *LineString) float64 {
 	var dist, d float64 = math.MaxFloat64, 0
 	var bln = false
-	var ln = self.coordinates
-	var ln2 = other.coordinates
-	for i := 0; !bln && i < len(ln)-1; i++ {
-		for j := 0; !bln && j < len(ln2)-1; j++ {
-			d = SegSegDistance(&ln[i], &ln[i+1], &ln2[j], &ln2[j+1])
+	var ln = self.Coordinates
+	var ln2 = other.Coordinates
+	for i := 0; !bln && i < ln.Len()-1; i++ {
+		for j := 0; !bln && j < ln2.Len()-1; j++ {
+			d = SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1))
 			dist = math.MinF64(d, dist)
 			bln = dist == 0
 		}

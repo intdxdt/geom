@@ -2,7 +2,7 @@ package geom
 
 //Clone linestring
 func (self *LineString) Clone() *LineString {
-	return NewLineString(self.coordinates)
+	return NewLineStringFromCoords(self.Coordinates)
 }
 
 //Clone linestring

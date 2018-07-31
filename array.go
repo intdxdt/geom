@@ -7,21 +7,21 @@ func (self *Point) ToArray() []float64 {
 	return coords
 }
 
-//Coordinates returns a copy of linestring coordinates
+//Coords returns a copy of linestring Coords
 func (self *LineString) ToArray() [][]float64 {
-	n := len(self.coordinates)
+	n := self.Coordinates.Len()
 	clone := make([][]float64, n)
 	for i := 0; i < n; i++ {
-		clone[i] = self.coordinates[i].ToArray()
+		clone[i] = self.Pt(i).ToArray()
 	}
 	return clone
 }
 
 //As point array
-func AsPointArray(array [][]float64) []Point {
-	var coords = make([]Point, len(array))
+func AsCoordinates(array [][]float64) Coords {
+	var coords = make([]Point, 0,  len(array))
 	for i := range array {
-		coords[i] = CreatePoint(array[i][:])
+		coords = append(coords,  CreatePoint(array[i]))
 	}
-	return coords
+	return Coordinates(coords)
 }

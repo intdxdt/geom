@@ -4,53 +4,86 @@ import (
 	"sort"
 )
 
-type Coordinates []Point
+func Coordinates(c []Point) Coords {
+	var n = len(c)
+	var coords = Coords{_c: c[:n:n], Idxs: make([]int, len(c))}
+	for i := range coords._c {
+		coords.Idxs[i] = i
+	}
+	return coords
+}
 
-//len of coordinates - sort interface
-func (s Coordinates) Len() int {
-	return len(s)
+type Coords struct {
+	_c   []Point
+	Idxs []int
+}
+
+//Point at index
+func (s *Coords) Pt(i int) *Point {
+	return &s._c[s.Idxs[i]]
+}
+
+//Point at index
+func (s Coords) Points() []Point {
+	var pts = make([]Point, 0, len(s.Idxs))
+	for _, i := range s.Idxs {
+		pts = append(pts, s._c[i])
+	}
+	return pts
+}
+
+//Point at index 0
+func (s *Coords) First() *Point {
+	return &s._c[s.Idxs[0]]
+}
+
+//Point at index 0
+func (s *Coords) Last() *Point {
+	return &s._c[s.Idxs[s.Len()-1]]
+}
+
+//len of Coords - sort interface
+func (s Coords) Len() int {
+	return len(s.Idxs)
 }
 
 //swap - sort interface
-func (s Coordinates) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
+func (s Coords) Swap(i, j int) {
+	s.Idxs[i], s.Idxs[j] = s.Idxs[j], s.Idxs[i]
 }
 
 //less - 2d compare - sort interface
-func (s Coordinates) Less(i, j int) bool {
-	return (s[i][0] < s[j][0]) || (
-		feq(s[i][0], s[j][0]) && s[i][1] < s[j][1])
+func (s Coords) Less(i, j int) bool {
+	i, j = s.Idxs[i], s.Idxs[j]
+	return (s._c[i][0] < s._c[j][0]) ||
+		(feq(s._c[i][0], s._c[j][0]) && s._c[i][1] < s._c[j][1])
 }
 
 //2D sort
-func (s Coordinates) Sort() Coordinates {
+func (s *Coords) Sort() *Coords {
 	sort.Sort(s)
 	return s
 }
 
 //pop point from
-func (s Coordinates) Pop() (Point, Coordinates) {
+func (s *Coords) Pop() (bool, Point) {
 	var v Point
 	var n int
-	if len(s) == 0 {
-		return NullPt, s
+	if len(s.Idxs) == 0 {
+		return false, NullPt
 	}
-	n = len(s) - 1
-	v, s[n] = s[n], NullPt
-	return v, s[:n]
+	n = len(s.Idxs) - 1
+	v, s.Idxs[n] = s._c[s.Idxs[n]], -1
+	s.Idxs = s.Idxs[:n]
+	return true, v
 }
 
-//get copy of coordinates of linestring
-func (self *LineString) Coordinates() []Point {
-	return CloneCoordinates(self.coordinates)
-}
-
-//get copy of coordinates of polygon
-func (self *Polygon) Coordinates() [][]Point {
-	lns := self.AsLinear()
-	coords := make([][]Point, len(lns))
+//get copy of Coords of polygon
+func (self *Polygon) Coordinates() []Coords {
+	var lns = self.AsLinear()
+	var coords = make([]Coords, len(lns))
 	for i, ln := range lns {
-		coords[i] = ln.Coordinates()
+		coords[i] = ln.Coordinates
 	}
 	return coords
 }
@@ -63,7 +96,7 @@ func (self *Point) IsRing() bool {
 
 //Checks if line string is a ring
 func (self *LineString) IsRing() bool {
-	return IsRing(self.coordinates)
+	return IsRing(self.Coordinates)
 }
 
 //Checks if polygon is a ring - default to true since all polygons are closed ring(s)
@@ -72,27 +105,21 @@ func (self *Polygon) IsRing() bool {
 }
 
 //------------------------------------------------------------------------------
-//Is coordinates a ring : P0 == Pn
-func IsRing(coordinates []Point) bool {
-	if len(coordinates) < 2 {
+//Is Coords a ring : P0 == Pn
+func IsRing(coordinates Coords) bool {
+	if coordinates.Len() < 2 {
 		return false
 	}
-	return coordinates[0].Equals2D(&coordinates[len(coordinates)-1])
+	return coordinates.First().Equals2D(coordinates.Last())
 }
 
-//Coordinates returns a copy of linestring coordinates
-func CloneCoordinates(coordinates []Point) []Point {
-	var clone = make([]Point, len(coordinates))
-	copy(clone, coordinates)
-	return clone
-}
-
-//
-func CoordinatesAsFloat2D(coordinates []Point) [][]float64 {
-	var n = len(coordinates)
-	var coords = make([][]float64, n)
-	for i := 0; i < n; i++ {
-		coords[i] = []float64{coordinates[i][X], coordinates[i][Y]}
+func CoordinatesAsFloat2D(coordinates Coords) [][]float64 {
+	var n = coordinates.Len()
+	var coords = make([][]float64, 0, n)
+	var pt *Point
+	for i := range coordinates.Idxs {
+		pt = coordinates.Pt(i)
+		coords = append(coords, []float64{pt[X], pt[Y]})
 	}
 	return coords
 }

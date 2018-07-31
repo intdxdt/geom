@@ -12,7 +12,7 @@ func TestGeom(t *testing.T) {
 	var ply *Polygon
 	var line *LineString
 	var pnt Point
-	var rng = NewLinearRing([]Point{{0, 0}, {1, 1}})
+	var rng = NewLinearRing(Coordinates([]Point{{0, 0}, {1, 1}}))
 	var pt_wkt = "POINT (30 10)"
 	var ln_wkt = "LINESTRING (30 10, 10 30, 40 40)"
 	var ply_wkt = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))"

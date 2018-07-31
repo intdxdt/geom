@@ -117,15 +117,15 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 			}
 		}
 		//check for all vertices
-		for idx := range self.coordinates {
-			var pt = self.coordinates[idx]
-			if shell.containsPoint(&pt) {
+		for idx := range self.Coordinates.Idxs {
+			var pt = self.Coordinates.Pt(idx)
+			if shell.containsPoint(pt) {
 				inhole := false
 				for i := 1; !inhole && i < len(rings); i++ {
-					inhole = rings[i].containsPoint(&pt)
+					inhole = rings[i].containsPoint(pt)
 				}
 				if !inhole {
-					ptset.Add(pt)
+					ptset.Add(*pt)
 				}
 			}
 		}
