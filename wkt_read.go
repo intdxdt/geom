@@ -14,7 +14,7 @@ var wktPoint = []byte("point")
 var wktComma = []byte{','}
 var wktSpace = []byte{' '}
 
-type Shell [][]float64
+type Shell Coords
 type Holes []Shell
 
 type WKTParserObj struct {
@@ -39,39 +39,32 @@ func (self *WKTParserObj) GeometryType() GeoType {
 }
 
 //To array of coodinates of wkt string
-func (self *WKTParserObj) ToArray() [][][]float64 {
-	var coords = make([][][]float64, 0)
+func (self *WKTParserObj) ToArray() []Shell {
+	var shells = make([]Shell, 0)
 	var sh = self.shell
 	if self.gtype == GeoTypePoint || self.gtype == GeoTypeLineString {
-		coords = append(coords, sh)
+		shells = append(shells, sh)
 	} else if self.gtype == GeoTypePolygon {
-		coords = append(coords, sh)
+		shells = append(shells, sh)
 		for _, sh = range self.holes {
-			coords = append(coords, sh)
+			shells = append(shells, sh)
 		}
 	}
-	return coords
+	return shells
 }
 
 //New WKT parser object
-func NewWKTParserObj(gtype GeoType, coords ...[][]float64) *WKTParserObj {
+func NewWKTParserObj(gtype GeoType, coords ...Coords) *WKTParserObj {
 	var shells = make([]Shell, 0, len(coords))
 	for i := range coords {
 		shells = append(shells, Shell(coords[i]))
 	}
+
 	var obj *WKTParserObj
 	if len(shells) == 1 {
-		obj = &WKTParserObj{
-			shells[0],
-			nil,
-			gtype,
-		}
+		obj = &WKTParserObj{shells[0], nil, gtype}
 	} else {
-		obj = &WKTParserObj{
-			shells[0],
-			Holes(shells[1:]),
-			gtype,
-		}
+		obj = &WKTParserObj{shells[0], Holes(shells[1:]), gtype}
 	}
 	return obj
 }
@@ -215,11 +208,11 @@ func wktPointParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	var indices = numberIndices(wktStr)
 	var dim = len(indices) / 2
 	var lns = parseNums(wktStr, indices)
-	var shell = make(Shell, 0, len(lns)/dim)
+	var  pts = make([]Point, 0, len(lns)/dim)
 	for i := 0; i < len(lns); i += dim {
-		shell = append(shell, lns[i:i+dim])
+		pts = append(pts, CreatePoint(lns[i:i+dim]))
 	}
-	return &WKTParserObj{gtype: typeId, shell: shell}
+	return &WKTParserObj{gtype: typeId, shell: Shell(Coordinates(pts))}
 }
 
 //parse linestring
@@ -254,12 +247,12 @@ func parseString(wkt []byte, tok *wktToken) Shell {
 	var indices = numberIndices(wktStr)
 	var dim = dimension(wktStr)
 	var lns = parseNums(wktStr, indices)
-	var shell = make(Shell, 0, len(lns)/dim)
+	var pts = make([]Point, 0, len(lns)/dim)
 
 	for i := 0; i < len(lns); i += dim {
-		shell = append(shell, lns[i:i+dim])
+		pts = append(pts, CreatePoint(lns[i:i+dim]))
 	}
-	return shell
+	return  Shell(Coordinates(pts))
 }
 
 func numberIndices(stream []byte) []int {

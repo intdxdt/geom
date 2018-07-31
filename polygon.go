@@ -14,9 +14,11 @@ func NewPolygon(coordinates ...[]Point) *Polygon {
 	var rings = shells(coords)
 	return NewPolygonFromRings(rings...)
 }
+
 //New polygon from points
 func NewPolygonFromCoords(coordinates ...Coords) *Polygon {
-	return NewPolygonFromRings(shells(coordinates)...)
+	var rings = shells(coordinates)
+	return NewPolygonFromRings(rings...)
 }
 
 //New Polygon from rings
