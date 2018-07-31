@@ -35,12 +35,8 @@ func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt string) *Polygon {
-	var array = readWKT(wkt, GeoTypePolygon).ToArray()
-	var pts []Coords
-	for i := range array {
-		pts = append(pts, AsCoordinates(array[i]))
-	}
-	return NewPolygonFromCoords(pts...)
+	var coords = readWKT(wkt, GeoTypePolygon).ToCoordinates()
+	return NewPolygonFromCoords(coords...)
 }
 
 //get geometry type

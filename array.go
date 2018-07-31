@@ -1,6 +1,6 @@
 package geom
 
-//ToArray converts Point to [2]float64
+//ToCoordinates converts Point to [2]float64
 func (self *Point) ToArray() []float64 {
 	return (*self)[:]
 }

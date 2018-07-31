@@ -112,14 +112,3 @@ func IsRing(coordinates Coords) bool {
 	}
 	return coordinates.First().Equals2D(coordinates.Last())
 }
-
-func CoordinatesAsFloat2D(coordinates Coords) [][]float64 {
-	var n = coordinates.Len()
-	var coords = make([][]float64, 0, n)
-	var pt *Point
-	for i := range coordinates.Idxs {
-		pt = coordinates.Pt(i)
-		coords = append(coords, []float64{pt[X], pt[Y]})
-	}
-	return coords
-}

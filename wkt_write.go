@@ -23,26 +23,26 @@ func WriteWKT(obj *WKTParserObj) string {
 }
 
 //str point
-func str_point(shell Shell) string {
+func str_point(shell Coords) string {
 	var s = "EMPTY"
-	if shell != nil && len(shell) > 0 {
-		s = "(" + coordStr(shell[0]) + ")"
+	if shell._c != nil && len(shell._c) > 0 {
+		s = "(" + coordStr(shell._c[0][:]) + ")"
 	}
 	return s
 }
 
 //str polyline
-func str_polyline(shell Shell) string {
+func str_polyline(shell Coords) string {
 	var s = "EMPTY"
-	if shell == nil {
+	if shell._c == nil {
 		return s
 	}
 
-	var n = len(shell)
+	var n = len(shell._c)
 	if n > 0 {
 		var lnstr = make([]string, n)
 		for i := 0; i < n; i++ {
-			lnstr[i] = coordStr(shell[i])
+			lnstr[i] = coordStr(shell._c[i][:])
 		}
 		s = "(" + strings.Join(lnstr, ", ") + ")"
 	}

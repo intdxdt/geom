@@ -54,15 +54,15 @@ func NewLineStringFromCoords(coordinates Coords) *LineString {
 }
 
 //New line string from array
-func NewLineStringFromArray(array [][]float64) *LineString {
-	return NewLineStringFromCoords(AsCoordinates(array))
+func NewLineStringFromArray(array Coords) *LineString {
+	return NewLineStringFromCoords(array)
 }
 
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewLineStringFromWKT(wkt string) *LineString {
 	return NewLineStringFromArray(
-		readWKT(wkt, GeoTypeLineString).ToArray()[0],
+		readWKT(wkt, GeoTypeLineString).ToCoordinates()[0],
 	)
 }
 
