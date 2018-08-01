@@ -56,9 +56,7 @@ func (self *LineString) processChains() *LineString {
 			mono_size = 1
 			prev_x, prev_y = cur_x, cur_y
 			a, b = self.Coordinates.Pt(i-1), self.Coordinates.Pt(i)
-			mbox = mono.CreateMonoMBR(
-				mbr.CreateMBR(a[X], a[Y], b[X], b[Y]),
-			)
+			mbox = mono.CreateMonoMBR(mbr.CreateMBR(a[X], a[Y], b[X], b[Y]))
 			self.xyMonobox(&mbox, i-1, i)
 			self.chains = append(self.chains, mbox)
 			m_index = len(self.chains) - 1

@@ -7,8 +7,7 @@ type Polygon struct {
 
 //New polygon from points
 func NewPolygon(coordinates ...Coords) *Polygon {
-	var rings = lnrRings(coordinates)
-	return newPolygonFromRings(rings...)
+	return newPolygonFromRings(lnrRings(coordinates)...)
 }
 
 //New Polygon from rings
@@ -23,8 +22,7 @@ func newPolygonFromRings(rings ...*LinearRing) *Polygon {
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt string) *Polygon {
-	var coords = readWKT(wkt, GeoTypePolygon).ToCoordinates()
-	return NewPolygon(coords...)
+	return NewPolygon(readWKT(wkt, GeoTypePolygon).ToCoordinates()...)
 }
 
 //get geometry type
