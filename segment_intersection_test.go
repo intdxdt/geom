@@ -8,7 +8,7 @@ import (
 
 func segment(ln string) *Segment {
 	var coords = NewLineStringFromWKT(ln).Coordinates._c
-	return NewSegmentAB(&coords[0], &coords[1])
+	return NewSegmentAB(coords[0], coords[1])
 }
 
 func TestToSegmentIntersection(t *testing.T) {
@@ -30,7 +30,7 @@ func TestToSegmentIntersection(t *testing.T) {
 			var l11 = segment("LINESTRING (350 350, 350 350 )")
 			var l12 = segment("LINESTRING ( 400 350, 450 350 )")
 
-			var intpts = SegSegIntersection(l0.A, l0.B, l1.A, l1.B)
+			var intpts = SegSegIntersection(l0.A(), l0.B(), l1.A(), l1.B())
 			g.Assert(len(intpts)).Equal(2)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(OtherA)
@@ -44,56 +44,56 @@ func TestToSegmentIntersection(t *testing.T) {
 			g.Assert(intpts[1].IsVertexOther()).IsFalse()
 			g.Assert(intpts[1].IsVerteXOR()).IsTrue()
 
-			intpts = SegSegIntersection(l0.A, l0.B, l2.A, l2.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l2.A(), l2.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(SelfA)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l3.A, l3.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l3.A(), l3.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(SelfB | OtherA)
 			g.Assert(intpts[0].IsVerteXOR()).IsFalse()
 
-			intpts = SegSegIntersection(l0.A, l0.B, l4.A, l4.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l4.A(), l4.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(SelfB)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l5.A, l5.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l5.A(), l5.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].IsIntersection()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(InterX)
 			g.Assert(intpts[0].IsVerteXOR()).IsFalse()
 
-			intpts = SegSegIntersection(l0.A, l0.B, l6.A, l6.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l6.A(), l6.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 			g.Assert(intpts[0].Inter).Equal(SelfA | OtherB)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l7.A, l7.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l7.A(), l7.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].Inter).Equal(SelfB | OtherA)
 			g.Assert(intpts[0].IsVertex()).IsTrue()
 
-			intpts = SegSegIntersection(l0.A, l0.B, l8.A, l8.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l8.A(), l8.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].Inter).Equal(SelfB | OtherA | OtherB)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l9.A, l9.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l9.A(), l9.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].Inter).Equal(SelfA | OtherA | OtherB)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l10.A, l10.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l10.A(), l10.B())
 			g.Assert(len(intpts)).Equal(2)
 			g.Assert(intpts[0].Inter).Equal(SelfA | OtherA)
 			g.Assert(intpts[1].Inter).Equal(SelfB | OtherB)
 
-			intpts = SegSegIntersection(l9.A, l9.B, l11.A, l11.B)
+			intpts = SegSegIntersection(l9.A(), l9.B(), l11.A(), l11.B())
 			g.Assert(len(intpts)).Equal(1)
 			g.Assert(intpts[0].Inter).Equal(SelfA | SelfB | OtherA | OtherB)
 
-			intpts = SegSegIntersection(l0.A, l0.B, l12.A, l12.B)
+			intpts = SegSegIntersection(l0.A(), l0.B(), l12.A(), l12.B())
 			g.Assert(len(intpts)).Equal(2)
 			g.Assert(intpts[0].Inter).Equal(OtherA)
 			g.Assert(intpts[1].Inter).Equal(SelfB | OtherB)

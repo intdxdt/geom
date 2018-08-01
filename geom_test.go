@@ -22,7 +22,7 @@ func TestGeom(t *testing.T) {
 			var pt = ReadGeometry(pt_wkt)
 			var ln = ReadGeometry(ln_wkt)
 			var ply = ReadGeometry(ply_wkt)
-			var seg = NewSegmentAB(&p, &p)
+			var seg = NewSegmentAB(p, p)
 			g.Assert(CastAsPoint(pt) == pt).IsTrue()
 			g.Assert(CastAsLineString(ln) == ln).IsTrue()
 			g.Assert(CastAsPolygon(ply) == ply).IsTrue()

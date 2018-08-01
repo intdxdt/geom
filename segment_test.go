@@ -22,22 +22,21 @@ func TestSegment(t *testing.T) {
 			var e = PointXY(0.5, 3)
 
 			//f := &Point{-2, -2}
-			var gk = &Point{-1.5, -2.5}
-			var h  = &Point{0.484154648492778, -0.645539531323704}
-			var i  = &Point{0.925118053504632, -1.233490738006176}
-			var k  = &Point{2, 2}
-			var n  = &Point{1, 5}
+			var gk = Point{-1.5, -2.5}
+			var h  = Point{0.484154648492778, -0.645539531323704}
+			var i  = Point{0.925118053504632, -1.233490738006176}
+			var k  = Point{2, 2}
+			var n  = Point{1, 5}
 			n.BBox()
 
-			seg_ab := NewSegmentAB(&a, &b)
+			seg_ab := NewSegmentAB(a, b)
 			ln_ab := NewLineString(Coordinates([]Point{a, b}))
-			seg_de := &Segment{A: &d, B: &e}
-
-			seg_cd := &Segment{&c, &d, nil}
-			seg_gkh := &Segment{gk, h, nil}
-			seg_hi := &Segment{A: h, B: i}
-			seg_ak := &Segment{A: &a, B: k}
-			seg_kn := &Segment{A: k, B: n}
+			seg_de  := NewSegmentAB(d,  e)
+			seg_cd  := NewSegmentAB(c, d, )
+			seg_gkh := NewSegmentAB(gk, h,)
+			seg_hi  := NewSegmentAB( h,  i)
+			seg_ak  := NewSegmentAB(a,  k)
+			seg_kn  := NewSegmentAB( k,  n)
 
 			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
 			g.Assert(seg_ab.IsSimple()).IsTrue()
@@ -91,7 +90,7 @@ func TestSegment(t *testing.T) {
 			g.Assert(seg_ak.SegSegIntersects(seg_kn)).Equal(ok)
 			g.Assert(ok).IsTrue()
 			g.Assert(len(pts)).Equal(1) //at k
-			g.Assert(pts[0].Point.Equals2D(k)).IsTrue()   //k
+			g.Assert(pts[0].Point.Equals2D(&k)).IsTrue()   //k
 		})
 	})
 
@@ -119,20 +118,20 @@ func TestSegDist(t *testing.T) {
 			var o = Pt(6, 5)
 			var expects = math.Round(1.1094003924504583, 12)
 
-			seg_ab := NewSegmentAB(&a, &b)
-			seg_ba := NewSegmentAB(&b, &a)
-			seg_cd := NewSegmentAB(&c, &d)
-			seg_dc := NewSegmentAB(&d, &c)
-			seg_dd := NewSegmentAB(&d, &d)
-			seg_ff := NewSegmentAB(&f, &f)
-			seg_ef := NewSegmentAB(&e, &f)
-			seg_fg := NewSegmentAB(&f, &gi)
-			seg_jk := NewSegmentAB(&j, &k)
-			seg_jj := NewSegmentAB(&j, &j)
-			seg_lm := NewSegmentAB(&l, &m)
-			seg_ll := NewSegmentAB(&l, &l)
-			seg_no := NewSegmentAB(&n, &o)
-			seg_tu := NewSegmentAB(&t, &u)
+			seg_ab := NewSegmentAB(a, b)
+			seg_ba := NewSegmentAB(b, a)
+			seg_cd := NewSegmentAB(c, d)
+			seg_dc := NewSegmentAB(d, c)
+			seg_dd := NewSegmentAB(d, d)
+			seg_ff := NewSegmentAB(f, f)
+			seg_ef := NewSegmentAB(e, f)
+			seg_fg := NewSegmentAB(f, gi)
+			seg_jk := NewSegmentAB(j, k)
+			seg_jj := NewSegmentAB(j, j)
+			seg_lm := NewSegmentAB(l, m)
+			seg_ll := NewSegmentAB(l, l)
+			seg_no := NewSegmentAB(n, o)
+			seg_tu := NewSegmentAB(t, u)
 
 			g.Assert(math.Round(seg_ab.SegSegDistance(seg_ab), 12)).Equal(0.0)
 			g.Assert(math.Round(seg_ab.SegSegDistance(seg_cd), 12)).Equal(expects)
@@ -143,8 +142,8 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_ef), 12)).Equal(0.0)
 			g.Assert(seg_dd.SegSegDistance(seg_ff)).Equal(d.Distance(f))
 			g.Assert(seg_ff.Length()).Equal(0.0)
-			g.Assert(seg_ff.Distance(seg_jj)).Equal(seg_ff.A.Distance(seg_jj.A))
-			g.Assert(seg_ab.Length()).Equal(seg_ab.A.Distance(seg_ab.B))
+			g.Assert(seg_ff.Distance(seg_jj)).Equal(seg_ff.A().Distance(seg_jj.A()))
+			g.Assert(seg_ab.Length()).Equal(seg_ab.A().Distance(seg_ab.B()))
 
 			g.Assert(math.Round(seg_dc.SegSegDistance(seg_fg), 12)).Equal(
 				math.Round(2.496150883013531, 12),
@@ -196,7 +195,7 @@ func TestSegDist(t *testing.T) {
 			}
 
 			t_dists := []float64{14.85, 13.99, 23.69, 12.05, 0.00, 0.00, 0.00}
-			tvect := NewSegmentAB(&a, &b)
+			tvect := NewSegmentAB(a, b)
 			dists := make([]float64, len(tpoints))
 
 			for i, tp := range tpoints {
@@ -230,12 +229,12 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.IsNaN(poly.Distance(null_ln))).IsTrue()
 			g.Assert(math.IsNaN(lnr.Distance(null_ln))).IsTrue()
 
-			var seg_aa = NewSegmentAB(&a, &a)
+			var seg_aa = NewSegmentAB(a, a)
 			g.Assert(seg_aa.DistanceToPoint(&a)).Equal(0.0)
 			g.Assert(a.SideOf(&a, &b).IsOn()).IsTrue()
 			g.Assert(b.SideOf(&a, &b).IsOn()).IsTrue()
 
-			seg_ab = NewSegmentAB(&a, &b)
+			seg_ab = NewSegmentAB(a, b)
 			g.Assert(seg_ab.SideOf(&a).IsOn()).IsTrue()
 			g.Assert(seg_ab.SideOf(&b).IsOn()).IsTrue()
 

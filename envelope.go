@@ -33,7 +33,7 @@ func (self *Segment) BBox() *mbr.MBR {
 
 //bounding box of segment
 func (self *Segment) Bounds() mbr.MBR {
-	var a, b = self.Coordinates.Pt(0), self.Coordinates.Pt(1)
+	var a, b = self.coords.Pt(0), self.coords.Pt(1)
 	return mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
 }
 

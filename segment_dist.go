@@ -6,12 +6,13 @@ import (
 
 //Length of segment
 func (self *Segment) Length() float64 {
-	return math.Hypot(self.B[X]-self.A[X], self.B[Y]-self.A[Y])
+	var a, b = self.A(), self.B()
+	return math.Hypot(a[X]-b[X], a[Y]-b[Y])
 }
 
 //Distance betwen two segments
 func (self *Segment) SegSegDistance(other *Segment) float64 {
-	return SegSegDistance(self.A, self.B, other.A, other.B)
+	return SegSegDistance(self.A(), self.B(), other.A(), other.B())
 }
 
 //Distance betwen two segments
@@ -100,7 +101,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 
 //Minimum distance from segement to point
 func (self *Segment) DistanceToPoint(pt *Point) float64 {
-	return DistanceToPoint(self.A, self.B, pt)
+	return DistanceToPoint(self.A(), self.B(), pt)
 }
 
 func DistanceToPoint(sa, sb, pt *Point) float64 {
