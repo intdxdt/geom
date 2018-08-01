@@ -8,11 +8,11 @@ type Polygon struct {
 //New polygon from points
 func NewPolygon(coordinates ...Coords) *Polygon {
 	var rings = lnrRings(coordinates)
-	return NewPolygonFromRings(rings...)
+	return newPolygonFromRings(rings...)
 }
 
 //New Polygon from rings
-func NewPolygonFromRings(rings ...*LinearRing) *Polygon {
+func newPolygonFromRings(rings ...*LinearRing) *Polygon {
 	var holes []*LinearRing
 	if len(rings) > 1 {
 		holes = rings[1:]

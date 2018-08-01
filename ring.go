@@ -11,7 +11,6 @@ func NewLinearRing(coords Coords) *LinearRing {
 	var n = coords.Len()
 	if n > 1 {
 		if !IsRing(coords) {
-			var n = coords.Len()
 			coords.Idxs = coords.Idxs[:n:n] //trigger a copy on append
 			coords.Idxs = append(coords.Idxs, coords.Idxs[0])
 		}

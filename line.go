@@ -6,8 +6,8 @@ import (
 )
 
 type LineString struct {
-	chains      []mono.MBR
 	Coordinates Coords
+	chains      []mono.MBR
 	index       *index.Index
 	bbox        mono.MBR
 }

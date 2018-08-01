@@ -17,5 +17,5 @@ func (self *Polygon) Clone() *Polygon {
 	for i := range rings {
 		rings[i] = rings[i].Clone()
 	}
-	return NewPolygonFromRings(rings...)
+	return newPolygonFromRings(rings...)
 }
