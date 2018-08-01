@@ -8,7 +8,7 @@ func (self *LineString) Length() float64 {
 }
 
 //compute length of chain
-func (self *LineString) chain_length(chain *mono.MBR) float64 {
+func (self *LineString) chainLength(chain *mono.MBR) float64 {
 	return self.len(chain.I, chain.J)
 }
 

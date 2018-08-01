@@ -7,9 +7,9 @@ import (
 
 type LineString struct {
 	Coordinates Coords
+	bbox        mono.MBR
 	chains      []mono.MBR
 	index       *index.Index
-	bbox        mono.MBR
 }
 
 //New LineString from a given Coords {Array} [[x,y], ....[x,y]]
