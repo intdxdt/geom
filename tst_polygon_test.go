@@ -104,14 +104,14 @@ func TestPolygon(t *testing.T) {
 			var hull        = ConvexHull(ply_coords)
 			var shull       = ConvexHull(ply_coords)
 
-			var phull  = NewPolygonFromCoords(hull)
-			var pshull = NewPolygonFromCoords(shull)
+			var phull  = NewPolygon(hull)
+			var pshull = NewPolygon(shull)
 			g.Assert(math.Round(phull.Area(), 2)).Equal(110190309.57)
 			g.Assert(math.Round(pshull.Area(), 2)).Equal(110190309.57)
 
 			arr4 := []Point{{5.10, 8.59}, {5.10, 8.59}, {5.10, 8.59}, {5.10, 8.59}, {5.01, 8.74}, {5.01, 8.74}, {5.01, 8.74}, {5.01, 8.74}}
 			hull = ConvexHull(Coordinates(arr4))
-			phull = NewPolygonFromCoords(hull)
+			phull = NewPolygon(hull)
 			g.Assert(math.Round(phull.Area(), 2)).Equal(0.0)
 
 		})

@@ -53,7 +53,7 @@ func TestCHull(t *testing.T) {
 
 		g.It("should test convex hull of sqr as sqr", func() {
 			var hull = ConvexHull(Coordinates(sqr))
-			var hpoly = NewPolygonFromCoords(hull)
+			var hpoly = NewPolygon(hull)
 			var sqrpoly = NewPolygon(Coordinates(sqr))
 
 			g.Assert(hull.Len()).Equal(len(sqr) - 1)
@@ -77,7 +77,7 @@ func TestCHull(t *testing.T) {
 		g.It("chull returns a polygon", func() {
 			var coords = Coordinates([]Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}})
 			var ply = NewPolygon(coords)
-			var hull = NewPolygonFromCoords(ConvexHull(coords))
+			var hull = NewPolygon(ConvexHull(coords))
 			g.Assert(hull.Area() > 0).IsTrue()
 			g.Assert(ply.Area() == hull.Area()).IsTrue()
 		})

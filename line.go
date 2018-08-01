@@ -14,7 +14,6 @@ type LineString struct {
 
 //New LineString from a given Coords {Array} [[x,y], ....[x,y]]
 func NewLineString(coordinates Coords) *LineString {
-	//var n =
 	if coordinates.Len() < 2 {
 		panic("a linestring must have at least 2 coordinates")
 	}
@@ -25,21 +24,9 @@ func NewLineString(coordinates Coords) *LineString {
 	return ln.processChains().buildIndex()
 }
 
-//New LineString from a given Coords
-func NewLineStringFromCoords(coordinates Coords) *LineString {
-	if coordinates.Len() < 2 {
-		panic("a linestring must have at least 2 coordinate")
-	}
-	var ln = &LineString{
-		Coordinates: coordinates,
-		index:       index.NewIndex(),
-	}
-	return ln.processChains().buildIndex()
-}
-
 //New line string from array
 func NewLineStringFromArray(array Coords) *LineString {
-	return NewLineStringFromCoords(array)
+	return NewLineString(array)
 }
 
 //create a new linestring from wkt string
@@ -80,7 +67,7 @@ func (self *LineString) MonoChains() []mono.MBR {
 
 //ConvexHull computes slice of vertices as points forming convex hull
 func (self *LineString) ConvexHull() *Polygon {
-	return NewPolygonFromCoords(ConvexHull(self.Coordinates))
+	return NewPolygon(ConvexHull(self.Coordinates))
 }
 
 //number of vertices

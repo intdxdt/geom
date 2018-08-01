@@ -16,7 +16,7 @@ func NewLinearRing(coords Coords) *LinearRing {
 			coords.Idxs = append(coords.Idxs, coords.Idxs[0])
 		}
 	}
-	return &LinearRing{NewLineStringFromCoords(coords)}
+	return &LinearRing{NewLineString(coords)}
 }
 
 //Contains point

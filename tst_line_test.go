@@ -65,7 +65,7 @@ func TestLineString(t *testing.T) {
 				}
 				done()
 			}()
-			NewLineStringFromCoords(Coordinates([]Point{}))
+			NewLineString(Coordinates([]Point{}))
 		})
 
 		g.It("should be slice of array", func() {
