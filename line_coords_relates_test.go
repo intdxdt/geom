@@ -1,10 +1,10 @@
 package geom
 
 import (
+	"fmt"
 	"testing"
 	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
-	"fmt"
 )
 
 func TestLineStringEdit(t *testing.T) {
