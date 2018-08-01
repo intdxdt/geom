@@ -28,7 +28,7 @@ func (self *Segment) WKT() string {
 //Segment as line string
 func (self *Segment) AsLineString() *LineString {
 	if self.ln == nil {
-		self.ln = NewLineString(Coordinates([]Point{*self.A, *self.B}))
+		self.ln = NewLineString(self.Coordinates)
 	}
 	return self.ln
 }
