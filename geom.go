@@ -27,7 +27,7 @@ const (
 var feq = math.FloatEqual
 
 //geometry constructor
-type GeometryFn func([]Point) Geometry
+type GeometryFn func(Coords) Geometry
 
 type Geometry interface {
 	BBox() *mbr.MBR
