@@ -8,7 +8,7 @@ import (
 
 func segment(ln string) *Segment {
 	var coords = NewLineStringFromWKT(ln).Coordinates._c
-	return NewSegment(&coords[0], &coords[1])
+	return NewSegmentAB(&coords[0], &coords[1])
 }
 
 func TestToSegmentIntersection(t *testing.T) {

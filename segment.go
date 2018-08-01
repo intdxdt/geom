@@ -5,14 +5,19 @@ import (
 )
 
 type Segment struct {
-	A  *Point
-	B  *Point
-	ln *LineString
+	Coordinates Coords
+	ln          *LineString
+}
+
+////New Segment constructor
+func NewSegment(coordinates Coords, i, j int) *Segment {
+	coordinates.Idxs = []int{i, j}
+	return &Segment{Coordinates: coordinates}
 }
 
 //New Segment constructor
-func NewSegment(a, b *Point) *Segment {
-	return &Segment{A: a, B: b}
+func NewSegmentAB(a, b Point) *Segment {
+	return &Segment{Coordinates: Coordinates([]Point{a, b})}
 }
 
 //WKT

@@ -29,7 +29,7 @@ func TestSegment(t *testing.T) {
 			var n  = &Point{1, 5}
 			n.BBox()
 
-			seg_ab := NewSegment(&a, &b)
+			seg_ab := NewSegmentAB(&a, &b)
 			ln_ab := NewLineString(Coordinates([]Point{a, b}))
 			seg_de := &Segment{A: &d, B: &e}
 
@@ -101,38 +101,38 @@ func TestSegDist(t *testing.T) {
 	g := goblin.Goblin(t)
 	g.Describe("SegSeg and SegToPoint", func() {
 		g.It("should test segment distance to point and seg", func() {
-			var a = PointXY(-0.8, -2.6)
-			var b = PointXY(-1, 1)
-			var c = PointXY(-2, 3)
-			var d = PointXY(7, -3)
-			var e = PointXY(1.6, 0.6)
-			var f = PointXY(-8, 4)
-			var gi = PointXY(10, -8)
-			var j = PointXY(-3.5, 4)
-			var k = PointXY(-5, 5)
-			var l = PointXY(8.5, -4)
-			var m = PointXY(10, -5)
-			var t = PointXY(1, 6)
-			var u = PointXY(6, 4)
+			var a  = Pt(-0.8, -2.6)
+			var b  = Pt(-1, 1)
+			var c  = Pt(-2, 3)
+			var d  = Pt(7, -3)
+			var e  = Pt(1.6, 0.6)
+			var f  = Pt(-8, 4)
+			var gi = Pt(10, -8)
+			var j  = Pt(-3.5, 4)
+			var k  = Pt(-5, 5)
+			var l  = Pt(8.5, -4)
+			var m  = Pt(10, -5)
+			var t  = Pt(1, 6)
+			var u  = Pt(6, 4)
 
-			var n = PointXY(1, 3)
-			var o = PointXY(6, 5)
+			var n = Pt(1, 3)
+			var o = Pt(6, 5)
 			var expects = math.Round(1.1094003924504583, 12)
 
-			seg_ab := NewSegment(&a, &b)
-			seg_ba := NewSegment(&b, &a)
-			seg_cd := NewSegment(&c, &d)
-			seg_dc := NewSegment(&d, &c)
-			seg_dd := NewSegment(&d, &d)
-			seg_ff := NewSegment(&f, &f)
-			seg_ef := NewSegment(&e, &f)
-			seg_fg := NewSegment(&f, &gi)
-			seg_jk := NewSegment(&j, &k)
-			seg_jj := NewSegment(&j, &j)
-			seg_lm := NewSegment(&l, &m)
-			seg_ll := NewSegment(&l, &l)
-			seg_no := NewSegment(&n, &o)
-			seg_tu := NewSegment(&t, &u)
+			seg_ab := NewSegmentAB(&a, &b)
+			seg_ba := NewSegmentAB(&b, &a)
+			seg_cd := NewSegmentAB(&c, &d)
+			seg_dc := NewSegmentAB(&d, &c)
+			seg_dd := NewSegmentAB(&d, &d)
+			seg_ff := NewSegmentAB(&f, &f)
+			seg_ef := NewSegmentAB(&e, &f)
+			seg_fg := NewSegmentAB(&f, &gi)
+			seg_jk := NewSegmentAB(&j, &k)
+			seg_jj := NewSegmentAB(&j, &j)
+			seg_lm := NewSegmentAB(&l, &m)
+			seg_ll := NewSegmentAB(&l, &l)
+			seg_no := NewSegmentAB(&n, &o)
+			seg_tu := NewSegmentAB(&t, &u)
 
 			g.Assert(math.Round(seg_ab.SegSegDistance(seg_ab), 12)).Equal(0.0)
 			g.Assert(math.Round(seg_ab.SegSegDistance(seg_cd), 12)).Equal(expects)
@@ -196,7 +196,7 @@ func TestSegDist(t *testing.T) {
 			}
 
 			t_dists := []float64{14.85, 13.99, 23.69, 12.05, 0.00, 0.00, 0.00}
-			tvect := NewSegment(&a, &b)
+			tvect := NewSegmentAB(&a, &b)
 			dists := make([]float64, len(tpoints))
 
 			for i, tp := range tpoints {
@@ -230,12 +230,12 @@ func TestSegDist(t *testing.T) {
 			g.Assert(math.IsNaN(poly.Distance(null_ln))).IsTrue()
 			g.Assert(math.IsNaN(lnr.Distance(null_ln))).IsTrue()
 
-			var seg_aa = NewSegment(&a, &a)
+			var seg_aa = NewSegmentAB(&a, &a)
 			g.Assert(seg_aa.DistanceToPoint(&a)).Equal(0.0)
 			g.Assert(a.SideOf(&a, &b).IsOn()).IsTrue()
 			g.Assert(b.SideOf(&a, &b).IsOn()).IsTrue()
 
-			seg_ab = NewSegment(&a, &b)
+			seg_ab = NewSegmentAB(&a, &b)
 			g.Assert(seg_ab.SideOf(&a).IsOn()).IsTrue()
 			g.Assert(seg_ab.SideOf(&b).IsOn()).IsTrue()
 

@@ -46,8 +46,8 @@ func TestIntersection(t *testing.T) {
 	var ptG = PointFromWKT(ptGwkt)
 	var ptH = PointFromWKT(ptHwkt)
 
-	var segAA = NewSegment(&ptA, &ptA)
-	var segAB = NewSegment(&ptA, &ptB)
+	var segAA = NewSegmentAB(&ptA, &ptA)
+	var segAB = NewSegmentAB(&ptA, &ptB)
 	segNoneGeom_AB := Seg{segAB}
 	var nilG *Polygon
 

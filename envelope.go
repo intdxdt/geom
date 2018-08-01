@@ -15,14 +15,14 @@ func (self *LineString) Bounds() mbr.MBR {
 //bounding box of point
 func (self Point) BBox() *mbr.MBR {
 	var box = self.Bounds()
-	return  &box
+	return &box
 }
 
 //bounding box of point
 func (self Point) Bounds() mbr.MBR {
 	var x, y = self[X], self[Y]
 	var box = mbr.CreateMBR(x, y, x, y)
-	return  box
+	return box
 }
 
 //bounding box of segment
@@ -33,7 +33,8 @@ func (self *Segment) BBox() *mbr.MBR {
 
 //bounding box of segment
 func (self *Segment) Bounds() mbr.MBR {
-	return mbr.CreateMBR(self.A[X], self.A[Y], self.B[X], self.B[Y])
+	var a, b = self.Coordinates.Pt(0), self.Coordinates.Pt(1)
+	return mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
 }
 
 //bounding box of linestring
