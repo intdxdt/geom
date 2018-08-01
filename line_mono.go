@@ -2,17 +2,21 @@ package geom
 
 import (
 	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
 
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
-func (self *LineString) processChains(i, j int) *LineString {
+func (self *LineString) processChains() *LineString {
 	var dx, dy float64
 	var cur_x, cur_y, prev_x, prev_y int
-	var mono_limit = self.monosize
+	var i, j = 0, self.Coordinates.Len()-1
+	var monoLimit = int(math.Log2(float64(j+1) + 1.0))
+
+	//init chains
+	self.chains = make([]mono.MBR, 0, 2*monoLimit)
 
 	prev_x, prev_y = null, null
 	var a, b *Point
@@ -33,8 +37,6 @@ func (self *LineString) processChains(i, j int) *LineString {
 		dx = b[X] - a[X]
 		dy = b[Y] - a[Y]
 
-		self.length += math.Hypot(dx, dy)
-
 		cur_x = xySign(dx)
 		cur_y = xySign(dy)
 
@@ -48,7 +50,7 @@ func (self *LineString) processChains(i, j int) *LineString {
 
 		//((cur_x + prev_x > 0) && (prev_y + cur_y > 0))
 		mono_size += 1
-		if prev_x == cur_x && prev_y == cur_y && mono_size <= mono_limit {
+		if prev_x == cur_x && prev_y == cur_y && mono_size <= monoLimit {
 			self.xyMonobox(&self.chains[m_index], i, null)
 		} else {
 			mono_size = 1

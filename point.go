@@ -51,7 +51,7 @@ func (self *Point) IsNull() bool {
 
 //As line strings
 func (self Point) AsLineString() *LineString {
-	return NewLineString([]Point{self, self})
+	return NewLineString(Coordinates([]Point{self, self}))
 }
 
 //As line strings

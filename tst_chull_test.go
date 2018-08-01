@@ -38,8 +38,8 @@ func TestCHull(t *testing.T) {
 
 		g.It("should test convex hull", func() {
 			var hull = ConvexHull(Coordinates(data))
-			var ply = NewPolygon(data)
-			var ln = NewLineString(data)
+			var ply = NewPolygon(Coordinates(data))
+			var ln = NewLineString(Coordinates(data))
 			var ch = []Point{{0, 0}, {9, 0}, {9, 9}, {0, 9}}
 			var ch_array = [][]float64{{0, 0, 0}, {9, 0, 0}, {9, 9, 0}, {0, 9, 0}, {0, 0, 0}}
 
@@ -54,7 +54,7 @@ func TestCHull(t *testing.T) {
 		g.It("should test convex hull of sqr as sqr", func() {
 			var hull = ConvexHull(Coordinates(sqr))
 			var hpoly = NewPolygonFromCoords(hull)
-			var sqrpoly = NewPolygon(sqr)
+			var sqrpoly = NewPolygon(Coordinates(sqr))
 
 			g.Assert(hull.Len()).Equal(len(sqr) - 1)
 			g.Assert(hpoly.Area()).Equal(sqrpoly.Area())
@@ -75,9 +75,9 @@ func TestCHull(t *testing.T) {
 			hullEql(g, ch, exp)
 		})
 		g.It("chull returns a polygon", func() {
-			var coords = []Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}}
+			var coords = Coordinates([]Point{{200, 200}, {760, 300}, {500, 500}, {400, 400}})
 			var ply = NewPolygon(coords)
-			var hull = NewPolygonFromCoords(ConvexHull(Coordinates(coords)))
+			var hull = NewPolygonFromCoords(ConvexHull(coords))
 			g.Assert(hull.Area() > 0).IsTrue()
 			g.Assert(ply.Area() == hull.Area()).IsTrue()
 		})

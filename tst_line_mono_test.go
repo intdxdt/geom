@@ -8,19 +8,16 @@ import (
 )
 
 func TestLineStringMono(t *testing.T) {
-	var g   = goblin.Goblin(t)
-	var pts = []Point{{5.78, 8.07}, {6.44, 9.09}, {7.87, 9.61}}
-	var ln  = NewLineString(pts)
-	var n   = ln.LenVertices()
+	var g = goblin.Goblin(t)
+	var pts = Coordinates([]Point{{5.78, 8.07}, {6.44, 9.09}, {7.87, 9.61}})
+	var ln = NewLineString(pts)
+	var n = ln.LenVertices()
 
 	g.Describe("Linestring", func() {
 		g.It("should test mono mbr", func() {
-			bounds := mbr.CreateMBR(
-				pts[0][X], pts[0][Y],
-				pts[n-1][X], pts[n-1][Y],
-			)
-
-			mbox := mono.MBR{bounds, 0, n - 1}
+			var a, b = pts.Pt(0), pts.Pt(n-1)
+			var bounds = mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
+			var mbox   = mono.MBR{bounds, 0, n - 1}
 			g.Assert(mbox.I).Eql(ln.bbox.I)
 			g.Assert(mbox.J).Eql(ln.bbox.J)
 			g.Assert(ln.BBox()).Eql(mbox.BBox())

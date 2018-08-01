@@ -12,8 +12,8 @@ func TestPolygon(t *testing.T) {
 
 	sh := []Point{{35, 10}, {45, 45}, {15, 40}, {10, 20}, {35, 10}}
 	h1 := []Point{{20, 30}, {35, 35}, {30, 20}, {20, 30}}
-	poly0 := NewPolygon(sh)
-	poly := NewPolygon(sh, h1)
+	poly0 := NewPolygon(Coordinates(sh))
+	poly := NewPolygon(Coordinates(sh), Coordinates(h1))
 	//poly := NewPolygon(sh)
 
 	g.Describe("Polygon", func() {
@@ -70,7 +70,7 @@ func TestPolygon(t *testing.T) {
 			}
 
 			var harr = ConvexHull(Coordinates(arr)).Points()
-			var hply = NewPolygon(harr)
+			var hply = NewPolygon(Coordinates(harr))
 			g.Assert(len(harr)).Equal(8)
 			g.Assert(math.Round(hply.Area(), 6)).Equal(0.41995)
 
@@ -81,7 +81,7 @@ func TestPolygon(t *testing.T) {
 				{5.91, 8.86}, {5.87, 8.74}})
 
 			harr = ConvexHull(arr2).Points()
-			hply = NewPolygon(harr)
+			hply = NewPolygon(Coordinates(harr))
 			g.Assert(len(harr)).Equal(8)
 			g.Assert(math.Round(hply.Area(), 6)).Equal(0.41995)
 
@@ -93,7 +93,7 @@ func TestPolygon(t *testing.T) {
 			}
 
 			harr = ConvexHull(Coordinates(arr3)).Points()
-			hply = NewPolygon(harr)
+			hply = NewPolygon(Coordinates(harr))
 
 			g.Assert(len(harr)).Equal(8)
 			g.Assert(math.Round(hply.Area(), 6)).Equal(0.27795)

@@ -13,37 +13,35 @@ func TestLineStringEdit(t *testing.T) {
 	var b = Point{1, -1}
 	var c = Point{-1, 4}
 
-	var pts = []Point{a, b, c}
+	var pts = Coordinates([]Point{a, b, c})
 
 	g.Describe("Linestring", func() {
 		g.It("should test length on append", func() {
 			var ln  = NewLineString(pts)
 
 			g.Assert(
-				math.Round(ln.length, 10)).Equal(
+				math.Round(ln.Length(), 10)).Equal(
 				math.Round(9.62780549425, 10),
 			)
 			g.Assert(len(ln.chains)).Equal(2)
-
-
-
 			//test util pop_coords
-			g.Assert(len(pts)).Equal(3)
+			g.Assert(pts.Len()).Equal(3)
 
-			v, pts := pop_coords(pts)
-			g.Assert(len(pts)).Equal(2)
+			var bln , v = pts.Pop()
+			g.Assert(pts.Len()).Equal(2)
+			g.Assert(bln).IsTrue()
 			g.Assert(v).Equal(c)
 
-			v, pts = pop_coords(pts)
-			g.Assert(len(pts)).Equal(1)
+			bln , v = pts.Pop()
+			g.Assert(pts.Len()).Equal(1)
 			g.Assert(v).Equal(b)
 
-			v, pts = pop_coords(pts)
-			g.Assert(len(pts)).Equal(0)
+			bln, v = pts.Pop()
+			g.Assert(pts.Len()).Equal(0)
 			g.Assert(v).Equal(a)
 
-			v, pts = pop_coords(pts)
-			g.Assert(len(pts)).Equal(0)
+			bln, v  = pts.Pop()
+			g.Assert(pts.Len()).Equal(0)
 			g.Assert(v.IsNull()).IsTrue()
 		})
 		g.It("should test intersection", func() {
@@ -58,10 +56,10 @@ func TestLineStringEdit(t *testing.T) {
 			var ln_e *LineString
 			fmt.Println(">? ln_e >> ", ln_e == nil)
 			var pt_e Point
-			var ln_ab       = NewLineString([]Point{a, b})
-			var ln_cd       = NewLineString([]Point{c, d})
+			var ln_ab       = NewLineString(Coordinates([]Point{a, b}))
+			var ln_cd       = NewLineString(Coordinates([]Point{c, d}))
 			var ln_cd_clone = ln_cd.Clone()
-			var ln_hi       = NewLineString([]Point{h, i})
+			var ln_hi       = NewLineString(Coordinates([]Point{h, i}))
 
 			var ok = ln_cd.Intersects(ln_ab)
 			g.Assert(ok).IsFalse()

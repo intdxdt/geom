@@ -30,7 +30,7 @@ func TestSegment(t *testing.T) {
 			n.BBox()
 
 			seg_ab := NewSegment(&a, &b)
-			ln_ab := NewLineString([]Point{a, b})
+			ln_ab := NewLineString(Coordinates([]Point{a, b}))
 			seg_de := &Segment{A: &d, B: &e}
 
 			seg_cd := &Segment{&c, &d, nil}

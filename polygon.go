@@ -6,13 +6,8 @@ type Polygon struct {
 }
 
 //New polygon from points
-func NewPolygon(coordinates ...[]Point) *Polygon {
-	var coords = make([]Coords, 0, len(coordinates))
-	for i := range coordinates {
-		coords = append(coords, Coordinates(coordinates[i]))
-	}
-	var rings = shells(coords)
-	return NewPolygonFromRings(rings...)
+func NewPolygon(coordinates ...Coords) *Polygon {
+	return NewPolygonFromRings(shells(coordinates)...)
 }
 
 //New polygon from points

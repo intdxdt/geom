@@ -19,9 +19,9 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	//var ok bool
 	//var qrng mbr.MBR
 	//var qbox, ibox *mono.MBR
-	var selfsegs []*Segment
+	var selfsegs  []*Segment
 	var othersegs []*Segment
-	var lnrange []*mono.MBR
+	var lnrange   []*mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; i < len(inrange); i++ {
@@ -55,8 +55,8 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 	var bln = false
 	//if root mbrs intersect
 	var othersegs []*Segment
-	var selfsegs []*Segment
-	var lnrange []*mono.MBR
+	var selfsegs  []*Segment
+	var lnrange   []*mono.MBR
 	//var qrng *mbr.MBR
 	//var qbox, ibox *mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)

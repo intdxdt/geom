@@ -8,7 +8,7 @@ import (
 func TestGeom(t *testing.T) {
 	var g = goblin.Goblin(t)
 	var p = PointXY(4.0, 5.0)
-	var ln = NewLineString([]Point{{0, 0}, {1, 1}})
+	var ln = NewLineString(Coordinates([]Point{{0, 0}, {1, 1}}))
 	var ply *Polygon
 	var line *LineString
 	var pnt Point

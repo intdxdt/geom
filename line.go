@@ -1,7 +1,6 @@
 package geom
 
 import (
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/geom/index"
 )
@@ -9,48 +8,33 @@ import (
 type LineString struct {
 	chains      []mono.MBR
 	Coordinates Coords
-	length      float64
-	monosize    int
-	bbox        mono.MBR
 	index       *index.Index
+	bbox        mono.MBR
 }
 
 //New LineString from a given Coords {Array} [[x,y], ....[x,y]]
-func NewLineString(coordinates []Point) *LineString {
-	var n = len(coordinates)
-	if n < 2 {
-		panic("a linestring must have at least 2 coordinate")
+func NewLineString(coordinates Coords) *LineString {
+	//var n =
+	if coordinates.Len() < 2 {
+		panic("a linestring must have at least 2 coordinates")
 	}
-	var mSize = int(math.Log2(float64(n) + 1.0))
 	var ln = &LineString{
-		chains:      make([]mono.MBR, 0, mSize),
-		Coordinates: Coordinates(coordinates),
-		monosize:    mSize,
+		Coordinates: coordinates,
 		index:       index.NewIndex(),
 	}
-	ln.processChains(0, n-1)
-	ln.buildIndex()
-
-	return ln
+	return ln.processChains().buildIndex()
 }
 
 //New LineString from a given Coords
 func NewLineStringFromCoords(coordinates Coords) *LineString {
-	var n = coordinates.Len()
-	if n < 2 {
+	if coordinates.Len() < 2 {
 		panic("a linestring must have at least 2 coordinate")
 	}
-	var mSize = int(math.Log2(float64(n) + 1.0))
 	var ln = &LineString{
-		chains:      make([]mono.MBR, 0, mSize),
 		Coordinates: coordinates,
-		monosize:    mSize,
 		index:       index.NewIndex(),
 	}
-	ln.processChains(0, n-1)
-	ln.buildIndex()
-
-	return ln
+	return ln.processChains().buildIndex()
 }
 
 //New line string from array
@@ -68,7 +52,7 @@ func NewLineStringFromWKT(wkt string) *LineString {
 
 //Point to LineString
 func NewLineStringFromPoint(pt Point) *LineString {
-	return NewLineString([]Point{pt, pt})
+	return NewLineString(Coordinates([]Point{pt, pt}))
 }
 
 //Point at index i
@@ -103,4 +87,3 @@ func (self *LineString) ConvexHull() *Polygon {
 func (self *LineString) LenVertices() int {
 	return self.Coordinates.Len()
 }
-

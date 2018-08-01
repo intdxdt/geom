@@ -4,9 +4,11 @@ import (
 	"sort"
 )
 
+
 func Coordinates(c []Point) Coords {
 	var n = len(c)
-	var coords = Coords{_c: c[:n:n], Idxs: make([]int, len(c))}
+	//padding-> for ring coords when append [0] to end - avoid re-allocation
+	var coords = Coords{_c: c[:n:n], Idxs: make([]int, n)}
 	for i := range coords._c {
 		coords.Idxs[i] = i
 	}

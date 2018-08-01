@@ -56,23 +56,23 @@ func quadrants(g, other Geometry) []Geometry {
 	*/
 
 
-	nw = NewPolygon([]Point{mat[2][0], mat[3][0], mat[3][1], mat[2][1], mat[2][0]})
-	ne = NewPolygon([]Point{mat[2][2], mat[3][2], mat[3][3], mat[2][3], mat[2][2]})
-	sw = NewPolygon([]Point{mat[0][0], mat[1][0], mat[1][1], mat[0][1], mat[0][0]})
-	se = NewPolygon([]Point{mat[0][2], mat[1][2], mat[1][3], mat[0][3], mat[0][2]})
+	nw = NewPolygon(Coordinates([]Point{mat[2][0], mat[3][0], mat[3][1], mat[2][1], mat[2][0]}))
+	ne = NewPolygon(Coordinates([]Point{mat[2][2], mat[3][2], mat[3][3], mat[2][3], mat[2][2]}))
+	sw = NewPolygon(Coordinates([]Point{mat[0][0], mat[1][0], mat[1][1], mat[0][1], mat[0][0]}))
+	se = NewPolygon(Coordinates([]Point{mat[0][2], mat[1][2], mat[1][3], mat[0][3], mat[0][2]}))
 
 	if other.Type().IsPoint() {
-		nn = NewLineString([]Point{mat[2][1], mat[3][1]})
-		ww = NewLineString([]Point{mat[1][0], mat[1][1]})
+		nn = NewLineString(Coordinates([]Point{mat[2][1], mat[3][1]}))
+		ww = NewLineString(Coordinates([]Point{mat[1][0], mat[1][1]}))
 		ii = &mat[1][1]
-		ee = NewLineString([]Point{mat[1][2], mat[1][3]})
-		ss = NewLineString([]Point{mat[0][1], mat[1][1]})
+		ee = NewLineString(Coordinates([]Point{mat[1][2], mat[1][3]}))
+		ss = NewLineString(Coordinates([]Point{mat[0][1], mat[1][1]}))
 	} else {
-		nn = NewPolygon([]Point{mat[2][1], mat[3][1], mat[3][2], mat[2][2], mat[2][1]})
-		ww = NewPolygon([]Point{mat[1][0], mat[2][0], mat[2][1], mat[1][1], mat[1][0]})
-		ii = NewPolygon([]Point{mat[1][1], mat[2][1], mat[2][2], mat[1][2], mat[1][1]})
-		ee = NewPolygon([]Point{mat[1][2], mat[2][2], mat[2][3], mat[1][3], mat[1][2]})
-		ss = NewPolygon([]Point{mat[0][1], mat[1][1], mat[1][2], mat[0][2], mat[0][1]})
+		nn = NewPolygon(Coordinates([]Point{mat[2][1], mat[3][1], mat[3][2], mat[2][2], mat[2][1]}))
+		ww = NewPolygon(Coordinates([]Point{mat[1][0], mat[2][0], mat[2][1], mat[1][1], mat[1][0]}))
+		ii = NewPolygon(Coordinates([]Point{mat[1][1], mat[2][1], mat[2][2], mat[1][2], mat[1][1]}))
+		ee = NewPolygon(Coordinates([]Point{mat[1][2], mat[2][2], mat[2][3], mat[1][3], mat[1][2]}))
+		ss = NewPolygon(Coordinates([]Point{mat[0][1], mat[1][1], mat[1][2], mat[0][2], mat[0][1]}))
 	}
 
 	return []Geometry{
