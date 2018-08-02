@@ -38,11 +38,11 @@ func str_polyline(shell Coords) string {
 		return s
 	}
 
-	var n = len(shell._c)
+	var n = shell.Len()
 	if n > 0 {
 		var lnstr = make([]string, n)
 		for i := 0; i < n; i++ {
-			lnstr[i] = coordStr(shell._c[i][:])
+			lnstr[i] = coordStr(shell.Pt(i)[:])
 		}
 		s = "(" + strings.Join(lnstr, ", ") + ")"
 	}
