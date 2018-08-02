@@ -3,6 +3,7 @@ package geom
 import (
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/geom/index"
+	"fmt"
 )
 
 type LineString struct {
@@ -10,6 +11,12 @@ type LineString struct {
 	bbox        mono.MBR
 	chains      []mono.MBR
 	index       *index.Index
+}
+
+func PrintChains(ln *LineString){
+	for _, o := range  ln.chains {
+		fmt.Println(o.BBox().String())
+	}
 }
 
 //New LineString from a given Coords {Array} [[x,y], ....[x,y]]
