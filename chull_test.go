@@ -63,7 +63,7 @@ func TestCHull(t *testing.T) {
 		g.It("chull contruction - empty, one, two, three", func() {
 			hullEql(g, ConvexHull(Coordinates([]Point{})), empty_hull)
 			hullEql(g, ConvexHull(Coordinates([]Point{{200, 200}})), Coordinates([]Point{{200, 200}}))
-			hullEql(g, ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}}), false), Coordinates([]Point{{200, 200}, {760, 300}}))
+			hullEql(g, ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}})), Coordinates([]Point{{200, 200}, {760, 300}}))
 			var ch = ConvexHull(Coordinates([]Point{{200, 200}, {760, 300}, {500, 500}}))
 			var exp = Coordinates([]Point{{760, 300}, {200, 200}, {500, 500}})
 			hullEql(g, ch, exp)
