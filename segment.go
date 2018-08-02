@@ -5,19 +5,19 @@ import (
 )
 
 type Segment struct {
-	coords Coords
+	Coords Coords
 	ln     *LineString
 }
 
 ////New Segment constructor
 func NewSegment(coordinates Coords, i, j int) *Segment {
 	coordinates.Idxs = []int{i, j}
-	return &Segment{coords: coordinates}
+	return &Segment{Coords: coordinates}
 }
 
 //New Segment constructor
 func NewSegmentAB(a, b Point) *Segment {
-	return &Segment{coords: Coordinates([]Point{a, b})}
+	return &Segment{Coords: Coordinates([]Point{a, b})}
 }
 
 //WKT
@@ -28,7 +28,7 @@ func (self *Segment) WKT() string {
 //Segment as line string
 func (self *Segment) AsLineString() *LineString {
 	if self.ln == nil {
-		self.ln = NewLineString(self.coords)
+		self.ln = NewLineString(self.Coords)
 	}
 	return self.ln
 }
@@ -51,9 +51,9 @@ func (self *Segment) SegSegIntersection(other *Segment) []*InterPoint {
 }
 
 func (self *Segment) A() *Point{
-	return self.coords.Pt(0)
+	return self.Coords.Pt(0)
 }
 
 func (self *Segment) B() *Point{
-	return self.coords.Pt(1)
+	return self.Coords.Pt(1)
 }

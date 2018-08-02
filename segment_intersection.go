@@ -110,7 +110,7 @@ func coincidentSegs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) [
 	return points
 }
 
-//updates coords that are in bounds
+//updates Coords that are in bounds
 func updateCoordsInbounds(bounds *mbr.MBR, point *Point, intpts *[]*InterPoint, vbits VBits) {
 	if bounds.ContainsXY(point[X], point[Y]) {
 		*intpts = append(*intpts, &InterPoint{*point, vbits})

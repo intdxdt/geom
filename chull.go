@@ -2,14 +2,14 @@ package geom
 
 // description computes the convex hull of a point set.
 // param points An array of [X, Y] coordinates
-func ConvexHull(points Coords, clone_coords ...bool) Coords {
-	var clone = true
-	if len(clone_coords) > 0 {
-		clone = clone_coords[0]
+func ConvexHull(points Coords, clone ...bool) Coords {
+	var cln = true
+	if len(clone) > 0 {
+		cln = clone[0]
 	}
 	var pnts = points
 	//copy points into mutable container
-	if clone {
+	if cln {
 		pnts = ShallowClone(points)
 	}
 
@@ -68,6 +68,7 @@ func ShallowClone(coordinates Coords, slice ...int) Coords {
 	} else if len(slice) > 1 {
 		i, j = slice[0], slice[1]
 	}
+
 	var o = Coords{_c: coordinates._c, Idxs: make([]int, 0,  j-i)}
 	for _, v := range coordinates.Idxs[i:j]{
 		o.Idxs = append(o.Idxs, v)

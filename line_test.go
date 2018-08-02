@@ -88,7 +88,7 @@ func TestLineString(t *testing.T) {
 			g.Assert(ln.Coordinates.Points()).Eql(pts)
 		})
 
-		g.It("should test coords indexing", func() {
+		g.It("should test Coords indexing", func() {
 			g.Assert(*ln.Coordinates.Pt(0)).Eql(pts[0])
 			g.Assert(ln.Pt(ln.LenVertices() - 1).Equals2D(&pts[len(pts)-1])).IsTrue()
 			g.Assert(ln.LenVertices()).Eql(len(pts))
