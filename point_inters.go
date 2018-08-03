@@ -11,7 +11,7 @@ type InterPoint struct {
 	Inter VBits
 }
 
-type IntPts []*InterPoint
+type IntPts []InterPoint
 
 func (s IntPts) Len() int {
 	return len(s)

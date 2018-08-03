@@ -1,7 +1,7 @@
 package geom
 
 import (
-		"github.com/intdxdt/sset"
+	"github.com/intdxdt/sset"
 	"github.com/intdxdt/geom/mono"
 )
 
@@ -19,25 +19,26 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	//var ok bool
 	//var qrng mbr.MBR
 	//var qbox, ibox *mono.MBR
-	var selfsegs  []*Segment
-	var othersegs []*Segment
-	var lnrange   []*mono.MBR
+	var selfsegs []int
+	var othersegs []int
+	var lnrange []*mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)
+	var ibox, qbox *mono.MBR
+	var minx, miny, maxx, maxy float64
 
 	for i := 0; i < len(inrange); i++ {
 		//cur self box
-		var ibox = inrange[i]
+		ibox = inrange[i]
 		//search ln using ibox
 		lnrange = other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
-			var qbox = lnrange[q]
-			var qrng, ok = ibox.MBR.Intersection(&qbox.MBR)
+			qbox = lnrange[q]
+			//var qrng, ok = ibox.MBR.Intersection(&qbox.MBR)
+			minx, miny, maxx, maxy = mono_intersection(ibox, qbox)
 
-			if ok {
-				self.segsInrange(&selfsegs, &qrng,   ibox.I, ibox.J)
-				other.segsInrange(&othersegs, &qrng, qbox.I, qbox.J)
-				self.segsegIntersection(selfsegs, othersegs, ptset)
-			}
+			self.segsInrange(&selfsegs, minx, miny, maxx, maxy, ibox.I, ibox.J)
+			other.segsInrange(&othersegs, minx, miny, maxx, maxy, qbox.I, qbox.J)
+			self.segsegIntersection(self.Coordinates._c, selfsegs, other.Coordinates._c, othersegs, ptset)
 		}
 	}
 
@@ -53,29 +54,31 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 //other{LineString} - geometry types and array as Point
 func (self *LineString) intersectsLinestring(other *LineString) bool {
 	var bln = false
-	//if root mbrs intersect
-	var othersegs []*Segment
-	var selfsegs  []*Segment
-	var lnrange   []*mono.MBR
+	var othersegs []int
+	var selfsegs []int
+	var lnrange []*mono.MBR
+	var ibox, qbox *mono.MBR
+	var minx, miny, maxx, maxy float64
+
 	//var qrng *mbr.MBR
 	//var qbox, ibox *mono.MBR
 	var inrange = self.index.Search(other.bbox.MBR)
 
 	for i := 0; !bln && i < len(inrange); i++ {
 		//search ln using ibox
-		var ibox = inrange[i]
+		ibox = inrange[i]
 		lnrange = other.index.Search(ibox.MBR)
 
 		for q := 0; !bln && q < len(lnrange); q++ {
+			qbox = lnrange[q]
+			//var qrng, _ = ibox.Intersection(&qbox.MBR)
+			minx, miny, maxx, maxy = mono_intersection(ibox, qbox)
 
-			var qbox = lnrange[q]
-			var qrng, _ = ibox.Intersection(&qbox.MBR)
-
-			self.segsInrange(&selfsegs, &qrng,   ibox.I, ibox.J)
-			other.segsInrange(&othersegs, &qrng, qbox.I, qbox.J)
+			self.segsInrange(&selfsegs, minx, miny, maxx, maxy, ibox.I, ibox.J)
+			other.segsInrange(&othersegs, minx, miny, maxx, maxy, qbox.I, qbox.J)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
-				bln = self.segseg_intersects(selfsegs, othersegs)
+				bln = self.segseg_intersects(self.Coordinates._c, selfsegs, other.Coordinates._c, othersegs)
 			}
 		}
 	}
@@ -114,12 +117,14 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 
 // Tests whether a collection of segments from line a and line b intersects
 // TODO:Improve O(n^2) - although expects few number of segs from index selection
-func (self *LineString) segseg_intersects(segsa []*Segment, segsb []*Segment) bool {
+func (self *LineString) segseg_intersects(a_coords []Point, segsa []int, b_coords []Point, segsb []int) bool {
 	var bln = false
 	var na, nb = len(segsa), len(segsb)
-	for a := 0; !bln && a < na; a++ {
-		for b := 0; !bln && b < nb; b++ {
-			bln = segsa[a].SegSegIntersects(segsb[b])
+	var a0, a1 *Point
+	for a := 0; !bln && a < na; a += 2 {
+		a0, a1 = &a_coords[segsa[a]], &a_coords[segsa[a+1]]
+		for b := 0; !bln && b < nb; b += 2 {
+			bln = SegSegIntersects(a0, a1, &b_coords[segsb[b]], &b_coords[segsb[b+1]])
 		}
 	}
 	return bln

@@ -46,7 +46,7 @@ func (self *Segment) SegSegIntersects(other *Segment) bool {
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
-func (self *Segment) SegSegIntersection(other *Segment) []*InterPoint {
+func (self *Segment) SegSegIntersection(other *Segment) []InterPoint {
 	return SegSegIntersection(self.A(), self.B(), other.A(), other.B())
 }
 

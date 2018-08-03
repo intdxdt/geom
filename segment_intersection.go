@@ -7,8 +7,8 @@ import (
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
-func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
-	var coords []*InterPoint
+func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
+	var coords = make([]InterPoint, 0, 3)
 	var a, b, d = segsegABD(sa[:], sb[:], oa[:], ob[:])
 
 	//snap to zero if near -0 or 0
@@ -29,14 +29,10 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []*InterPoint {
 	var ub_0_1 = 0.0 <= ub && ub <= 1.0
 
 	if ua_0_1 && ub_0_1 {
-		var pt = &InterPoint{
-			Point: PointXY(
-				sa[X]+ua*(sb[X]-sa[X]),
-				sa[Y]+ua*(sb[Y]-sa[Y]),
-			),
-			Inter: interRelation(ua, ub),
-		}
-		coords = append(coords, pt)
+		coords = append(coords, InterPoint{
+			 Pt(sa[X]+ua*(sb[X]-sa[X]), sa[Y]+ua*(sb[Y]-sa[Y])),
+			 interRelation(ua, ub),
+		})
 	}
 	return coords
 }
@@ -72,21 +68,21 @@ func interRelation(ua, ub float64) VBits {
 	return sa | sb | oa | ob
 }
 
-func coincidentSegs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) []*InterPoint {
+func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []InterPoint {
 	if a == 0 && b == 0 {
 		var selfBox = BBox(sa, sb)
 		var otherBox = BBox(oa, ob)
 		if selfBox.Intersects(otherBox) {
 			updateCoordsInbounds(otherBox, sa, &coords, SelfA)
 			updateCoordsInbounds(otherBox, sb, &coords, SelfB)
-			updateCoordsInbounds(selfBox, oa, &coords, OtherA)
-			updateCoordsInbounds(selfBox, ob, &coords, OtherB)
+			updateCoordsInbounds(selfBox, oa,  &coords, OtherA)
+			updateCoordsInbounds(selfBox, ob,  &coords, OtherB)
 		}
 	}
 	//lexical sort
 	sort.Sort(IntPts(coords))
 
-	var points []*InterPoint
+	var points []InterPoint
 	var last = false
 	var n = len(coords) - 1
 
@@ -111,8 +107,8 @@ func coincidentSegs(sa, sb, oa, ob *Point, coords []*InterPoint, a, b float64) [
 }
 
 //updates Coords that are in bounds
-func updateCoordsInbounds(bounds *mbr.MBR, point *Point, intpts *[]*InterPoint, vbits VBits) {
+func updateCoordsInbounds(bounds *mbr.MBR, point *Point, intpts *[]InterPoint, vbits VBits) {
 	if bounds.ContainsXY(point[X], point[Y]) {
-		*intpts = append(*intpts, &InterPoint{*point, vbits})
+		*intpts = append(*intpts, InterPoint{*point, vbits})
 	}
 }
