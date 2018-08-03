@@ -23,7 +23,7 @@ func TestLineStringEdit(t *testing.T) {
 				math.Round(ln.Length(), 10)).Equal(
 				math.Round(9.62780549425, 10),
 			)
-			g.Assert(len(ln.chains)).Equal(2)
+			g.Assert(len(ln.chains)).Equal(1)
 			//test util pop_coords
 			g.Assert(pts.Len()).Equal(3)
 

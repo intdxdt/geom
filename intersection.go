@@ -105,7 +105,7 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 	var bln = self.bbox.MBR.Intersects(&shell.bbox.MBR)
 
 	if bln {
-		spts := self.linearIntersection(shell.LineString)
+		var spts = self.linearIntersection(shell.LineString)
 		for idx := range spts {
 			ptset.Add(spts[idx])
 		}
@@ -116,6 +116,7 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 				ptset.Add(hpts[idx])
 			}
 		}
+
 		//check for all vertices
 		for idx := range self.Coordinates.Idxs {
 			var pt = self.Coordinates.Pt(idx)

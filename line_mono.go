@@ -12,16 +12,28 @@ import (
 func (self *LineString) processChains() *LineString {
 	var dx, dy float64
 	var cur_x, cur_y, prev_x, prev_y int
-	var i, j = 0, self.Coordinates.Len()-1
+	var n = self.Coordinates.Len()
+	var i, j = 0, n-1
+	var a, b *Point
+	a = self.Coordinates.Pt(i)
+	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
+	if n <= 8 {
+		for i := range self.Coordinates.Idxs {
+			a = self.Coordinates.Pt(i)
+			box.ExpandIncludeXY(a[X], a[Y])
+		}
+		self.bbox = mono.CreateMonoMBR(box)
+		self.bbox.I, self.bbox.J = 0, n-1
+		self.chains = append(self.chains, self.bbox)
+		return self
+	}
+
 	var monoLimit = int(math.Log2(float64(j+1) + 1.0))
 
 	//init chains
 	self.chains = make([]mono.MBR, 0, 2*monoLimit)
 
 	prev_x, prev_y = null, null
-	var a, b *Point
-	a = self.Coordinates.Pt(i)
-	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
 
 	self.bbox = mono.CreateMonoMBR(box)
 	var mbox = mono.CreateMonoMBR(box)
