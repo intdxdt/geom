@@ -13,7 +13,9 @@ func (self *LineString) segsInrange(seglist *[]*Segment, box *mbr.MBR, i, j int)
 	for ; i < j; i++ {
 		a, b = self.Coordinates.Pt(i), self.Coordinates.Pt(i+1)
 		if box.IntersectsBounds(a[:], b[:]) {
-			*seglist = append(*seglist, NewSegment(self.Coordinates, i, i+1))
+			*seglist = append(*seglist, NewSegment(
+				self.Coordinates, self.Coordinates.Idxs[i], self.Coordinates.Idxs[i+1],
+			))
 		}
 	}
 }
