@@ -14,11 +14,6 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 		return ptlist //disjoint
 	}
 
-	//if root mbrs intersect
-	//var i, q, lnrange, ibox, qbox, qrng
-	//var ok bool
-	//var qrng mbr.MBR
-	//var qbox, ibox *mono.MBR
 	var selfsegs []int
 	var othersegs []int
 	var lnrange []*mono.MBR
@@ -33,7 +28,6 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 		lnrange = other.index.Search(ibox.MBR)
 		for q := 0; q < len(lnrange); q++ {
 			qbox = lnrange[q]
-			//var qrng, ok = ibox.MBR.Intersection(&qbox.MBR)
 			minx, miny, maxx, maxy = mono_intersection(ibox, qbox)
 
 			self.segsInrange(&selfsegs, minx, miny, maxx, maxy, ibox.I, ibox.J)
@@ -71,7 +65,6 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 
 		for q := 0; !bln && q < len(lnrange); q++ {
 			qbox = lnrange[q]
-			//var qrng, _ = ibox.Intersection(&qbox.MBR)
 			minx, miny, maxx, maxy = mono_intersection(ibox, qbox)
 
 			self.segsInrange(&selfsegs, minx, miny, maxx, maxy, ibox.I, ibox.J)
