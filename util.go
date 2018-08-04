@@ -1,8 +1,7 @@
 package geom
 
 import (
-	"github.com/intdxdt/math"
-	"github.com/intdxdt/geom/mono"
+		"github.com/intdxdt/geom/mono"
 )
 
 //Checks if geometry type is one of the fundermental types
@@ -61,12 +60,21 @@ func intersects(
 	return !(o_minx > m_maxx || o_maxx < m_minx || o_miny > m_maxy || o_maxy < m_miny)
 }
 
+//Checks if two bounding boxes intesect
+func bounds_intersects(sa, sb, oa, ob *Point) bool {
+	var  s_minx, s_miny, s_maxx, s_maxy = bounds(sa, sb)
+	var  o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
+	//not disjoint
+	return !(o_minx > s_maxx || o_maxx < s_minx || o_miny > s_maxy || o_maxy < s_miny)
+}
+
+
 //Intersects bounding box defined by two points pt1 & pt2
 func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {
-	if minx > math.MaxF64(pt1[0], pt2[0]) || maxx < math.MinF64(pt1[0], pt2[0]) {
+	if minx > maxf64(pt1[0], pt2[0]) || maxx < minf64(pt1[0], pt2[0]) {
 		return false
 	}
-	return !(miny > math.MaxF64(pt1[1], pt2[1]) || maxy < math.MinF64(pt1[1], pt2[1]))
+	return !(miny > maxf64(pt1[1], pt2[1]) || maxy < minf64(pt1[1], pt2[1]))
 }
 
 //bounds contains x, y
@@ -75,7 +83,7 @@ func containsXY(minx, miny, maxx, maxy, x, y float64) bool {
 }
 
 //envelope of segment
-func BBox(a, b *Point) (float64, float64, float64, float64) {
+func bounds(a, b *Point) (float64, float64, float64, float64) {
 	var minx, miny, maxx, maxy = a[X], a[Y], b[X], b[Y]
 	return minf64(minx, maxx), minf64(miny, maxy), maxf64(minx, maxx), maxf64(miny, maxy)
 }

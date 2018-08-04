@@ -23,7 +23,7 @@ func TestPoint(t *testing.T) {
 	var p10 = CreatePoint([]float64{3.9, 4.9, 9.8})
 	var p11 = CreatePoint([]float64{3.9, 4.9, 9.8, 7.9})
 
-	//p0.BBox
+	//p0.bounds
 	//p0.AsLinear
 	//p0.Intersects
 	//p0.Intersection

@@ -69,8 +69,8 @@ func interRelation(ua, ub float64) VBits {
 
 func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []InterPoint {
 	if a == 0 && b == 0 {
-		var s_minx, s_miny, s_maxx, s_maxy = BBox(sa, sb)
-		var o_minx, o_miny, o_maxx, o_maxy = BBox(oa, ob)
+		var s_minx, s_miny, s_maxx, s_maxy = bounds(sa, sb)
+		var o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
 		if intersects(s_minx, s_miny, s_maxx, s_maxy, o_minx, o_miny, o_maxx, o_maxy) {
 			updateCoordsInbounds(o_minx, o_miny, o_maxx, o_maxy, sa, &coords, SelfA)
 			updateCoordsInbounds(o_minx, o_miny, o_maxx, o_maxy, sb, &coords, SelfB)

@@ -5,7 +5,7 @@ import (
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/math"
 )
-
+const miniMonoSize = 8
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
@@ -19,7 +19,7 @@ func (self *LineString) processChains() *LineString {
 	a = self.Coordinates.Pt(i)
 	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
 
-	if n <= 8 {
+	if n <= miniMonoSize {
 		for i := range self.Coordinates.Idxs {
 			a = self.Coordinates.Pt(i)
 			box.ExpandIncludeXY(a[X], a[Y])
