@@ -1,9 +1,5 @@
 package geom
 
-import (
-	"github.com/intdxdt/mbr"
-)
-
 type VBits uint8
 
 const (
@@ -37,8 +33,3 @@ func snap_to_zero_or_one(v float64) float64 {
 	return v
 }
 
-//envelope of segment
-func BBox(a, b *Point) *mbr.MBR {
-	var box = mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
-	return &box
-}

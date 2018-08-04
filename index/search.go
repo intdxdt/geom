@@ -17,17 +17,15 @@ func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
 
 	var nodesToSearch []*idxNode
 	var child *idxNode
-	var childBBox *mbr.MBR
 
 	for {
-		for i, length := 0, len(nd.children); i < length; i++ {
+		for i := range nd.children {
 			child = &nd.children[i]
-			childBBox = &child.bbox
 
-			if intersects(bbox, childBBox) {
+			if intersects(bbox, &child.bbox) {
 				if nd.leaf {
 					result = append(result, child.item)
-				} else if contains(bbox, childBBox) {
+				} else if contains(bbox, &child.bbox) {
 					result = all(child, result)
 				} else {
 					nodesToSearch = append(nodesToSearch, child)

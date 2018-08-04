@@ -53,6 +53,13 @@ func mono_intersection(mbr, other *mono.MBR) (float64, float64, float64, float64
 	return minx, miny, maxx, maxy
 }
 
+//Checks if two bounding boxes intesect
+func intersects(
+	m_minx, m_miny, m_maxx, m_maxy float64,
+	o_minx, o_miny, o_maxx, o_maxy float64) bool {
+	//not disjoint
+	return !(o_minx > m_maxx || o_maxx < m_minx || o_miny > m_maxy || o_maxy < m_miny)
+}
 
 //Intersects bounding box defined by two points pt1 & pt2
 func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {
@@ -60,4 +67,31 @@ func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {
 		return false
 	}
 	return !(miny > math.MaxF64(pt1[1], pt2[1]) || maxy < math.MinF64(pt1[1], pt2[1]))
+}
+
+//bounds contains x, y
+func containsXY(minx, miny, maxx, maxy, x, y float64) bool {
+	return (x >= minx) && (x <= maxx) && (y >= miny) && (y <= maxy)
+}
+
+//envelope of segment
+func BBox(a, b *Point) (float64, float64, float64, float64) {
+	var minx, miny, maxx, maxy = a[X], a[Y], b[X], b[Y]
+	return minf64(minx, maxx), minf64(miny, maxy), maxf64(minx, maxx), maxf64(miny, maxy)
+}
+
+//max
+func maxf64(x, y float64) float64 {
+	if y > x {
+		return y
+	}
+	return x
+}
+
+//min
+func minf64(x, y float64) float64 {
+	if y < x {
+		return y
+	}
+	return x
 }

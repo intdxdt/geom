@@ -15,8 +15,10 @@ func (self *LineString) processChains() *LineString {
 	var n = self.Coordinates.Len()
 	var i, j = 0, n-1
 	var a, b *Point
+
 	a = self.Coordinates.Pt(i)
 	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
+
 	if n <= 8 {
 		for i := range self.Coordinates.Idxs {
 			a = self.Coordinates.Pt(i)
@@ -30,13 +32,10 @@ func (self *LineString) processChains() *LineString {
 
 	var monoLimit = int(math.Log2(float64(j+1) + 1.0))
 
-	//init chains
-	self.chains = make([]mono.MBR, 0, 2*monoLimit)
-
 	prev_x, prev_y = null, null
 
 	self.bbox = mono.CreateMonoMBR(box)
-	var mbox = mono.CreateMonoMBR(box)
+	var mbox  = self.bbox
 
 	self.xyMonobox(&mbox, i, i)
 	self.chains = append(self.chains, mbox)
@@ -60,7 +59,6 @@ func (self *LineString) processChains() *LineString {
 			prev_y = cur_y
 		}
 
-		//((cur_x + prev_x > 0) && (prev_y + cur_y > 0))
 		mono_size += 1
 		if prev_x == cur_x && prev_y == cur_y && mono_size <= monoLimit {
 			self.xyMonobox(&self.chains[m_index], i, null)

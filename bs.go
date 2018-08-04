@@ -7,6 +7,7 @@ func ptCmp(oa, ob interface{}) int {
 	if feq(d, 0) {
 		d = a[Y] - b[Y]
 	}
+
 	var r = 1
 	if feq(d, 0) {
 		r = 0

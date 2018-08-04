@@ -2,7 +2,6 @@ package geom
 
 import (
 	"sort"
-	"github.com/intdxdt/mbr"
 )
 
 //do two lines intersect line segments a && b with
@@ -30,8 +29,8 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 
 	if ua_0_1 && ub_0_1 {
 		coords = append(coords, InterPoint{
-			 Pt(sa[X]+ua*(sb[X]-sa[X]), sa[Y]+ua*(sb[Y]-sa[Y])),
-			 interRelation(ua, ub),
+			Pt(sa[X]+ua*(sb[X]-sa[X]), sa[Y]+ua*(sb[Y]-sa[Y])),
+			interRelation(ua, ub),
 		})
 	}
 	return coords
@@ -70,15 +69,16 @@ func interRelation(ua, ub float64) VBits {
 
 func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []InterPoint {
 	if a == 0 && b == 0 {
-		var selfBox = BBox(sa, sb)
-		var otherBox = BBox(oa, ob)
-		if selfBox.Intersects(otherBox) {
-			updateCoordsInbounds(otherBox, sa, &coords, SelfA)
-			updateCoordsInbounds(otherBox, sb, &coords, SelfB)
-			updateCoordsInbounds(selfBox, oa,  &coords, OtherA)
-			updateCoordsInbounds(selfBox, ob,  &coords, OtherB)
+		var s_minx, s_miny, s_maxx, s_maxy = BBox(sa, sb)
+		var o_minx, o_miny, o_maxx, o_maxy = BBox(oa, ob)
+		if intersects(s_minx, s_miny, s_maxx, s_maxy, o_minx, o_miny, o_maxx, o_maxy) {
+			updateCoordsInbounds(o_minx, o_miny, o_maxx, o_maxy, sa, &coords, SelfA)
+			updateCoordsInbounds(o_minx, o_miny, o_maxx, o_maxy, sb, &coords, SelfB)
+			updateCoordsInbounds(s_minx, s_miny, s_maxx, s_maxy, oa, &coords, OtherA)
+			updateCoordsInbounds(s_minx, s_miny, s_maxx, s_maxy, ob, &coords, OtherB)
 		}
 	}
+
 	//lexical sort
 	sort.Sort(IntPts(coords))
 
@@ -107,8 +107,8 @@ func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []
 }
 
 //updates Coords that are in bounds
-func updateCoordsInbounds(bounds *mbr.MBR, point *Point, intpts *[]InterPoint, vbits VBits) {
-	if bounds.ContainsXY(point[X], point[Y]) {
+func updateCoordsInbounds(minx, miny, maxx, maxy float64, point *Point, intpts *[]InterPoint, vbits VBits) {
+	if containsXY(minx, miny, maxx, maxy, point[X], point[Y]) {
 		*intpts = append(*intpts, InterPoint{*point, vbits})
 	}
 }

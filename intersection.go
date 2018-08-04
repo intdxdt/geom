@@ -99,9 +99,9 @@ func (self *Polygon) Intersection(other Geometry) []Point {
 
 //line intersect polygon rings
 func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
+	var res []Point
 	var shell = rings[0]
 	var ptset = sset.NewSSet(ptCmp)
-	var res []Point
 	var bln = self.bbox.MBR.Intersects(&shell.bbox.MBR)
 
 	if bln {
@@ -110,8 +110,8 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 			ptset.Add(spts[idx])
 		}
 		//inside shell, does it touch hole boundary ?
-		for i := 1; i < len(rings); i++ {
-			hpts := self.linearIntersection(rings[i].LineString)
+		for i := range rings {
+			var hpts = self.linearIntersection(rings[i].LineString)
 			for idx := range hpts {
 				ptset.Add(hpts[idx])
 			}
