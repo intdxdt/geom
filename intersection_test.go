@@ -1,9 +1,9 @@
 package geom
 
 import (
+	"time"
 	"testing"
 	"github.com/franela/goblin"
-	"time"
 )
 
 func TestIntersection(t *testing.T) {
@@ -46,9 +46,10 @@ func TestIntersection(t *testing.T) {
 	var ptG = PointFromWKT(ptGwkt)
 	var ptH = PointFromWKT(ptHwkt)
 
+	var coords = Coordinates([]Point{ptA, ptB, ptC})
 	var segAA = NewSegmentAB(ptA, ptA)
-	var segAB = NewSegmentAB(ptA, ptB)
-	segNoneGeom_AB := Seg{segAB}
+	var segAB = NewSegment(coords, 0, 1)
+	var segNoneGeom_AB = Seg{segAB}
 	var nilG *Polygon
 
 	g.Describe("Intersection with pt, seg, ln, poly", func() {
