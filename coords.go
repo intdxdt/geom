@@ -4,7 +4,6 @@ import (
 	"sort"
 )
 
-
 func Coordinates(c []Point) Coords {
 	var n = len(c)
 	var coords = Coords{_c: c[:n:n], Idxs: make([]int, n)}
@@ -22,6 +21,16 @@ type Coords struct {
 //Point at index
 func (s *Coords) Pt(i int) *Point {
 	return &s._c[s.Idxs[i]]
+}
+
+//Point at index
+func (s *Coords) Slice(i, j int) Coords {
+	var coords = *s
+	coords.Idxs = make([]int, 0, j-i)
+	for _, v := range s.Idxs[i:j] {
+		coords.Idxs = append(coords.Idxs, v)
+	}
+	return coords
 }
 
 //Point at index
