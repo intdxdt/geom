@@ -26,9 +26,6 @@ const (
 
 var feq = math.FloatEqual
 
-//geometry constructor
-type GeometryFn func(Coords) Geometry
-
 type Geometry interface {
 	BBox() *mbr.MBR
 	Bounds() mbr.MBR

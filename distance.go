@@ -76,7 +76,7 @@ func (self *LineString) mindistBruteforce(other *LineString) float64 {
 	for i := 0; !bln && i < ln.Len()-1; i++ {
 		for j := 0; !bln && j < ln2.Len()-1; j++ {
 			d = SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1))
-			dist = math.MinF64(d, dist)
+			dist = minf64(d, dist)
 			bln = dist == 0
 		}
 	}
@@ -95,7 +95,7 @@ func distAsLines(self, other Geometry) float64 {
 			if math.IsNaN(dist) {
 				dist = d
 			} else {
-				dist = math.MinF64(d, dist)
+				dist = minf64(d, dist)
 			}
 		}
 	}
