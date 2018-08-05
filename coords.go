@@ -26,10 +26,7 @@ func (s *Coords) Pt(i int) *Point {
 //Point at index
 func (s *Coords) Slice(i, j int) Coords {
 	var coords = *s
-	coords.Idxs = make([]int, 0, j-i)
-	for _, v := range s.Idxs[i:j] {
-		coords.Idxs = append(coords.Idxs, v)
-	}
+	coords.Idxs = s.Idxs[i:j]
 	return coords
 }
 

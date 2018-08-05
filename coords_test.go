@@ -16,8 +16,10 @@ func TestCoordinate(t *testing.T) {
 
 	var c2 = ShallowClone(cds, 1, 3)
 	g.Assert(c2.Points()).Equal([]Point{{1.0, 0.1}, {1.0, 0.05}})
+	g.Assert(cds.Slice(1,3).Points()).Equal(c2.Points())
 	var c4 = ShallowClone(cds, 2, 3)
 	g.Assert(c4.Points()).Equal([]Point{{1.0, 0.05}})
+	g.Assert(cds.Slice(2,3).Points()).Equal(c4.Points())
 	var c5 = ShallowClone(cds, 2, 2)
 	g.Assert(c5.Points()).Equal([]Point{})
 

@@ -59,5 +59,9 @@ func ShallowClone(coordinates Coords, slice ...int) Coords {
 	} else if len(slice) > 1 {
 		i, j = slice[0], slice[1]
 	}
-	return coordinates.Slice(i, j)
+	var o = Coords{_c: coordinates._c, Idxs: make([]int, 0,  j-i)}
+	for _, v := range coordinates.Idxs[i:j]{
+		o.Idxs = append(o.Idxs, v)
+	}
+	return o
 }
