@@ -23,7 +23,6 @@ func TestCoordinate(t *testing.T) {
 	var c5 = ShallowClone(cds, 2, 2)
 	g.Assert(c5.Points()).Equal([]Point{})
 
-
 	var coords = []Point{{0.0, 0.0}, {1.0, 0.0}, {2.0, 0.0}}
 	var coords2d = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
 	var coords2d1 = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.9}, {1.0, 0.5}})

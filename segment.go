@@ -11,7 +11,7 @@ type Segment struct {
 
 ////New Segment constructor
 func NewSegment(coordinates Coords, i, j int) *Segment {
-	coordinates.Idxs = []int{i, j}
+	coordinates.Idxs = []int{coordinates.Idxs[i], coordinates.Idxs[j]}
 	return &Segment{Coords: coordinates}
 }
 
