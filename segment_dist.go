@@ -51,7 +51,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 			}
 			dist = DistanceToPoint(lna, lnb, pta)
 		} else {
-			dist = math.MinF64(
+			dist = minf64(
 				minf64(
 					DistanceToPoint(oa, ob, sa),
 					DistanceToPoint(oa, ob, sb)),
@@ -81,7 +81,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 			}
 
 			if pta != nil && ptb != nil {
-				dist = math.MinF64(
+				dist = minf64(
 					DistanceToPoint(oa, ob, pta),
 					DistanceToPoint(sa, sb, ptb),
 				)
