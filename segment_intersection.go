@@ -1,13 +1,11 @@
 package geom
 
-import (
-	"sort"
-)
+import "sort"
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
 func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
-	var coords = make([]InterPoint, 0, 3)
+	var coords []InterPoint
 	var a, b, d = segsegABD(sa[:], sb[:], oa[:], ob[:])
 
 	//snap to zero if near -0 or 0
@@ -65,16 +63,19 @@ func segsegABD(sa, sb, oa, ob []float64) (float64, float64, float64) {
 
 func interRelation(ua, ub float64) VBits {
 	var sa, sb, oa, ob VBits
+
 	if ua == 0 {
 		sa = SelfA
 	} else if ua == 1 {
 		sb = SelfB
 	}
+
 	if ub == 0 {
 		oa = OtherA
 	} else if ub == 1 {
 		ob = OtherB
 	}
+
 	return sa | sb | oa | ob
 }
 

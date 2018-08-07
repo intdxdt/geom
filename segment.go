@@ -9,7 +9,7 @@ type Segment struct {
 	ln     *LineString
 }
 
-////New Segment constructor
+//New Segment constructor
 func NewSegment(coordinates Coords, i, j int) *Segment {
 	coordinates.Idxs = []int{coordinates.Idxs[i], coordinates.Idxs[j]}
 	return &Segment{Coords: coordinates}
@@ -50,10 +50,10 @@ func (self *Segment) SegSegIntersection(other *Segment) []InterPoint {
 	return SegSegIntersection(self.A(), self.B(), other.A(), other.B())
 }
 
-func (self *Segment) A() *Point{
+func (self *Segment) A() *Point {
 	return self.Coords.Pt(0)
 }
 
-func (self *Segment) B() *Point{
+func (self *Segment) B() *Point {
 	return self.Coords.Pt(1)
 }

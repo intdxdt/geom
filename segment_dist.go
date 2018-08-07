@@ -29,7 +29,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 	var is_aspt_a, is_aspt_b bool
 	var denom, numera, numerb float64
 
-	denom  = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1)
+	denom = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1)
 	numera = (x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)
 	numerb = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)
 
@@ -64,16 +64,16 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 	} else {
 		//if close to zero or one , snap
 		mua = numera / denom
-		if feq(mua, 0) {
+		if (mua == 0) || math.Abs(mua) < math.EPSILON { //a == b || Abs(a - b) < EPSILON
 			mua = 0
-		} else if feq(mua, 1) {
+		} else if (mua == 1) || math.Abs(mua-1) < math.EPSILON {
 			mua = 1
 		}
 
 		mub = numerb / denom
-		if feq(mub, 0) {
+		if (mub == 0) || math.Abs(mub) < math.EPSILON {
 			mub = 0
-		} else if feq(mub, 1) {
+		} else if (mub == 1) || math.Abs(mub-1) < math.EPSILON {
 			mub = 1
 		}
 
@@ -123,7 +123,8 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 	var px, py = pt[X], pt[Y]
 	//var dab = sb.Sub(sa)
 	var dx, dy = bx-ax, by-ay
-	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON //a == b || Abs(a - b) < EPSILON
+	//a == b || Abs(a - b) < EPSILON
+	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON
 	var isz_y = (dy == 0) || math.Abs(dy) < math.EPSILON
 
 	if isz_x && isz_y {
@@ -131,21 +132,15 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 		dist = hypot(px-ax, py-ay)
 	} else {
 		var cPtx, cPty float64
-		//(pax * dx) + (pay * dy)
-		//var u = pt.Sub(sa).DotProduct(dab) / (dx*dx + dy*dy)
 		var u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
-			//cPt = sa
 			cPtx, cPty = ax, ay
 		} else if u > 1 {
-			//cPt = sb
 			cPtx, cPty = bx, by
 		} else {
-			//cPt = PointXY(sa[X]+u*dx, sa[Y]+u*dy)
 			cPtx, cPty = ax+u*dx, ay+u*dy
 		}
-		//dist = pt.Magnitude(cPt)
 		dist = hypot(px-cPtx, py-cPty)
 	}
 
