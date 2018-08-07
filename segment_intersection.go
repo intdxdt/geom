@@ -21,8 +21,19 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 	}
 
 	// is the intersection along the the segments
-	var ua = snap_to_zero_or_one(a / d)
-	var ub = snap_to_zero_or_one(b / d)
+	var ua = a / d
+	if feq(ua, 0.0) {
+		ua = 0.0
+	} else if feq(ua, 1.0) {
+		ua = 1.0
+	}
+
+	var ub = b / d
+	if feq(ub, 0.0) {
+		ub = 0.0
+	} else if feq(ub, 1.0) {
+		ub = 1.0
+	}
 
 	var ua_0_1 = 0.0 <= ua && ua <= 1.0
 	var ub_0_1 = 0.0 <= ub && ub <= 1.0

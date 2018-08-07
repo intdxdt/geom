@@ -69,21 +69,24 @@ func (self *LineString) line_line_dist(other *LineString) float64 {
 
 // brute force distance
 func (self *LineString) mindistBruteforce(other *LineString) float64 {
-	var dist, d float64 = math.MaxFloat64, 0
+	var dist = math.MaxFloat64
 	var bln = false
 	var ln = self.Coordinates
 	var ln2 = other.Coordinates
-	for i := 0; !bln && i < ln.Len()-1; i++ {
-		for j := 0; !bln && j < ln2.Len()-1; j++ {
-			d = SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1))
-			dist = minf64(d, dist)
+	var n1 , n2 = ln.Len()-1, ln2.Len()-1
+	for i := 0; !bln && i < n1; i++ {
+		for j := 0; !bln && j < n2; j++ {
+			dist = minf64(
+				dist,
+				SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1)),
+			)
 			bln = dist == 0
 		}
 	}
 	return dist
 }
 
-//Computes the distance between wktreg and another linestring
+//Computes the distance between geometries
 func distAsLines(self, other Geometry) float64 {
 	var dist = nan
 	var lns1 = self.AsLinear()

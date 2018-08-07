@@ -1,8 +1,26 @@
 package geom
 
 import (
-		"github.com/intdxdt/geom/mono"
+	"math"
+	"github.com/intdxdt/geom/mono"
 )
+
+func hypot(p, q float64) float64 {
+	if p < 0 {
+		p = -p
+	}
+	if q < 0 {
+		q = -q
+	}
+	if p < q {
+		p, q = q, p
+	}
+	if p == 0 {
+		return 0
+	}
+	q = q / p
+	return p * math.Sqrt(1+q*q)
+}
 
 //Checks if geometry type is one of the fundermental types
 //panics if geometry is not Point, Segment, LineString or Polygon
@@ -62,12 +80,11 @@ func intersects(
 
 //Checks if two bounding boxes intesect
 func bounds_intersects(sa, sb, oa, ob *Point) bool {
-	var  s_minx, s_miny, s_maxx, s_maxy = bounds(sa, sb)
-	var  o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
+	var s_minx, s_miny, s_maxx, s_maxy = bounds(sa, sb)
+	var o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
 	//not disjoint
 	return !(o_minx > s_maxx || o_maxx < s_minx || o_miny > s_maxy || o_maxy < s_miny)
 }
-
 
 //Intersects bounding box defined by two points pt1 & pt2
 func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {

@@ -23,12 +23,13 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 
 	var x3, y3 = oa[X], oa[Y]
 	var x4, y4 = ob[X], ob[Y]
-	var mua, mub float64
-	var denom, numera, numerb float64
-	var is_aspt_a, is_aspt_b bool
-	var pta, ptb *Point
 
-	denom = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1)
+	var pta, ptb *Point
+	var mua, mub float64
+	var is_aspt_a, is_aspt_b bool
+	var denom, numera, numerb float64
+
+	denom  = (y4-y3)*(x2-x1) - (x4-x3)*(y2-y1)
 	numera = (x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)
 	numerb = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)
 
@@ -37,8 +38,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 		is_aspt_b = oa.Equals2D(ob)
 
 		if is_aspt_a && is_aspt_b {
-			//dist = sa.Magnitude(ob)
-			dist = math.Hypot(x1-x4, y1-y4)
+			dist = hypot(x1-x4, y1-y4)
 		} else if is_aspt_a || is_aspt_b {
 			var lna, lnb *Point
 
@@ -63,8 +63,19 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 
 	} else {
 		//if close to zero or one , snap
-		mua = snap_to_zero_or_one(numera / denom)
-		mub = snap_to_zero_or_one(numerb / denom)
+		mua = numera / denom
+		if feq(mua, 0) {
+			mua = 0
+		} else if feq(mua, 1) {
+			mua = 1
+		}
+
+		mub = numerb / denom
+		if feq(mub, 0) {
+			mub = 0
+		} else if feq(mub, 1) {
+			mub = 1
+		}
 
 		if mua < 0 || mua > 1 || mub < 0 || mub > 1 {
 			//the is intersection along the the segments
@@ -92,7 +103,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 			}
 		} else {
 			//lines intersect
-			dist = 0.0
+			dist = 0
 		}
 	}
 
@@ -112,20 +123,17 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 	var px, py = pt[X], pt[Y]
 	//var dab = sb.Sub(sa)
 	var dx, dy = bx-ax, by-ay
-	var isz_x = feq(dx, 0)
-	var isz_y = feq(dy, 0)
+	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON //a == b || Abs(a - b) < EPSILON
+	var isz_y = (dy == 0) || math.Abs(dy) < math.EPSILON
 
 	if isz_x && isz_y {
 		//line with zero length
-		//dist = pt.Magnitude(sa)
-		dist = math.Hypot(px-ax, py-ay)
+		dist = hypot(px-ax, py-ay)
 	} else {
 		var cPtx, cPty float64
-		//var dx, dy = dab[X], dab[Y]
-		var pax, pay = px-ax, py-ay
 		//(pax * dx) + (pay * dy)
 		//var u = pt.Sub(sa).DotProduct(dab) / (dx*dx + dy*dy)
-		var u = ((pax * dx) + (pay * dy)) / (dx*dx + dy*dy)
+		var u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
 			//cPt = sa
@@ -138,7 +146,7 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 			cPtx, cPty = ax+u*dx, ay+u*dy
 		}
 		//dist = pt.Magnitude(cPt)
-		dist = math.Hypot(px-cPtx, py-cPty)
+		dist = hypot(px-cPtx, py-cPty)
 	}
 
 	return dist

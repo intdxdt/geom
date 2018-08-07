@@ -18,9 +18,19 @@ func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 		return bln
 	}
 	//intersection along the the seg or extended seg
-	var ua = snap_to_zero_or_one(a / d)
-	var ub = snap_to_zero_or_one(b / d)
+	var ua = a / d
+	if feq(ua, 0) {
+		ua = 0.0
+	} else if feq(ua, 1) {
+		ua = 1.0
+	}
+
+	var ub = b / d
+	if feq(ub, 0) {
+		ub = 0.0
+	} else if feq(ub, 1) {
+		ub = 1.0
+	}
+
 	return (0 <= ua && ua <= 1) && (0 <= ub && ub <= 1)
 }
-
-
