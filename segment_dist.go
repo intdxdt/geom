@@ -17,7 +17,7 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 
 //Distance betwen two segments
 func SegSegDistance(sa, sb, oa, ob *Point) float64 {
-	var dist = math.NaN()
+	var dist = nan
 	var x1, y1 = sa[X], sa[Y]
 	var x2, y2 = sb[X], sb[Y]
 
@@ -49,6 +49,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 				pta = oa
 				lna, lnb = sa, sb
 			}
+
 			dist = DistanceToPoint(lna, lnb, pta)
 		} else {
 			dist = minf64(
