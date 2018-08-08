@@ -12,7 +12,7 @@ func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
 	var nd = &tree.data
 
 	if !intersects(bbox, &nd.bbox) {
-		return []*mono.MBR{}
+		return nil
 	}
 
 	var nodesToSearch []*idxNode
