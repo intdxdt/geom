@@ -4,6 +4,22 @@ import (
 	"github.com/intdxdt/side"
 )
 
+type VBits uint8
+
+const (
+	OtherB VBits = 1 << iota // 1 << 0 == 0001
+	OtherA                   // 1 << 1 == 0010
+	SelfB                    // 1 << 2 == 0100
+	SelfA                    // 1 << 3 == 1000
+)
+const InterX VBits = 0
+
+const (
+	SelfMask  = SelfA | SelfB
+	OtherMask = OtherA | OtherB
+)
+
+
 type Segment struct {
 	Coords Coords
 	ln     *LineString
