@@ -55,6 +55,10 @@ func prepareEvents(red, blue *LineString) []*event {
 	var n = nr + nb
 	var data = make([]*event, 2*n)
 
+	//reset bf
+	red.bfList.count = 0
+	blue.bfList.count = 0
+
 	for i, idx = 0, 0; i < len(red.rbEvent); i += 2 {
 		red.rbEvent[i].ev, red.rbEvent[i].idx = CreateRED, idx
 		data[ptr] = &red.rbEvent[i]

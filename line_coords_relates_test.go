@@ -23,8 +23,6 @@ func TestLineStringEdit(t *testing.T) {
 				math.Round(ln.Length(), 10)).Equal(
 				math.Round(9.62780549425, 10),
 			)
-			g.Assert(len(ln.chains)).Equal(1)
-			//test util pop_coords
 			g.Assert(pts.Len()).Equal(3)
 
 			var bln , v = pts.Pop()
@@ -70,6 +68,8 @@ func TestLineStringEdit(t *testing.T) {
 			ok = ln_cd.Intersects(ln_hi)
 			g.Assert(ok).IsTrue() //at h, i
 
+			fmt.Println(ln_cd.WKT())
+			fmt.Println(ln_hi.WKT())
 			var pts = ln_cd.Intersection(ln_hi)
 			g.Assert(len(pts)).Equal(2) //at h, i
 
