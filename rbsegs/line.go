@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/intdxdt/geom"
 	"fmt"
+	"github.com/intdxdt/mbr"
+	"github.com/intdxdt/geom/mono"
 )
 
 const (
@@ -24,6 +26,7 @@ func main() {
 
 type LineString struct {
 	Coordinates geom.Coords
+	bbox        mono.MBR
 	rbEvent     []event
 	bfList      bfList
 }
@@ -46,11 +49,17 @@ func (self *LineString) prepEvents() *LineString {
 	var n = self.Coordinates.Len() - 1
 	var a, b *geom.Point
 	var x, y float64
+	a = self.Coordinates.Pt(0)
+	self.bbox.MBR = mbr.MBR{a[0], a[1], a[0], a[1]}
+	self.bbox.I = self.Coordinates.Idxs[0]
+	self.bbox.J = self.Coordinates.Idxs[n]
+
 	for i := 0; i < n; i++ {
 		a, b = self.Coordinates.Pt(i), self.Coordinates.Pt(i+1)
 		x, y = a[0], b[0]
 		self.rbEvent = append(self.rbEvent, event{val: minf64(x, y)})
 		self.rbEvent = append(self.rbEvent, event{val: maxf64(x, y)})
+		self.bbox.MBR.ExpandIncludeXY(b[0], b[1])
 	}
 	return self
 }
