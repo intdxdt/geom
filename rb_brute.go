@@ -16,7 +16,6 @@ func createBruteForceList(capacity int) bfList {
 	}
 }
 
-
 func (brt *bfList) insert(lo, hi float64, index int) {
 	var count = brt.count
 	brt.index[count] = index

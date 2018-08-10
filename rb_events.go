@@ -35,7 +35,7 @@ func (o events) Less(i, j int) bool {
 	var d = a.val - b.val
 	var id int
 	//x's are close enough to each other
-	if math.FloatEqual(d, 0) {
+	if d == 0 || math.Abs(d) < math.EPSILON {
 		id = a.ev - b.ev
 	} else {
 		return d < 0
@@ -51,30 +51,19 @@ func (o events) Less(i, j int) bool {
 func prepareEvents(red, blue *LineString) []event {
 	var nr = red.Coordinates.Len() - 1
 	var nb = blue.Coordinates.Len() - 1
-	var i, ptr, idx int
+	var i,  idx int
 	var n = nr + nb
 	var data = make([]event, 0, 2*n)
 
 	for i, idx = 0, 0; i < len(red.rbEvents); i += 2 {
-		//red.rbEvents[i].ev, red.rbEvents[i].idx = CreateRED, idx
 		data = append(data, event{red.rbEvents[i], CreateRED, idx})
-		ptr++
-
-		//red.rbEvents[i+1].ev, red.rbEvents[i+1].idx = RemoveRED, idx
 		data = append(data, event{red.rbEvents[i+1], RemoveRED, idx})
-		ptr++
 		idx++
 	}
 
 	for i, idx = 0, 0; i < len(blue.rbEvents); i += 2 {
-		//blue.rbEvents[i].ev, blue.rbEvents[i].idx = CreateBLUE, idx
 		data = append(data, event{blue.rbEvents[i], CreateBLUE, idx})
-		ptr++
-
-		//blue.rbEvents[i+1].ev, blue.rbEvents[i+1].idx = RemoveBLUE, idx
 		data = append(data, event{blue.rbEvents[i+1], RemoveBLUE, idx})
-		//data[ptr] = &blue.rbEvents[i+1]
-		ptr++
 		idx++
 	}
 
