@@ -16,14 +16,6 @@ func createBruteForceList(capacity int) bfList {
 	}
 }
 
-func (brt *bfList) reset() {
-	for i := range brt.intervals {
-		brt.intervals[i] = 0
-	}
-	for i := range brt.index {
-		brt.index[i] = 0
-	}
-}
 
 func (brt *bfList) insert(lo, hi float64, index int) {
 	var count = brt.count

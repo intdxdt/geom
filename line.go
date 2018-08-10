@@ -2,15 +2,15 @@ package geom
 
 import (
 	"github.com/intdxdt/geom/mono"
-		"github.com/intdxdt/mbr"
+	"github.com/intdxdt/mbr"
 )
 
 type LineString struct {
 	Coordinates Coords
 	bbox        mono.MBR
-	rbEvent     []event
-	bfList      bfList
+	rbEvents    []float64
 }
+
 //New LineString from a given Coords {Array} [[x,y], ....[x,y]]
 func NewLineString(coordinates Coords) *LineString {
 	var n = coordinates.Len()
@@ -19,8 +19,7 @@ func NewLineString(coordinates Coords) *LineString {
 	}
 	var ln = &LineString{
 		Coordinates: coordinates,
-		rbEvent:     make([]event, 0, 2*(n-1)),
-		bfList:      createBruteForceList(n - 1),
+		rbEvents:    make([]float64, 0, 2*(n-1)),
 	}
 	return ln.prepEvents()
 }
@@ -37,46 +36,35 @@ func (self *LineString) prepEvents() *LineString {
 	for i := 0; i < n; i++ {
 		a, b = self.Coordinates.Pt(i), self.Coordinates.Pt(i+1)
 		x, y = a[0], b[0]
-		self.rbEvent = append(self.rbEvent, event{val: minf64(x, y)})
-		self.rbEvent = append(self.rbEvent, event{val: maxf64(x, y)})
+		self.rbEvents = append(self.rbEvents, minf64(x, y))
+		self.rbEvents = append(self.rbEvents, maxf64(x, y))
 		self.bbox.MBR.ExpandIncludeXY(b[0], b[1])
 	}
 	return self
 }
 
-func (self *LineString) rbIntersection(other *LineString) [][]int {
-	var crossings [][]int
-	//self.bfList.reset()
-	//other.bfList.reset()
-	var visit = func(i, j int) bool {
-		crossings = append(crossings, []int{i, j})
-		return false
-	}
+func redblueLineSegmentIntersection(red, blue *LineString, visit func(int, int) bool) bool {
 
-	RedBlueLineSegmentIntersection(self, other, visit)
-	return crossings
-}
-
-func RedBlueLineSegmentIntersection(red, blue *LineString, visit func(int, int) bool) bool {
 	var nr = red.Coordinates.Len() - 1
 	var nb = blue.Coordinates.Len() - 1
 	var n = nr + nb
 	var ne = 2 * n
 	var ret bool
 
+	var redList = createBruteForceList(nr)
+	var blueList = createBruteForceList(nb)
+
 	var events = prepareEvents(red, blue)
 
-	var redList = &red.bfList
-	var blueList = &blue.bfList
 	var ev, index int
 
 	for i := 0; !ret && i < ne; i++ {
 		ev, index = events[i].ev, events[i].idx
 
 		if ev == CreateRED {
-			ret = addSegment(index, red, redList, blue, blueList, visit, false)
+			ret = addSegment(index, red, &redList, blue, &blueList, visit, false)
 		} else if ev == CreateBLUE {
-			ret = addSegment(index, blue, blueList, red, redList, visit, true)
+			ret = addSegment(index, blue, &blueList, red, &redList, visit, true)
 		} else if ev == RemoveRED {
 			redList.remove(index)
 		} else if ev == RemoveBLUE {

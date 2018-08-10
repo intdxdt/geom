@@ -34,7 +34,7 @@ func (self *LineString) Intersects(other Geometry) bool {
 		bln = self.intersects_polygon(other_lns)
 	} else if other.Type().IsLineString() ||
 		other.Type().IsSegment() || other.Type().IsPoint() {
-		bln = self.intersectsLinestring(shell)
+		bln = self.linearIntersects(shell)
 	}
 
 	return bln

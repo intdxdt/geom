@@ -1,32 +1,29 @@
 package geom
 
 //intersection of self linestring with other
-func (self *LineString) linear_intersection_rb(other *LineString) []Point {
-	var r, b int
-	var inters = self.rbIntersection(other)
-	var results []Point
-	var sa, sb, oa, ob *Point
-	var pts []InterPoint
-	for _, rb := range inters {
-		r, b = rb[0], rb[1]
-		sa, sb = self.Coordinates.Pt(r), self.Coordinates.Pt(r+1)
-		oa, ob = other.Coordinates.Pt(b), other.Coordinates.Pt(b+1)
-		pts = SegSegIntersection(sa, sb, oa, ob)
-		for i := range pts {
-			results = append(results, pts[i].Point)
-		}
-	}
-	return results
-}
-
-//intersection of self linestring with other
 func (self *LineString) linear_intersects_rb(other *LineString) bool {
-	var bln = false
-	RedBlueLineSegmentIntersection(self, other, func(r, b int) bool {
+	var bln bool
+	redblueLineSegmentIntersection(self, other, func(r, b int) bool {
 		bln = true
 		return bln
 	})
 	return bln
+}
+
+func (self *LineString) linear_intersection_rb(other *LineString) []Point {
+	var results []Point
+	var sa, sb, oa, ob *Point
+	var pts []InterPoint
+	redblueLineSegmentIntersection(self, other, func(i, j int) bool {
+		sa, sb = self.Coordinates.Pt(i), self.Coordinates.Pt(i+1)
+		oa, ob = other.Coordinates.Pt(j), other.Coordinates.Pt(j+1)
+		pts = SegSegIntersection(sa, sb, oa, ob)
+		for i := range pts {
+			results = append(results, pts[i].Point)
+		}
+		return false
+	})
+	return results
 }
 
 //intersection of self linestring with other
@@ -36,7 +33,7 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 
 //Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
-func (self *LineString) intersectsLinestring(other *LineString) bool {
+func (self *LineString) linearIntersects(other *LineString) bool {
 	return self.linear_intersects_rb(other)
 }
 
@@ -69,4 +66,3 @@ func (self *LineString) intersects_polygon(lns []*LineString) bool {
 	}
 	return bln
 }
-

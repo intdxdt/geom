@@ -1,11 +1,11 @@
 package geom
+
 const (
 	CreateRED = iota
 	CreateBLUE
 	RemoveRED
 	RemoveBLUE
 )
-
 
 func addSegment(
 	index int,
@@ -31,7 +31,7 @@ func addSegment(
 	var bindex int
 	var ret bool
 
-	for i := count - 1; i >= 0; i-- {
+	for i := count - 1; !ret && i >= 0; i-- {
 		ptr += -1
 		h1 = intervals[ptr]
 		ptr += -1
@@ -50,13 +50,9 @@ func addSegment(
 				} else {
 					ret = visit(index, bindex)
 				}
-				if ret {
-					return ret
-				}
 			}
 		}
 	}
-
 	redList.insert(l0, h0, index)
-	return false
+	return ret
 }

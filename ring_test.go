@@ -74,14 +74,14 @@ func TestLinearRing(t *testing.T) {
 	g.Describe("LinearRing - Relation to Linestring", func() {
 		g.It("should test polygon in ring & intersect", func() {
 			var rngc = rng0.Clone()
-			g.Assert(rng0.intersectsLinestring(ln3)).IsFalse()
-			g.Assert(rngc.intersectsLinestring(ln3)).IsFalse()
+			g.Assert(rng0.linearIntersects(ln3)).IsFalse()
+			g.Assert(rngc.linearIntersects(ln3)).IsFalse()
 			g.Assert(rngc.Intersects(ln3)).IsFalse()
 			g.Assert(rng0.containsLine(ln3)).IsFalse()
 
 			g.Assert(rng0.containsLine(ln4)).IsFalse()
-			g.Assert(rng0.intersectsLinestring(ln4)).IsTrue()
-			g.Assert(rngc.intersectsLinestring(ln4)).IsTrue()
+			g.Assert(rng0.linearIntersects(ln4)).IsTrue()
+			g.Assert(rngc.linearIntersects(ln4)).IsTrue()
 			g.Assert(rngc.Intersects(ln4)).IsTrue()
 		})
 	})
