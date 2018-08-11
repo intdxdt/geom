@@ -1,8 +1,7 @@
-package main
+package geom
 
 import (
 	"time"
-	"github.com/intdxdt/geom"
 	"github.com/TopoSimplify/pln"
 	"github.com/intdxdt/geom/index"
 	"github.com/intdxdt/geom/mono"
@@ -28,7 +27,7 @@ func BigMinDist(a, b pln.Polyline) (float64, float64) {
 		for q := range queries {
 			db.KnnMinDist(queries[q].MBR, 1, func(query *mbr.MBR, boxer *index.KObj) (float64, float64) {
 				item = boxer.GetNode()
-				d = geom.SegSegDistance(
+				d = SegSegDistance(
 					a.Coordinates.Pt(queries[q].I),
 					a.Coordinates.Pt(queries[q].J),
 					b.Coordinates.Pt(item.I),
@@ -52,7 +51,7 @@ func BigMinDist(a, b pln.Polyline) (float64, float64) {
 
 func queryBounds(ln pln.Polyline) []mono.MBR {
 	var n = ln.Len() - 1
-	var a, b *geom.Point
+	var a, b *Point
 	var I, J int
 	var items = make([]mono.MBR, 0, n)
 	for i := 0; i < n; i++ {
@@ -60,7 +59,7 @@ func queryBounds(ln pln.Polyline) []mono.MBR {
 		//items = append(items, mbr.CreateMBR(a[geom.X], a[geom.Y], b[geom.X], b[geom.Y]))
 		I, J = ln.Coordinates.Idxs[i], ln.Coordinates.Idxs[i+1]
 		items = append(items, mono.MBR{
-			MBR: mbr.CreateMBR(a[geom.X], a[geom.Y], b[geom.X], b[geom.Y]),
+			MBR: mbr.CreateMBR(a[X], a[Y], b[X], b[Y]),
 			I:   I, J: J,
 		})
 	}
@@ -74,19 +73,3 @@ func segmentDB(polyline pln.Polyline) (*index.Index, []mono.MBR) {
 	return tree, data
 }
 
-func bruteForce(wktA, wktB string) (float64, float64) {
-	var A = geom.ReadGeometry(wktA)
-	var B = geom.ReadGeometry(wktB)
-	var duration float64
-	const N = 1000
-	var dists = [N]float64{}
-
-	for i := 0; i < N; i++ {
-		var t0 = time.Now()
-		var c = A.Distance(B)
-		var t1 = time.Now()
-		dists[i] = c
-		duration += t1.Sub(t0).Seconds()
-	}
-	return dists[0], (duration / float64(N)) * 1000
-}
