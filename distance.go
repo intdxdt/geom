@@ -74,12 +74,12 @@ func (self *LineString) mindistBruteforce(other *LineString) float64 {
 	var ln = self.Coordinates
 	var ln2 = other.Coordinates
 	var n1 , n2 = ln.Len()-1, ln2.Len()-1
+	var d float64
 	for i := 0; !bln && i < n1; i++ {
 		for j := 0; !bln && j < n2; j++ {
-			dist = minf64(
-				dist,
-				SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1)),
-			)
+			d = SegSegDistance(ln.Pt(i), ln.Pt(i+1), ln2.Pt(j), ln2.Pt(j+1))
+			if d < dist {dist = d}
+			//dist = minf64(dist, d)
 			bln = dist == 0
 		}
 	}

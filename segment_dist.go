@@ -103,8 +103,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 				dist = DistanceToPoint(sa, sb, ptb)
 			}
 		} else {
-			//lines intersect
-			dist = 0
+			dist = 0 //lines intersect
 		}
 	}
 
@@ -117,14 +116,12 @@ func (self *Segment) DistanceToPoint(pt *Point) float64 {
 }
 
 func DistanceToPoint(sa, sb, pt *Point) float64 {
+	var cPtx, cPty, u float64
 	var dist = math.NaN()
-	//var cPt *Point
 	var ax, ay = sa[X], sa[Y]
 	var bx, by = sb[X], sb[Y]
 	var px, py = pt[X], pt[Y]
-	//var dab = sb.Sub(sa)
 	var dx, dy = bx-ax, by-ay
-	//a == b || Abs(a - b) < EPSILON
 	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON
 	var isz_y = (dy == 0) || math.Abs(dy) < math.EPSILON
 
@@ -132,7 +129,6 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 		//line with zero length
 		dist = hypot(px-ax, py-ay)
 	} else {
-		var cPtx, cPty, u float64
 		u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
