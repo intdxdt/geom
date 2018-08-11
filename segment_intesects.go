@@ -6,7 +6,9 @@ import "github.com/intdxdt/math"
 //vertices sa, sb, oa, ob
 func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 	var bln = false
-	var a, b, d = segsegABD(sa, sb, oa, ob)
+	var a = ((ob[0] - oa[0]) * (sa[1] - oa[1])) - ((ob[1] - oa[1]) * (sa[0] - oa[0]))
+	var b = ((sb[0] - sa[0]) * (sa[1] - oa[1])) - ((sb[1] - sa[1]) * (sa[0] - oa[0]))
+	var d = ((ob[1] - oa[1]) * (sb[0] - sa[0])) - ((ob[0] - oa[0]) * (sb[1] - sa[1]))
 
 	//snap to zero if near -0 or 0
 	if a == 0 || math.Abs(a) < math.EPSILON {
