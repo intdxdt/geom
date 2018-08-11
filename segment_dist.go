@@ -132,8 +132,8 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 		//line with zero length
 		dist = hypot(px-ax, py-ay)
 	} else {
-		var cPtx, cPty float64
-		var u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
+		var cPtx, cPty, u float64
+		u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
 			cPtx, cPty = ax, ay

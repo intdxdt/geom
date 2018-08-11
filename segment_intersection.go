@@ -9,7 +9,9 @@ import (
 //vertices lna0, lna1 and lnb0, lnb1
 func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 	var coords []InterPoint
-	var a, b, d = segsegABD(sa, sb, oa, ob)
+	var a = ((ob[0] - oa[0]) * (sa[1] - oa[1])) - ((ob[1] - oa[1]) * (sa[0] - oa[0]))
+	var b = ((sb[0] - sa[0]) * (sa[1] - oa[1])) - ((sb[1] - sa[1]) * (sa[0] - oa[0]))
+	var d = ((ob[1] - oa[1]) * (sb[0] - sa[0])) - ((ob[0] - oa[0]) * (sb[1] - sa[1]))
 
 	//snap to zero if near -0 or 0
 	if a == 0 || math.Abs(a) < math.EPSILON {
@@ -54,21 +56,6 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 	return coords
 }
 
-func segsegABD(sa, sb, oa, ob *Point) (float64, float64, float64) {
-	var x1, y1, x2, y2, x3, y3, x4, y4, d, a, b float64
-
-	x1, y1 = sa[X], sa[Y]
-	x2, y2 = sb[X], sb[Y]
-
-	x3, y3 = oa[X], oa[Y]
-	x4, y4 = ob[X], ob[Y]
-
-	d = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1))
-	a = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3))
-	b = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3))
-
-	return a, b, d
-}
 
 func interRelation(ua, ub float64) VBits {
 	var sa, sb, oa, ob VBits
