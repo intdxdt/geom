@@ -84,9 +84,11 @@ func distAsLines(self, other Geometry) float64 {
 //the distance between intersecting linestrings is 0.  Otherwise, the
 //distance is the Euclidean distance between the closest segments.
 func (self *LineString) line_line_dist(other *LineString) float64 {
-	//TODO(titus):this could be improved KNN in Rtree
-	// go bruteforce dist(seg , seg)
-	return self.mindistBruteforce(other)
+	if self.Coordinates.Len() < 16 && other.Coordinates.Len() < 16 {
+		return self.mindistBruteforce(other)
+	}
+	return knnMinLinearDistance(self.Coordinates, other.Coordinates)
+
 }
 
 // brute force distance
@@ -110,7 +112,7 @@ func (self *LineString) mindistBruteforce(other *LineString) float64 {
 	return dist
 }
 
-func Big_MinLinearDistance(a, b Coords) float64 {
+func knnMinLinearDistance(a, b Coords) float64 {
 	if a.Len() > b.Len() {
 		a, b = b, a
 	}
