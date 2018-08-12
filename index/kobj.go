@@ -2,9 +2,17 @@ package index
 
 import (
 	"fmt"
+	"sync"
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
+
+var KObjPool = sync.Pool{
+	New: func() interface{} {
+		return new(KObj)
+	},
+}
 
 //KObj instance struct
 type KObj struct {
@@ -28,7 +36,7 @@ func kObjCmp(a interface{}, b interface{}) int {
 	var self, other = a.(*KObj), b.(*KObj)
 	var dx = self.Distance - other.Distance
 	var r = 1
-	if feq(dx, 0) {
+	if dx == 0 || math.Abs(dx) < math.EPSILON {
 		r = 0
 	} else if dx < 0 {
 		r = -1
