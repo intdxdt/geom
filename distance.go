@@ -88,7 +88,6 @@ func (self *LineString) line_line_dist(other *LineString) float64 {
 		return self.mindistBruteforce(other)
 	}
 	return knnMinLinearDistance(self.Coordinates, other.Coordinates)
-
 }
 
 // brute force distance

@@ -24,6 +24,11 @@ func (s *Coords) Pt(i int) *Point {
 }
 
 //Point at index
+func (s *Coords) DataView() []Point {
+	return s._c[s.Idxs[0] : s.Idxs[s.Len()-1]+1]
+}
+
+//Point at index
 func (s *Coords) Slice(i, j int) Coords {
 	var coords = *s
 	coords.Idxs = s.Idxs[i:j]
@@ -37,6 +42,16 @@ func (s Coords) Points() []Point {
 		pts = append(pts, s._c[i])
 	}
 	return pts
+}
+
+//First index at 0
+func (s *Coords) FirstIndex() int {
+	return s.Idxs[0]
+}
+
+//First index at len(indices)-1
+func (s *Coords) LastIndex() int {
+	return s.Idxs[s.Len()-1]
 }
 
 //Point at index 0
