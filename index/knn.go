@@ -4,6 +4,7 @@ import (
 	"github.com/intdxdt/heap"
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
 
 func predicate(_ *KObj) (bool, bool) {
@@ -28,12 +29,10 @@ func (tree *Index) Knn(
 	for !stop && (nd != nil) {
 		for i := range nd.children {
 			child = &nd.children[i]
-			var o = &KObj{
-				dbNode:   child,
-				MBR:      &child.bbox,
-				IsItem:   len(child.children) == 0,
-				Distance: -1,
-			}
+			var o = KObjPool.Get().(*KObj)
+			o.dbNode = child
+			o.MBR = &child.bbox
+			o.IsItem = len(child.children) == 0
 			o.Distance = score(&query, o)
 			queue.Push(o)
 		}
@@ -46,12 +45,15 @@ func (tree *Index) Knn(
 			}
 
 			if stop {
+				KObjPool.Put(candidate)
 				break
 			}
 
 			if limit != 0 && len(result) == limit {
+				KObjPool.Put(candidate)
 				return result
 			}
+			KObjPool.Put(candidate)
 		}
 
 		if !stop {
@@ -59,9 +61,70 @@ func (tree *Index) Knn(
 			if q == nil {
 				nd = nil
 			} else {
-				nd = q.(*KObj).dbNode
+				var candidate = q.(*KObj)
+				nd = candidate.dbNode
+				KObjPool.Put(candidate)
 			}
 		}
 	}
+	for _, o := range queue.View() {
+		KObjPool.Put(o.(*KObj))
+	}
 	return result
+}
+
+func (tree *Index) KnnMinDist(
+	query *mono.MBR,
+	distScore func(query *mono.MBR, dbitem *mono.MBR) (float64, float64),
+	predicate func(*KObj) bool,
+) {
+
+	var nd = &tree.data
+	//var result []*mono.MBR
+	var child *idxNode
+	var stop bool
+	var queue = heap.NewHeap(kObjCmp, heap.NewHeapType().AsMin())
+	var mindist = math.MaxFloat64
+
+	for !stop && (nd != nil) {
+		for i := range nd.children {
+			child = &nd.children[i]
+			var box_dist = child.bbox.Distance(&query.MBR)
+			if box_dist < mindist {
+				var o = KObjPool.Get().(*KObj)
+				o.dbNode = child
+				o.MBR = &child.bbox
+				o.IsItem = len(child.children) == 0
+				o.Distance = box_dist
+				if o.IsItem {
+					o.Distance, mindist = distScore(query, child.item)
+				}
+				queue.Push(o)
+			}
+		}
+
+		for !queue.IsEmpty() && queue.Peek().(*KObj).IsItem {
+			var candidate = queue.Pop().(*KObj)
+			stop = predicate(candidate)
+			if stop {
+				KObjPool.Put(candidate)
+				break
+			}
+			KObjPool.Put(candidate)
+		}
+
+		if !stop {
+			var q = queue.Pop()
+			if q == nil {
+				nd = nil
+			} else {
+				var candidate = q.(*KObj)
+				nd = candidate.dbNode
+				KObjPool.Put(candidate)
+			}
+		}
+	}
+	for _, o := range queue.View() {
+		KObjPool.Put(o.(*KObj))
+	}
 }

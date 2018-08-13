@@ -9,6 +9,7 @@ func TestCoordinate(t *testing.T) {
 	var g = goblin.Goblin(t)
 	var cds  = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
 	var c0 = ShallowClone(cds, 0, 1)
+	g.Assert(cds.DataView()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
 	g.Assert(c0.Points()).Equal([]Point{{0.0, 0.2}})
 	var c1 = ShallowClone(cds, 0, 2)
 	g.Assert(c1.Points()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}})
@@ -35,7 +36,11 @@ func TestCoordinate(t *testing.T) {
 	g.Describe("geom.point", func() {
 		g.It("tests Coords as an array of points", func() {
 			var coords2 = Coordinates([]Point{{0.0, 0.0}, {1.0, 0.0}, {2.0, 0.0}})
+			g.Assert(coords2.FirstIndex()).Equal(0)
+			g.Assert(coords2.LastIndex()).Equal(2)
 			var bln, c = coords2.Pop()
+			g.Assert(coords2.FirstIndex()).Equal(0)
+			g.Assert(coords2.LastIndex()).Equal(1)
 
 			c[2] = 4.5
 			g.Assert(bln).IsTrue()
