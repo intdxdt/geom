@@ -8,7 +8,7 @@ import (
 	"github.com/intdxdt/math"
 )
 
-var KObjPool = sync.Pool{
+var kobjPool = sync.Pool{
 	New: func() interface{} {
 		return new(KObj)
 	},

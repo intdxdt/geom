@@ -29,7 +29,7 @@ func (tree *Index) Knn(
 	for !stop && (nd != nil) {
 		for i := range nd.children {
 			child = &nd.children[i]
-			var o = KObjPool.Get().(*KObj)
+			var o = kobjPool.Get().(*KObj)
 			o.node = child
 			o.MBR = &child.bbox
 			o.IsItem = len(child.children) == 0
@@ -45,15 +45,15 @@ func (tree *Index) Knn(
 			}
 
 			if stop {
-				KObjPool.Put(candidate)
+				kobjPool.Put(candidate)
 				break
 			}
 
 			if limit != 0 && len(result) == limit {
-				KObjPool.Put(candidate)
+				kobjPool.Put(candidate)
 				return result
 			}
-			KObjPool.Put(candidate)
+			kobjPool.Put(candidate)
 		}
 
 		if !stop {
@@ -63,12 +63,12 @@ func (tree *Index) Knn(
 			} else {
 				var candidate = q.(*KObj)
 				nd = candidate.node
-				KObjPool.Put(candidate)
+				kobjPool.Put(candidate)
 			}
 		}
 	}
 	for _, o := range queue.View() {
-		KObjPool.Put(o.(*KObj))
+		kobjPool.Put(o.(*KObj))
 	}
 	return result
 }
@@ -91,7 +91,7 @@ func (tree *Index) KnnMinDist(
 			child = &nd.children[i]
 			var box_dist = child.bbox.Distance(&query.MBR)
 			if box_dist < mindist {
-				var o = KObjPool.Get().(*KObj)
+				var o = kobjPool.Get().(*KObj)
 				o.node = child
 				o.MBR = &child.bbox
 				o.IsItem = len(child.children) == 0
@@ -107,10 +107,10 @@ func (tree *Index) KnnMinDist(
 			var candidate = queue.Pop().(*KObj)
 			stop = predicate(candidate)
 			if stop {
-				KObjPool.Put(candidate)
+				kobjPool.Put(candidate)
 				break
 			}
-			KObjPool.Put(candidate)
+			kobjPool.Put(candidate)
 		}
 
 		if !stop {
@@ -120,11 +120,11 @@ func (tree *Index) KnnMinDist(
 			} else {
 				var candidate = q.(*KObj)
 				nd = candidate.node
-				KObjPool.Put(candidate)
+				kobjPool.Put(candidate)
 			}
 		}
 	}
 	for _, o := range queue.View() {
-		KObjPool.Put(o.(*KObj))
+		kobjPool.Put(o.(*KObj))
 	}
 }

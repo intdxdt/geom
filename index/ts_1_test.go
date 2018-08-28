@@ -59,7 +59,7 @@ func TestRtree(t *testing.T) {
 		var pt = &Pnt{0, 0}
 		pt.BBox()
 		var item = &mono.MBR{MBR: pt.Bounds()}
-		var pth NodePath
+		var pth nodePath
 		var b = createNode(item, 0, true, nil)
 
 		pth = append(pth, b)
@@ -69,7 +69,7 @@ func TestRtree(t *testing.T) {
 		n := createNode(item, 1, false, pth)
 
 		var items = make([]*mono.MBR, 0, 10)
-		var nodes NodePath
+		var nodes nodePath
 
 		items = append(items, item)
 		nodes = append(nodes, b)
