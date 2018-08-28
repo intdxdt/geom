@@ -13,7 +13,7 @@ func emptyMBR() mbr.MBR {
 }
 
 func (tree *Index) Clear() *Index {
-	tree.data = createIdxNode(nil, 1, true, []idxNode{})
+	tree.data = createNode(nil, 1, true, []node{})
 	return tree
 }
 

@@ -146,11 +146,13 @@ func queryBounds(coords Coords) []mono.MBR {
 	var items = make([]mono.MBR, 0, n)
 	for i := 0; i < n; i++ {
 		I, J = coords.Idxs[i], coords.Idxs[i+1]
-		items = append(items, mono.MBR{
-			MBR: mbr.CreateMBR(
-				coords._c[I][X], coords._c[I][Y],
-				coords._c[J][X], coords._c[J][Y]), I: I, J: J,
-		})
+		items = append(items,
+			mono.MBR{
+				MBR: mbr.CreateMBR(
+					coords._c[I][X], coords._c[I][Y],
+					coords._c[J][X], coords._c[J][Y],
+				), I: I, J: J,
+			})
 	}
 	return items
 }
@@ -162,12 +164,13 @@ func segmentDB(coords Coords) *index.Index {
 	var items = make([]mono.MBR, 0, n)
 	for i := 0; i < n; i++ {
 		I, J = coords.Idxs[i], coords.Idxs[i+1]
-		items = append(items, mono.MBR{
-			MBR: mbr.CreateMBR(
-				coords._c[I][X], coords._c[I][Y],
-				coords._c[J][X], coords._c[J][Y]), I: I, J: J,
-		})
+		items = append(items,
+			mono.MBR{
+				MBR: mbr.CreateMBR(
+					coords._c[I][X], coords._c[I][Y],
+					coords._c[J][X], coords._c[J][Y],
+				), I: I, J: J,
+			})
 	}
-	tree.Load(items)
-	return tree
+	return tree.Load(items)
 }

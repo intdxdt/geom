@@ -25,18 +25,18 @@ type nodeParent struct {
 	children []string
 }
 
-func printRtree(a *idxNode) []*nodeParent {
+func printRtree(a *node) []*nodeParent {
 	var tokens []*nodeParent
 	if a == nil {
 		return tokens
 	}
-	var nd *idxNode
-	var stack []*idxNode
+	var nd *node
+	var stack []*node
 	stack = append(stack, a)
 	for len(stack) > 0 {
 		nd, stack = popNode(stack)
 		var parent = &nodeParent{wkt: nd.bbox.String()}
-		//adopt children on stack and let idxNode go out of scope
+		//adopt children on stack and let node go out of scope
 		for i := range nd.children {
 			if len(nd.children[i].children) > 0 {
 				stack = append(stack, &nd.children[i])
@@ -55,18 +55,18 @@ func printRtree(a *idxNode) []*nodeParent {
 func TestRtree(t *testing.T) {
 	g := goblin.Goblin(t)
 
-	g.Describe("Index : idxNode, leaf, inode", func() {
+	g.Describe("Index : node, leaf, inode", func() {
 		var pt = &Pnt{0, 0}
 		pt.BBox()
 		var item = &mono.MBR{MBR: pt.Bounds()}
 		var pth NodePath
-		var b = createIdxNode(item, 0, true, nil)
+		var b = createNode(item, 0, true, nil)
 
 		pth = append(pth, b)
 		pth = append(pth, b)
 		pth = append(pth, b)
 
-		n := createIdxNode(item, 1, false, pth)
+		n := createNode(item, 1, false, pth)
 
 		var items = make([]*mono.MBR, 0, 10)
 		var nodes NodePath
@@ -74,7 +74,7 @@ func TestRtree(t *testing.T) {
 		items = append(items, item)
 		nodes = append(nodes, b)
 
-		g.It("type idxNode check ", func() {
+		g.It("type node check ", func() {
 			g.Assert(b.item.MBR.Equals(pt.BBox())).IsTrue()
 
 			g.Assert(b.leaf).Equal(true)

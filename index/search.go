@@ -15,8 +15,8 @@ func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
 		return nil
 	}
 
-	var nodesToSearch []*idxNode
-	var child *idxNode
+	var nodesToSearch []*node
+	var child *node
 
 	for {
 		for i := range nd.children {
@@ -41,14 +41,14 @@ func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
 	return result
 }
 
-//All items from  root idxNode
+//All items from  root node
 func (tree *Index) All() []*mono.MBR {
 	return all(&tree.data, []*mono.MBR{})
 }
 
-//all - fetch all items from idxNode
-func all(nd *idxNode, result []*mono.MBR) []*mono.MBR {
-	var nodesToSearch []*idxNode
+//all - fetch all items from node
+func all(nd *node, result []*mono.MBR) []*mono.MBR {
+	var nodesToSearch []*node
 	for {
 		if nd.leaf {
 			for i := range nd.children {

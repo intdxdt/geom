@@ -8,7 +8,7 @@ import (
 	"github.com/franela/goblin"
 )
 
-func print_rtree(n *idxNode) {
+func print_rtree(n *node) {
 	var tokens = printRtree(n)
 	for _, tok := range tokens {
 		fmt.Println(tok.wkt)

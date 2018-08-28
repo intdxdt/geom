@@ -5,14 +5,14 @@ import (
 	"github.com/intdxdt/geom/mono"
 )
 
-//build
-func (tree *Index) buildTree(items []*mono.MBR, left, right, height int) idxNode {
+//Build Tree
+func (tree *Index) buildTree(items []*mono.MBR, left, right, height int) node {
 	var N = float64(right - left + 1)
 	var M = float64(tree.maxEntries)
-	//var n *idxNode
+
 	if N <= M {
 		// reached leaf level return leaf
-		var n = createIdxNode(nil, 1, true,
+		var n = createNode(nil, 1, true,
 			makeChildren(items[left:right+1:right+1]))
 		calcBBox(&n)
 		return n
@@ -20,16 +20,14 @@ func (tree *Index) buildTree(items []*mono.MBR, left, right, height int) idxNode
 
 	if height == 0 {
 		// target height of the bulk-loaded tree
-		height = int(
-			math.Ceil(math.Log(N) / math.Log(M)))
+		height = int(math.Ceil(math.Log(N) / math.Log(M)))
 
 		// target number of root entries to maximize storage utilization
 		M = math.Ceil(N / math.Pow(M, float64(height-1)))
 	}
 
 	// TODO eliminate recursion?
-
-	var n = createIdxNode(nil, height, false, []idxNode{})
+	var n = createNode(nil, height, false, []node{})
 
 	// split the items into M mostly square tiles
 
@@ -37,11 +35,11 @@ func (tree *Index) buildTree(items []*mono.MBR, left, right, height int) idxNode
 	var N1 = N2 * int(math.Ceil(math.Sqrt(M)))
 	var i, j, right2, right3 int
 
-	multiSelect(items, left, right, N1, compareNodeMinX)
+	multiSelect(items, left, right, N1, cmpMinX)
 
 	for i = left; i <= right; i += N1 {
 		right2 = minInt(i+N1-1, right)
-		multiSelect(items, i, right2, N2, compareNodeMinY)
+		multiSelect(items, i, right2, N2, cmpMinY)
 
 		for j = i; j <= right2; j += N2 {
 			right3 = minInt(j+N2-1, right2)

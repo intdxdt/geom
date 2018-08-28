@@ -9,7 +9,7 @@ package index
 
 //Index type
 type Index struct {
-	data       idxNode
+	data       node
 	maxEntries int
 	minEntries int
 }
@@ -21,7 +21,7 @@ func NewIndex(nodeCap ...int) *Index {
 	if len(nodeCap) > 0 {
 		bucketSize = nodeCap[0]
 	}
-	// bucket size(idxNode) == 8 by default
+	// bucket size(node) == 8 by default
 	tree.maxEntries = maxEntries(bucketSize)
 	tree.minEntries = minEntries(tree.maxEntries)
 	return tree

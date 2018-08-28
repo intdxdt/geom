@@ -22,15 +22,15 @@ func (tree *Index) Knn(
 
 	var nd = &tree.data
 	var result []*mono.MBR
-	var child *idxNode
+	var child *node
 	var stop, pred bool
-	var queue = heap.NewHeap(kObjCmp, heap.NewHeapType().AsMin())
+	var queue = heap.NewHeap(kobjCmp, heap.NewHeapType().AsMin())
 
 	for !stop && (nd != nil) {
 		for i := range nd.children {
 			child = &nd.children[i]
 			var o = KObjPool.Get().(*KObj)
-			o.dbNode = child
+			o.node = child
 			o.MBR = &child.bbox
 			o.IsItem = len(child.children) == 0
 			o.Distance = score(&query, o)
@@ -62,7 +62,7 @@ func (tree *Index) Knn(
 				nd = nil
 			} else {
 				var candidate = q.(*KObj)
-				nd = candidate.dbNode
+				nd = candidate.node
 				KObjPool.Put(candidate)
 			}
 		}
@@ -81,9 +81,9 @@ func (tree *Index) KnnMinDist(
 
 	var nd = &tree.data
 	//var result []*mono.MBR
-	var child *idxNode
+	var child *node
 	var stop bool
-	var queue = heap.NewHeap(kObjCmp, heap.NewHeapType().AsMin())
+	var queue = heap.NewHeap(kobjCmp, heap.NewHeapType().AsMin())
 	var mindist = math.MaxFloat64
 
 	for !stop && (nd != nil) {
@@ -92,7 +92,7 @@ func (tree *Index) KnnMinDist(
 			var box_dist = child.bbox.Distance(&query.MBR)
 			if box_dist < mindist {
 				var o = KObjPool.Get().(*KObj)
-				o.dbNode = child
+				o.node = child
 				o.MBR = &child.bbox
 				o.IsItem = len(child.children) == 0
 				o.Distance = box_dist
@@ -119,7 +119,7 @@ func (tree *Index) KnnMinDist(
 				nd = nil
 			} else {
 				var candidate = q.(*KObj)
-				nd = candidate.dbNode
+				nd = candidate.node
 				KObjPool.Put(candidate)
 			}
 		}

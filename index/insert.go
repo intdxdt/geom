@@ -3,26 +3,27 @@ package index
 import (
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
 
 //insert - private
 func (tree *Index) insert(item *mono.MBR) *Index {
-		if item == nil {
+	if item == nil {
 		return tree
 	}
-	var level =  tree.data.height-1
+	var level = tree.data.height - 1
 
-	var nd *idxNode
-	var insertPath = make([]*idxNode, 0, tree.maxEntries)
+	var nd *node
+	var insertPath = make([]*node, 0, tree.maxEntries)
 
-	// find the best idxNode for accommodating the item, saving all nodes along the path too
+	// find the best node for accommodating the item, saving all nodes along the path too
 	nd, insertPath = chooseSubtree(&item.MBR, &tree.data, level, insertPath)
 
-	// put the item into the idxNode item_bbox
+	// put the item into the node item_bbox
 	nd.addChild(newLeafNode(item))
-	extend(&nd.bbox, &item.MBR)
+	nd.bbox.ExpandIncludeMBR(&item.MBR)
 
-	// split on idxNode overflow propagate upwards if necessary
+	// split on node overflow propagate upwards if necessary
 	level, insertPath = tree.splitOnOverflow(level, insertPath)
 
 	// adjust bboxes along the insertion path
@@ -31,25 +32,25 @@ func (tree *Index) insert(item *mono.MBR) *Index {
 }
 
 //insert - private
-func (tree *Index) insertNode(item idxNode, level int) {
-	var nd *idxNode
-	var insertPath []*idxNode
+func (tree *Index) insertNode(item node, level int) {
+	var nd *node
+	var insertPath []*node
 
-	// find the best idxNode for accommodating the item, saving all nodes along the path too
+	// find the best node for accommodating the item, saving all nodes along the path too
 	nd, insertPath = chooseSubtree(&item.bbox, &tree.data, level, insertPath)
 
 	nd.children = append(nd.children, item)
-	extend(&nd.bbox, &item.bbox)
+	nd.bbox.ExpandIncludeMBR(&item.bbox)
 
-	// split on idxNode overflow propagate upwards if necessary
+	// split on node overflow propagate upwards if necessary
 	level, insertPath = tree.splitOnOverflow(level, insertPath)
 
 	// adjust bboxes along the insertion path
 	tree.adjustParentBBoxes(&item.bbox, insertPath, level)
 }
 
-// split on idxNode overflow propagate upwards if necessary
-func (tree *Index) splitOnOverflow(level int, insertPath []*idxNode) (int, []*idxNode) {
+// split on node overflow propagate upwards if necessary
+func (tree *Index) splitOnOverflow(level int, insertPath []*node) (int, []*node) {
 	for (level >= 0) && (len(insertPath[level].children) > tree.maxEntries) {
 		tree.split(insertPath, level)
 		level--
@@ -57,11 +58,19 @@ func (tree *Index) splitOnOverflow(level int, insertPath []*idxNode) (int, []*id
 	return level, insertPath
 }
 
-//_chooseSubtree select child of idxNode and updates path to selected idxNode.
-func chooseSubtree(bbox *mbr.MBR, nd *idxNode, level int, path []*idxNode) (*idxNode, []*idxNode) {
-	var child *idxNode
-	var targetNode *idxNode
-	var minArea, minEnlargement, area, enlargement float64
+//_chooseSubtree select child of node and updates path to selected node.
+func chooseSubtree(bbox *mbr.MBR, nd *node, level int, path []*node) (*node, []*node) {
+	var child, targetNode *node
+	var minArea, minEnlargement float64
+	var area, enlargement, d float64
+	var minx, miny float64
+	var maxx, maxy float64
+	var ch_minx, ch_miny float64
+	var ch_maxx, ch_maxy float64
+	var b_minx, b_miny = bbox.MinX, bbox.MinY
+	var b_maxx, b_maxy = bbox.MaxX, bbox.MaxY
+
+	var chbox *mbr.MBR
 
 	for {
 		path = append(path, nd)
@@ -72,17 +81,39 @@ func chooseSubtree(bbox *mbr.MBR, nd *idxNode, level int, path []*idxNode) (*idx
 
 		for i, length := 0, len(nd.children); i < length; i++ {
 			child = &nd.children[i]
-			area = bboxArea(&child.bbox)
-			enlargement = enlargedArea(bbox, &child.bbox) - area
+			chbox = &child.bbox
 
+			minx, miny = b_minx, b_miny
+			maxx, maxy = b_maxx, b_maxy
+
+			ch_minx, ch_miny = chbox.MinX, chbox.MinY
+			ch_maxx, ch_maxy = chbox.MaxX, chbox.MaxY
+
+			if ch_minx < minx {
+				minx = ch_minx
+			}
+			if ch_miny < miny {
+				miny = ch_miny
+			}
+			if ch_maxx > maxx {
+				maxx = ch_maxx
+			}
+			if ch_maxy > maxy {
+				maxy = ch_maxy
+			}
+
+			area = (ch_maxx - ch_minx) * (ch_maxy - ch_miny)
+			enlargement = (maxx - minx) * (maxy - miny)
+
+			d = enlargement - minEnlargement
 			// choose entry with the least area enlargement
-			if enlargement < minEnlargement {
+			if d < 0 {
 				minEnlargement = enlargement
 				if area < minArea {
 					minArea = area
 				}
 				targetNode = child
-			} else if feq(enlargement, minEnlargement) {
+			} else if d == 0 || math.Abs(d) < math.EPSILON {
 				// otherwise choose one with the smallest area
 				if area < minArea {
 					minArea = area
@@ -97,52 +128,33 @@ func chooseSubtree(bbox *mbr.MBR, nd *idxNode, level int, path []*idxNode) (*idx
 	return nd, path
 }
 
-//extend bounding box
-func extend(a, b *mbr.MBR) *mbr.MBR {
-	a[x1] = min(a[x1], b[x1])
-	a[y1] = min(a[y1], b[y1])
-	a[x2] = max(a[x2], b[x2])
-	a[y2] = max(a[y2], b[y2])
-	return a
-}
-
-//computes area of bounding box
-func bboxArea(a *mbr.MBR) float64 {
-	return (a[x2] - a[x1]) * (a[y2] - a[y1])
-}
-
 //computes box margin
 func bboxMargin(a *mbr.MBR) float64 {
-	return (a[x2] - a[x1]) + (a[y2] - a[y1])
-}
-
-//computes enlarged area given two mbrs
-func enlargedArea(a, b *mbr.MBR) float64 {
-	return (max(a[x2], b[x2]) - min(a[x1], b[x1])) * (max(a[y2], b[y2]) - min(a[y1], b[y1]))
+	return (a.MaxX - a.MinX) + (a.MaxY - a.MinY)
 }
 
 //computes the intersection area of two mbrs
 func intersectionArea(a, b *mbr.MBR) float64 {
-	var minx, miny, maxx, maxy = a[x1], a[y1], a[x2], a[y2]
+	var minx, miny, maxx, maxy = a.MinX, a.MinY, a.MaxX, a.MaxY
 
 	if !intersects(a, b) {
-		return 0.0
+		return 0
 	}
 
-	if b[x1] > minx {
-		minx = b[x1]
+	if b.MinX > minx {
+		minx = b.MinX
 	}
 
-	if b[y1] > miny {
-		miny = b[y1]
+	if b.MinY > miny {
+		miny = b.MinY
 	}
 
-	if b[x2] < maxx {
-		maxx = b[x2]
+	if b.MaxX < maxx {
+		maxx = b.MaxX
 	}
 
-	if b[y2] < maxy {
-		maxy = b[y2]
+	if b.MaxY < maxy {
+		maxy = b.MaxY
 	}
 
 	return (maxx - minx) * (maxy - miny)
@@ -150,10 +162,10 @@ func intersectionArea(a, b *mbr.MBR) float64 {
 
 //contains tests whether a contains b
 func contains(a, b *mbr.MBR) bool {
-	return b[x1] >= a[x1] && b[x2] <= a[x2] && b[y1] >= a[y1] && b[y2] <= a[y2]
+	return b.MinX >= a.MinX && b.MaxX <= a.MaxX && b.MinY >= a.MinY && b.MaxY <= a.MaxY
 }
 
 //intersects tests a intersect b (MBR)
 func intersects(a, b *mbr.MBR) bool {
-	return !(b[x1] > a[x2] || b[x2] < a[x1] || b[y1] > a[y2] || b[y2] < a[y1])
+	return !(b.MinX > a.MaxX || b.MaxX < a.MinX || b.MinY > a.MaxY || b.MaxY < a.MinY)
 }

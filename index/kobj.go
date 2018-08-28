@@ -16,23 +16,23 @@ var KObjPool = sync.Pool{
 
 //KObj instance struct
 type KObj struct {
-	dbNode   *idxNode
+	node     *node
 	MBR      *mbr.MBR
 	IsItem   bool
 	Distance float64
 }
 
 func (kobj *KObj) GetNode() *mono.MBR {
-	return kobj.dbNode.item
+	return kobj.node.item
 }
 
 //String representation of knn object
 func (kobj *KObj) String() string {
-	return fmt.Sprintf("%v -> %v", kobj.dbNode.bbox.String(), kobj.Distance)
+	return fmt.Sprintf("%v -> %v", kobj.node.bbox.String(), kobj.Distance)
 }
 
 //Compare - cmp interface
-func kObjCmp(a interface{}, b interface{}) int {
+func kobjCmp(a interface{}, b interface{}) int {
 	var self, other = a.(*KObj), b.(*KObj)
 	var dx = self.Distance - other.Distance
 	var r = 1

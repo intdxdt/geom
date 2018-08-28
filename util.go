@@ -2,7 +2,6 @@ package geom
 
 import (
 	"math"
-	"github.com/intdxdt/geom/mono"
 )
 
 func hypot(p, q float64) float64 {
@@ -47,29 +46,6 @@ func IsLinearRing(g Geometry) (*LinearRing, bool) {
 	return ln, ok
 }
 
-//Insersection of two intersecting mono bounding boxes
-func mono_intersection(mbr, other *mono.MBR) (float64, float64, float64, float64) {
-	var minx, miny, maxx, maxy = other.MBR[0], other.MBR[1], other.MBR[2], other.MBR[3]
-
-	if mbr.MBR[0] > other.MBR[0] {
-		minx = mbr.MBR[0]
-	}
-
-	if mbr.MBR[1] > other.MBR[1] {
-		miny = mbr.MBR[1]
-	}
-
-	if mbr.MBR[2] < other.MBR[2] {
-		maxx = mbr.MBR[2]
-	}
-
-	if mbr.MBR[3] < other.MBR[3] {
-		maxy = mbr.MBR[3]
-	}
-
-	return minx, miny, maxx, maxy
-}
-
 //Checks if two bounding boxes intesect
 func intersects(
 	m_minx, m_miny, m_maxx, m_maxy float64,
@@ -84,14 +60,6 @@ func bounds_intersects(sa, sb, oa, ob *Point) bool {
 	var o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
 	//not disjoint
 	return !(o_minx > s_maxx || o_maxx < s_minx || o_miny > s_maxy || o_maxy < s_miny)
-}
-
-//Intersects bounding box defined by two points pt1 & pt2
-func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {
-	if minx > maxf64(pt1[0], pt2[0]) || maxx < minf64(pt1[0], pt2[0]) {
-		return false
-	}
-	return !(miny > maxf64(pt1[1], pt2[1]) || maxy < minf64(pt1[1], pt2[1]))
 }
 
 //bounds contains x, y

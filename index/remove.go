@@ -5,7 +5,7 @@ import (
 	"github.com/intdxdt/geom/mono"
 )
 
-func nodeAtIndex(a []*idxNode, i int) *idxNode {
+func nodeAtIndex(a []*node, i int) *node {
 	var n = len(a)
 	if i > n-1 || i < 0 || n == 0 {
 		return nil
@@ -13,7 +13,7 @@ func nodeAtIndex(a []*idxNode, i int) *idxNode {
 	return a[i]
 }
 
-func nodeSiblingAtIndex(a []idxNode, i int) *idxNode {
+func nodeSiblingAtIndex(a []node, i int) *node {
 	var n = len(a)
 	if i > n-1 || i < 0 || n == 0 {
 		return nil
@@ -21,8 +21,8 @@ func nodeSiblingAtIndex(a []idxNode, i int) *idxNode {
 	return &a[i]
 }
 
-func popNode(a []*idxNode) (*idxNode, []*idxNode) {
-	var v *idxNode
+func popNode(a []*node) (*node, []*node) {
+	var v *node
 	var n int
 	if len(a) == 0 {
 		return nil, a
@@ -44,19 +44,19 @@ func popIndex(indxs *[]int) int {
 	return v
 }
 
-//remove idxNode at given index from idxNode slice.
-func removeNode(a []idxNode, i int) []idxNode {
+//remove node at given index from node slice.
+func removeNode(a []node, i int) []node {
 	var n = len(a) - 1
 	if i > n {
 		return a
 	}
-	a, a[n] = append(a[:i], a[i+1:]...), idxNode{}
+	a, a[n] = append(a[:i], a[i+1:]...), node{}
 	return a
 }
 
-//condense idxNode and its path from the root
-func (tree *Index) condense(path []*idxNode) {
-	var parent *idxNode
+//condense node and its path from the root
+func (tree *Index) condense(path []*node) {
+	var parent *node
 	var i = len(path) - 1
 	// go through the path, removing empty nodes and updating bboxes
 	for i >= 0 {
@@ -87,7 +87,7 @@ func (tree *Index) Remove(item *mono.MBR) *Index {
 	if item == nil {
 		return tree
 	}
-	tree.removeItem(&item.MBR, func(nd *idxNode, i int) bool {
+	tree.removeItem(&item.MBR, func(nd *node, i int) bool {
 		return nd.children[i].item == item
 	})
 	return tree
@@ -97,17 +97,17 @@ func (tree *Index) Remove(item *mono.MBR) *Index {
 //NOTE:if item is a bbox , then first found bbox is removed
 func (tree *Index) removeMBR(item *mbr.MBR) *Index {
 	tree.removeItem(item,
-		func(nd *idxNode, i int) bool {
+		func(nd *node, i int) bool {
 			return nd.children[i].bbox.Equals(item)
 		})
 	return tree
 }
 
-func (tree *Index) removeItem(item *mbr.MBR, predicate func(*idxNode, int) bool) *Index {
+func (tree *Index) removeItem(item *mbr.MBR, predicate func(*node, int) bool) *Index {
 	var nd = &tree.data
-	var parent *idxNode
+	var parent *node
 	var bbox = item.BBox()
-	var path = make([]*idxNode, 0)
+	var path = make([]*node, 0)
 	var indexes = make([]int, 0)
 	var i, index int
 	var goingUp bool
@@ -123,8 +123,8 @@ func (tree *Index) removeItem(item *mbr.MBR, predicate func(*idxNode, int) bool)
 		}
 
 		if nd.leaf {
-			// check current idxNode
-			//index = idxNode.children.indexOf(item)
+			// check current node
+			//index = node.children.indexOf(item)
 			index = sliceIndex(len(nd.children), func(i int) bool {
 				return predicate(nd, i)
 			})
@@ -132,7 +132,7 @@ func (tree *Index) removeItem(item *mbr.MBR, predicate func(*idxNode, int) bool)
 			//if found
 			if index != -1 {
 				//item found, remove the item and condense self upwards
-				//idxNode.children.splice(index, 1)
+				//node.children.splice(index, 1)
 				nd.children = removeNode(nd.children, index)
 				path = append(path, nd)
 				tree.condense(path)

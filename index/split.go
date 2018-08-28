@@ -5,10 +5,10 @@ import (
 	"sort"
 )
 
-// _split overflowed idxNode into two
-func (tree *Index) split(insertPath []*idxNode, level int) {
+// _split overflowed node into two
+func (tree *Index) split(insertPath []*node, level int) {
 	var nd = insertPath[level]
-	var newNode = createIdxNode(nil, nd.height, nd.leaf, []idxNode{})
+	var newNode = createNode(nil, nd.height, nd.leaf, []node{})
 	var M = len(nd.children)
 	var m = tree.minEntries
 
@@ -28,14 +28,14 @@ func (tree *Index) split(insertPath []*idxNode, level int) {
 }
 
 //_splitRoot splits the root of tree.
-func (tree *Index) splitRoot(nd, other idxNode) {
-	// split root idxNode
-	tree.data = createIdxNode(nil, nd.height+1, false, []idxNode{nd, other})
+func (tree *Index) splitRoot(nd, other node) {
+	// split root node
+	tree.data = createNode(nil, nd.height+1, false, []node{nd, other})
 	calcBBox(&tree.data)
 }
 
 //_chooseSplitIndex selects split index.
-func (tree *Index) chooseSplitIndex(nd *idxNode, m, M int) int {
+func (tree *Index) chooseSplitIndex(nd *node, m, M int) int {
 	var i, index int
 	var overlap, area, minOverlap, minArea float64
 
@@ -46,7 +46,7 @@ func (tree *Index) chooseSplitIndex(nd *idxNode, m, M int) int {
 		var bbox2 = distBBox(nd, i, M)
 
 		overlap = intersectionArea(&bbox1, &bbox2)
-		area = bboxArea(&bbox1) + bboxArea(&bbox2)
+		area = bbox1.Area() + bbox2.Area()
 
 		// choose distribution with minimum overlap
 		if overlap < minOverlap {
@@ -68,9 +68,9 @@ func (tree *Index) chooseSplitIndex(nd *idxNode, m, M int) int {
 	return index
 }
 
-//_chooseSplitAxis selects split axis : sorts idxNode children
+//_chooseSplitAxis selects split axis : sorts node children
 //by the best axis for split.
-func (tree *Index) chooseSplitAxis(nd *idxNode, m, M int) {
+func (tree *Index) chooseSplitAxis(nd *node, m, M int) {
 	var xMargin = tree.allDistMargin(nd, m, M, byX)
 	var yMargin = tree.allDistMargin(nd, m, M, byY)
 

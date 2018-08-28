@@ -1,7 +1,7 @@
 package index
 
-//NodePath slice of idxNode
-type NodePath []idxNode
+//NodePath slice of node
+type NodePath []node
 
 //Len for sort interface
 func (path NodePath) Len() int {
@@ -20,7 +20,7 @@ type xNodePath struct {
 
 //Less sorts boxes by ll[x]
 func (path xNodePath) Less(i, j int) bool {
-	return path.NodePath[i].bbox[0] < path.NodePath[j].bbox[0]
+	return path.NodePath[i].bbox.MinX < path.NodePath[j].bbox.MinX
 }
 
 //yNodePath is type  for  y sorting of boxes
@@ -30,6 +30,6 @@ type yNodePath struct {
 
 //Less sorts boxes by ll[y]
 func (path yNodePath) Less(i, j int) bool {
-	return path.NodePath[i].bbox[1] < path.NodePath[j].bbox[1]
+	return path.NodePath[i].bbox.MinY < path.NodePath[j].bbox.MinY
 }
 
