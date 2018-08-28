@@ -7,9 +7,9 @@ func (tree *Index) Collides(query mbr.MBR) bool {
     if !intersects(bbox, &tree.data.bbox) {
         return false
     }
-    var child *idxNode
+    var child *node
     var bln  = false
-    var searchList []*idxNode
+    var searchList []*node
     var nd = &tree.data
 
     for !bln && nd != nil {

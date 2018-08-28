@@ -1,12 +1,12 @@
 package index
 
 //split at index
-func splitAtIndex(nodes []idxNode, index int) ([]idxNode, []idxNode) {
+func splitAtIndex(nodes []node, index int) ([]node, []node) {
 	var ln = len(nodes)
-	var ext = make([]idxNode, 0, ln-index)
+	var ext = make([]node, 0, ln-index)
 	for i := index; i < ln; i++ {
 		ext = append(ext, nodes[i])
-		nodes[i] = idxNode{}
+		nodes[i] = node{}
 	}
 	return nodes[:index], ext
 }

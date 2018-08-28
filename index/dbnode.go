@@ -5,17 +5,17 @@ import (
 	"github.com/intdxdt/geom/mono"
 )
 
-//idxNode type for internal idxNode
-type idxNode struct {
-	children []idxNode
+//node type for internal node
+type node struct {
+	children []node
 	item     *mono.MBR
 	height   int
 	leaf     bool
 	bbox     mbr.MBR
 }
 
-//createIdxNode creates a new idxNode
-func createIdxNode(item *mono.MBR, height int, leaf bool, children []idxNode) idxNode {
+//createNode creates a new node
+func createNode(item *mono.MBR, height int, leaf bool, children []node) node {
 	var box mbr.MBR
 	if item == nil {
 		box = emptyMBR()
@@ -23,7 +23,7 @@ func createIdxNode(item *mono.MBR, height int, leaf bool, children []idxNode) id
 		box = item.MBR
 	}
 
-	return idxNode{
+	return node{
 		children: children,
 		item:     item,
 		height:   height,
@@ -32,10 +32,10 @@ func createIdxNode(item *mono.MBR, height int, leaf bool, children []idxNode) id
 	}
 }
 
-//idxNode type for internal idxNode
-func newLeafNode(item *mono.MBR) idxNode {
-	return idxNode{
-		children: []idxNode{},
+//node type for internal node
+func newLeafNode(item *mono.MBR) node {
+	return node{
+		children: []node{},
 		item:     item,
 		height:   1,
 		leaf:     true,
@@ -44,18 +44,18 @@ func newLeafNode(item *mono.MBR) idxNode {
 }
 
 //MBR returns bbox property
-func (nd *idxNode) BBox() *mbr.MBR {
+func (nd *node) BBox() *mbr.MBR {
 	return &nd.bbox
 }
 
-//add child
-func (nd *idxNode) addChild(child idxNode) {
+//Add child
+func (nd *node) addChild(child node) {
 	nd.children = append(nd.children, child)
 }
 
-//Constructs children of idxNode
-func makeChildren(items []*mono.MBR) []idxNode {
-	var chs = make([]idxNode, 0, len(items))
+//Constructs children of node
+func makeChildren(items []*mono.MBR) []node {
+	var chs = make([]node, 0, len(items))
 	for i := range items {
 		chs = append(chs, newLeafNode(items[i]))
 	}

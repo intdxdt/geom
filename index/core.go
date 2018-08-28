@@ -13,15 +13,10 @@ const (
 	byX sortBy = iota
 	byY
 )
-
 const (
-	x1 = iota
-	y1
-	x2
-	y2
+	cmpMinX = iota
+	cmpMinY
 )
-
-type compareNode func(*mono.MBR, *mono.MBR) float64
 
 func maxEntries(x int) int {
 	return maxInt(4, x)
@@ -29,16 +24,6 @@ func maxEntries(x int) int {
 
 func minEntries(x int) int {
 	return maxInt(2, int(math.Ceil(float64(x)*0.4)))
-}
-
-//compareNodeMinX computes change in minimum x
-func compareNodeMinX(a, b *mono.MBR) float64 {
-	return a.MBR[x1] - b.MBR[x1]
-}
-
-//compareNodeMinY computes change in minimum y
-func compareNodeMinY(a, b *mono.MBR) float64 {
-	return a.MBR[y1] - b.MBR[y1]
 }
 
 func swapItem(arr []*mono.MBR, i, j int) {

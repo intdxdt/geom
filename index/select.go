@@ -8,7 +8,7 @@ import (
 // sort an array so that items come in groups of n unsorted items,
 // with groups sorted between each other and
 // combines selection algorithm with binary divide & conquer approach.
-func multiSelect(arr []*mono.MBR, left, right, n int, compare compareNode) {
+func multiSelect(arr []*mono.MBR, left, right, n int, compare int) {
 	var mid int
 	var stack = make([]int, 2)
 	stack[0], stack[1] = left, right
@@ -22,42 +22,43 @@ func multiSelect(arr []*mono.MBR, left, right, n int, compare compareNode) {
 		}
 
 		mid = left + int(math.Ceil(float64(right-left)/float64(n)/2.0))*n
-		selectBox(arr, left, right, mid, compare)
+		selectBox(arr, mid, left, right, compare)
 		stack = appendInts(stack, left, mid, mid, right)
 	}
 }
 
 // sort array between left and right (inclusive) so that the smallest k elements come first (unordered)
-func selectBox(arr []*mono.MBR, left, right, k int, compare compareNode) {
+func selectBox(arr []*mono.MBR, k, left, right int, cmp int) {
 	var i, j int
-	var fn, fi, fnewleft, fnewright, fsn, fz, fs, fsd float64
+	var newLeft, newRight int
+	var fn, fi, fsn, fz, fs, fsd float64
 	var fleft, fright, fk = float64(left), float64(right), float64(k)
-	var t *mono.MBR
+	var tMinX, tMinY float64
 
 	for right > left {
-		//the arbitrary constants 600 and 0.5 are used in the original
-		// version to minimize execution time
 		if right-left > 600 {
-			fn = fright - fleft + 1.0
-			fi = fk - fleft + 1.0
+			fn = fright - fleft + 1
+			fi = fk - fleft + 1
 			fz = math.Log(fn)
-			fs = 0.5 * math.Exp(2.0*fz/3.0)
-			fsn = 1.0
-			if (fi - fn/2.0) < 0 {
-				fsn = -1.0
+
+			fs = 0.5 * math.Exp(2*fz/3.0)
+			fsn = 1
+			if (fi - fn/2) < 0 {
+				fsn = -1
 			}
 			fsd = 0.5 * math.Sqrt(fz*fs*(fn-fs)/fn) * fsn
-			fnewleft = max(fleft, math.Floor(fk-fi*fs/fn+fsd))
-			fnewright = min(fright, math.Floor(fk+(fn-fi)*fs/fn+fsd))
-			selectBox(arr, int(fnewleft), int(fnewright), int(fk), compare)
+			newLeft = int(max(fleft, math.Floor(fk-fi*fs/fn+fsd)))
+			newRight = int(min(fright, math.Floor(fk+(fn-fi)*fs/fn+fsd)))
+			selectBox(arr, k, newLeft, newRight, cmp)
 		}
 
-		t = arr[k]
-		i = left
-		j = right
+		i, j = left, right
+		tMinX, tMinY = arr[k].MinX, arr[k].MinY
 
 		swapItem(arr, left, k)
-		if compare(arr[right], t) > 0 {
+
+		if  (cmp == cmpMinX && (arr[right].MinX-tMinX) > 0) ||
+			(cmp == cmpMinY && (arr[right].MinY-tMinY) > 0) {
 			swapItem(arr, left, right)
 		}
 
@@ -65,15 +66,20 @@ func selectBox(arr []*mono.MBR, left, right, k int, compare compareNode) {
 			swapItem(arr, i, j)
 			i++
 			j--
-			for compare(arr[i], t) < 0 {
+
+			for (cmp == cmpMinX && (arr[i].MinX-tMinX) < 0) ||
+				(cmp == cmpMinY && (arr[i].MinY-tMinY) < 0) {
 				i++
 			}
-			for compare(arr[j], t) > 0 {
+
+			for (cmp == cmpMinX && (arr[j].MinX-tMinX) > 0) ||
+				(cmp == cmpMinY && (arr[j].MinY-tMinY) > 0) {
 				j--
 			}
 		}
 
-		if compare(arr[left], t) == 0 {
+		if  (cmp == cmpMinX && (arr[left].MinX-tMinX) == 0) ||
+			(cmp == cmpMinY && (arr[left].MinY-tMinY) == 0) {
 			swapItem(arr, left, j)
 		} else {
 			j++

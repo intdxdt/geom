@@ -7,6 +7,7 @@ import (
 	"github.com/franela/goblin"
 	"time"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
 
 type Boxes []mbr.MBR
@@ -23,15 +24,13 @@ func (o Boxes) Swap(i, j int) {
 
 //Less sorts boxes lexicographically
 func (o Boxes) Less(i, j int) bool {
-	var x, y = 0, 1
-	var d = o[i][x] - o[j][x]
-	//x's are close enough to each other
-	if feq(d, 0.0) {
-		d = o[i][y] - o[j][y]
+	var d = o[i].MinX - o[j].MinX
+	if d == 0 || math.Abs(d) < math.EPSILON  {
+		d = o[i].MinY - o[j].MinY
 	}
-	//check if close enough ot zero
 	return d < 0
 }
+
 
 func someData(n int) []mbr.MBR {
 	var data = make([]mbr.MBR, n)
@@ -55,7 +54,7 @@ func testResults(g *goblin.G, objects []*mono.MBR, boxes Boxes) {
 	}
 }
 
-func getObjs(nodes []idxNode) []*mono.MBR {
+func getObjs(nodes []node) []*mono.MBR {
 	var objs = make([]*mono.MBR, 0, len(nodes))
 	for _, o := range nodes {
 		objs = append(objs, o.item)
@@ -305,16 +304,16 @@ func TestRtreeUtil(t *testing.T) {
 	g.Describe("Index Util", func() {
 		g.It("tests pop nodes", func() {
 			g.Timeout(1 * time.Hour)
-			var a = createIdxNode(&mono.MBR{MBR: emptyMBR()}, 0, true, nil)
-			var b = createIdxNode(&mono.MBR{MBR: emptyMBR()}, 1, true, nil)
-			var c = createIdxNode(&mono.MBR{MBR: emptyMBR()}, 1, true, nil)
-			var nodes = make([]*idxNode, 0)
-			var n *idxNode
+			var a = createNode(&mono.MBR{MBR: emptyMBR()}, 0, true, nil)
+			var b = createNode(&mono.MBR{MBR: emptyMBR()}, 1, true, nil)
+			var c = createNode(&mono.MBR{MBR: emptyMBR()}, 1, true, nil)
+			var nodes = make([]*node, 0)
+			var n *node
 
 			n, nodes = popNode(nodes)
 			g.Assert(n == nil).IsTrue()
 
-			nodes = []*idxNode{&a, &b, &c}
+			nodes = []*node{&a, &b, &c}
 			g.Assert(len(nodes)).Equal(3)
 
 			n, nodes = popNode(nodes)
@@ -333,7 +332,7 @@ func TestRtreeUtil(t *testing.T) {
 			g.Assert(len(nodes)).Equal(0)
 			g.Assert(n == nil).IsTrue()
 
-			var nodes_abc = []idxNode{a, b, c}
+			var nodes_abc = []node{a, b, c}
 			g.Assert(len(nodes_abc)).Equal(3)
 			nodes_abc = removeNode(nodes_abc, 1)
 			g.Assert(len(nodes_abc)).Equal(2)
@@ -370,6 +369,15 @@ func TestRtreeUtil(t *testing.T) {
 			n = popIndex(&indexes)
 			g.Assert(len(indexes)).Equal(0)
 			g.Assert(n == 0).IsTrue()
+		})
+
+		g.It("util max min", func() {
+				g.Assert(max(2.3, 4.5)).Equal(4.5)
+				g.Assert(max( 4.5, 2.3)).Equal(4.5)
+				g.Assert(min(2.3, 4.5)).Equal(2.3)
+				g.Assert(min( 4.5, 2.3)).Equal(2.3)
+				g.Assert(min( 4.50233, 4.50233)).Equal(4.50233)
+				g.Assert(max( 4.50233, 4.50233)).Equal(4.50233)
 		})
 	})
 
