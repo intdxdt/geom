@@ -33,8 +33,8 @@ func quadrants(g, other Geometry) []Geometry {
 	box.ExpandByDelta(1e2, 1e2)
 
 	var mat [][]Point
-	var xs = []float64{box[minx], other_mbr[minx], other_mbr[maxx], box[maxx]}
-	var ys = []float64{box[miny], other_mbr[miny], other_mbr[maxy], box[maxy]}
+	var xs = []float64{box.MinX, other_mbr.MinX, other_mbr.MaxX, box.MaxX}
+	var ys = []float64{box.MinY, other_mbr.MinY, other_mbr.MaxY, box.MaxY}
 
 	for j := 0; j < len(ys); j++ {
 		var row_mat []Point

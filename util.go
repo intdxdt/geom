@@ -49,22 +49,23 @@ func IsLinearRing(g Geometry) (*LinearRing, bool) {
 
 //Insersection of two intersecting mono bounding boxes
 func mono_intersection(mbr, other *mono.MBR) (float64, float64, float64, float64) {
-	var minx, miny, maxx, maxy = other.MBR[0], other.MBR[1], other.MBR[2], other.MBR[3]
+	var minx, miny = other.MinX, other.MinY
+	var maxx, maxy = other.MaxX, other.MaxY
 
-	if mbr.MBR[0] > other.MBR[0] {
-		minx = mbr.MBR[0]
+	if mbr.MinX > other.MinX {
+		minx = mbr.MinX
 	}
 
-	if mbr.MBR[1] > other.MBR[1] {
-		miny = mbr.MBR[1]
+	if mbr.MinY > other.MinY {
+		miny = mbr.MinY
 	}
 
-	if mbr.MBR[2] < other.MBR[2] {
-		maxx = mbr.MBR[2]
+	if mbr.MaxX < other.MaxX {
+		maxx = mbr.MaxX
 	}
 
-	if mbr.MBR[3] < other.MBR[3] {
-		maxy = mbr.MBR[3]
+	if mbr.MaxY < other.MaxY {
+		maxy = mbr.MaxY
 	}
 
 	return minx, miny, maxx, maxy
