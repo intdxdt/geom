@@ -10,8 +10,7 @@ import (
 // combines selection algorithm with binary divide & conquer approach.
 func multiSelect(arr []*mono.MBR, left, right, n int, compare int) {
 	var mid int
-	var stack = make([]int, 2)
-	stack[0], stack[1] = left, right
+	var stack = []int{ left, right}
 
 	for len(stack) > 0 {
 		right, stack = popInt(stack)
