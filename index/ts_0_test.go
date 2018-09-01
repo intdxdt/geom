@@ -295,7 +295,10 @@ func TestRtreeRbush(t *testing.T) {
 
 }
 
-
+/*
+	g := goblin.Goblin(t)
+	g.Describe("Index Tests - From Rbush", func() {
+ */
 func TestRtreeUtil(t *testing.T) {
 	g := goblin.Goblin(t)
 	g.Describe("Index Util", func() {
@@ -377,4 +380,5 @@ func TestRtreeUtil(t *testing.T) {
 				g.Assert(max( 4.50233, 4.50233)).Equal(4.50233)
 		})
 	})
+
 }
