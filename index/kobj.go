@@ -2,17 +2,11 @@ package index
 
 import (
 	"fmt"
-	"sync"
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/math"
 )
 
-var KObjPool = sync.Pool{
-	New: func() interface{} {
-		return new(KObj)
-	},
-}
 
 //KObj instance struct
 type KObj struct {
