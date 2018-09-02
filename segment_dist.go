@@ -140,8 +140,8 @@ func minDistSegmentEndpoints(sa, sb, oa, ob *Point, fn hypotFunc) float64 {
 
 //Distance from segment endpoints to point
 func distanceToPoint(sa, sb, pt *Point, hypotFunc func(float64, float64) float64) float64 {
+	var dist = nan
 	var cPtx, cPty, u float64
-	var dist = math.NaN()
 	var ax, ay = sa[X], sa[Y]
 	var bx, by = sb[X], sb[Y]
 	var px, py = pt[X], pt[Y]

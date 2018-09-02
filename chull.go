@@ -15,8 +15,8 @@ func ConvexHull(points Coords) Coords {
 	var lower = makeCoords(pnts, 0, N/2)
 	var upper = makeCoords(pnts, 0, N/2)
 
-	lower = build_hull(lower, pnts, 0, 1, N)
-	upper = build_hull(upper, pnts, N-1, -1, -1)
+	lower = buildHull(lower, pnts, 0, 1, N)
+	upper = buildHull(upper, pnts, N-1, -1, -1)
 
 	upper.Pop()
 	lower.Pop()
@@ -29,7 +29,7 @@ func ConvexHull(points Coords) Coords {
 }
 
 //build boundary
-func build_hull(hb, points Coords, start, step, stop int) Coords {
+func buildHull(hb, points Coords, start, step, stop int) Coords {
 	var pnt *Point
 	var i = start
 	var idx int
