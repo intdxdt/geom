@@ -2,7 +2,6 @@ package geom
 
 import (
 	"sort"
-	"github.com/intdxdt/math"
 )
 
 type event struct {
@@ -35,7 +34,7 @@ func (o events) Less(i, j int) bool {
 	var d = a.val - b.val
 	var id int
 	//x's are close enough to each other
-	if d == 0 || math.Abs(d) < math.EPSILON {
+	if feq(d, 0) {
 		id = a.ev - b.ev
 	} else {
 		return d < 0
@@ -51,7 +50,7 @@ func (o events) Less(i, j int) bool {
 func prepareEvents(red, blue *LineString) []event {
 	var nr = red.Coordinates.Len() - 1
 	var nb = blue.Coordinates.Len() - 1
-	var i,  idx int
+	var i, idx int
 	var n = nr + nb
 	var data = make([]event, 0, 2*n)
 

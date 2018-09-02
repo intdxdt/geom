@@ -60,14 +60,14 @@ func redblueLineSegmentIntersection(red, blue *LineString, visit func(int, int) 
 
 	for i := 0; !ret && i < ne; i++ {
 		ev, index = events[i].ev, events[i].idx
-
-		if ev == CreateRED {
+		switch ev {
+		case CreateRED:
 			ret = addSegment(index, red, &redList, blue, &blueList, visit, false)
-		} else if ev == CreateBLUE {
+		case CreateBLUE:
 			ret = addSegment(index, blue, &blueList, red, &redList, visit, true)
-		} else if ev == RemoveRED {
+		case RemoveRED:
 			redList.remove(index)
-		} else if ev == RemoveBLUE {
+		case RemoveBLUE:
 			blueList.remove(index)
 		}
 	}
