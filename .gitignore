@@ -1,5 +1,8 @@
+node_modules/
 .idea/
-*.iml
+.directory
 sandbox/
+app/
+temp/
 *.test
 *.out

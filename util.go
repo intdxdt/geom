@@ -1,8 +1,22 @@
 package geom
 
 import (
-	"math"
+	"github.com/intdxdt/math"
 )
+
+const (
+	X = iota
+	Y
+	Z
+	null = -9
+)
+
+var nan = math.NaN()
+var feq = math.FloatEqual
+
+func hypotSqr(p, q float64) float64 {
+	return (p * p) + (q * q)
+}
 
 func hypot(p, q float64) float64 {
 	if p < 0 {
@@ -19,6 +33,22 @@ func hypot(p, q float64) float64 {
 	}
 	q = q / p
 	return p * math.Sqrt(1+q*q)
+}
+
+func snap_to_zero(x float64) float64 {
+	if feq(x, 0) {
+		x = 0
+	}
+	return x
+}
+
+func snap_to_zero_or_one(x float64) float64 {
+	if feq(x, 0) {
+		x = 0
+	} else if feq(x, 1) {
+		x = 1
+	}
+	return x
 }
 
 //Checks if geometry type is one of the fundermental types
@@ -40,22 +70,17 @@ func IsNullGeometry(g Geometry) bool {
 	return bln
 }
 
-//Is linearing
-func IsLinearRing(g Geometry) (*LinearRing, bool) {
-	ln, ok := g.(*LinearRing)
-	return ln, ok
-}
-
 //Checks if two bounding boxes intesect
 func intersects(
 	m_minx, m_miny, m_maxx, m_maxy float64,
-	o_minx, o_miny, o_maxx, o_maxy float64) bool {
+	o_minx, o_miny, o_maxx, o_maxy float64,
+) bool {
 	//not disjoint
 	return !(o_minx > m_maxx || o_maxx < m_minx || o_miny > m_maxy || o_maxy < m_miny)
 }
 
 //Checks if two bounding boxes intesect
-func bounds_intersects(sa, sb, oa, ob *Point) bool {
+func boundsIntersects(sa, sb, oa, ob *Point) bool {
 	var s_minx, s_miny, s_maxx, s_maxy = bounds(sa, sb)
 	var o_minx, o_miny, o_maxx, o_maxy = bounds(oa, ob)
 	//not disjoint

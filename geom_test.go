@@ -39,11 +39,6 @@ func TestGeom(t *testing.T) {
 			g.Assert(IsNullGeometry(pnt)).IsFalse()
 			g.Assert(IsNullGeometry(ply)).IsTrue()
 			g.Assert(IsNullGeometry(line)).IsTrue()
-
-			ring, ok := IsLinearRing(rng)
-			g.Assert(ok).IsTrue()
-			g.Assert(ring).Eql(rng)
-
 		})
 		g.It("test geom type from composed type", func() {
 			g.Assert(IsNullGeometry(rng)).IsFalse()

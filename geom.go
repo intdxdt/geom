@@ -1,30 +1,19 @@
 package geom
 
 import (
-	"github.com/intdxdt/math"
-	"github.com/intdxdt/mbr"
 	"bytes"
+	"github.com/intdxdt/mbr"
 	"strings"
 )
 
-var nan = math.NaN()
 
 const (
-	X    = iota
-	Y
-	Z
-	null = -9
-)
-
-const (
-	GeoTypeUnknown    GeoType = iota - 1
+	GeoTypeUnknown GeoType = iota - 1
 	GeoTypePoint
 	GeoTypeSegment
 	GeoTypeLineString
 	GeoTypePolygon
 )
-
-var feq = math.FloatEqual
 
 type Geometry interface {
 	BBox() *mbr.MBR
@@ -40,7 +29,7 @@ type Geometry interface {
 
 type GeoType int
 
-//Read geometry from WKT
+// Read geometry from WKT
 func ReadGeometry(wkt string) Geometry {
 	wkt = strings.ToLower(wkt_string(wkt))
 	var g Geometry
@@ -76,22 +65,22 @@ func CastAsSegment(other Geometry) *Segment {
 	return other.Geometry().(*Segment)
 }
 
-//is polygon
+// is polygon
 func (gt GeoType) IsPolygon() bool {
 	return gt == GeoTypePolygon
 }
 
-//is linestring
+// is linestring
 func (gt GeoType) IsLineString() bool {
 	return gt == GeoTypeLineString
 }
 
-//is linestring
+// is linestring
 func (gt GeoType) IsSegment() bool {
 	return gt == GeoTypeSegment
 }
 
-//is point
+// is point
 func (gt GeoType) IsPoint() bool {
 	return gt == GeoTypePoint
 }

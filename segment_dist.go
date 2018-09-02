@@ -4,6 +4,8 @@ import (
 	"github.com/intdxdt/math"
 )
 
+type hypotFunc func(float64, float64) float64
+
 //Length of segment
 func (self *Segment) Length() float64 {
 	var a, b = self.A(), self.B()
@@ -16,7 +18,42 @@ func (self *Segment) SegSegDistance(other *Segment) float64 {
 }
 
 //Distance betwen two segments
+func (self *Segment) SquareSegSegDistance(other *Segment) float64 {
+	return SquareSegSegDistance(self.A(), self.B(), other.A(), other.B())
+}
+
+//Minimum distance from segement to point
+func (self *Segment) DistanceToPoint(pt *Point) float64 {
+	return DistanceToPoint(self.A(), self.B(), pt)
+}
+
+//Minimum square distance from segement to point
+func (self *Segment) SquareDistanceToPoint(pt *Point) float64 {
+	return SquareDistanceToPoint(self.A(), self.B(), pt)
+}
+
+//Distance betwen two segments
 func SegSegDistance(sa, sb, oa, ob *Point) float64 {
+	return segsegDistance(sa, sb, oa, ob, hypot)
+}
+
+//Distance betwen two segments
+func SquareSegSegDistance(sa, sb, oa, ob *Point) float64 {
+	return segsegDistance(sa, sb, oa, ob, hypotSqr)
+}
+
+//Distance from segment endpoints to point
+func DistanceToPoint(sa, sb, pt *Point) float64 {
+	return distanceToPoint(sa, sb, pt, hypot)
+}
+
+//Square Distance from segment endpoints to point
+func SquareDistanceToPoint(sa, sb, pt *Point) float64 {
+	return distanceToPoint(sa, sb, pt, hypotSqr)
+}
+
+//Distance betwen two segments with custom hypot function
+func segsegDistance(sa, sb, oa, ob *Point, hypotFn hypotFunc) float64 {
 	var dist = nan
 	var x1, y1 = sa[X], sa[Y]
 	var x2, y2 = sb[X], sb[Y]
@@ -38,7 +75,7 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 		is_aspt_b = oa.Equals2D(ob)
 
 		if is_aspt_a && is_aspt_b {
-			dist = hypot(x1-x4, y1-y4)
+			dist = hypotFn(x1-x4, y1-y4)
 		} else if is_aspt_a || is_aspt_b {
 			var lna, lnb *Point
 
@@ -49,34 +86,17 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 				pta = oa
 				lna, lnb = sa, sb
 			}
-
-			dist = DistanceToPoint(lna, lnb, pta)
+			dist = distanceToPoint(lna, lnb, pta, hypotFn)
 		} else {
-			dist = minf64(
-				minf64(
-					DistanceToPoint(oa, ob, sa),
-					DistanceToPoint(oa, ob, sb)),
-				minf64(
-					DistanceToPoint(sa, sb, oa),
-					DistanceToPoint(sa, sb, ob),
-				))
+			dist = minDistSegmentEndpoints(sa, sb, oa, ob, hypotFn)
 		}
 
 	} else {
-		//if close to zero or one , snap
 		mua = numera / denom
-		if (mua == 0) || math.Abs(mua) < math.EPSILON { //a == b || Abs(a - b) < EPSILON
-			mua = 0
-		} else if (mua == 1) || math.Abs(mua-1) < math.EPSILON {
-			mua = 1
-		}
+		mua = snap_to_zero_or_one(mua)
 
 		mub = numerb / denom
-		if (mub == 0) || math.Abs(mub) < math.EPSILON {
-			mub = 0
-		} else if (mub == 1) || math.Abs(mub-1) < math.EPSILON {
-			mub = 1
-		}
+		mub = snap_to_zero_or_one(mub)
 
 		if mua < 0 || mua > 1 || mub < 0 || mub > 1 {
 			//the is intersection along the the segments
@@ -94,46 +114,46 @@ func SegSegDistance(sa, sb, oa, ob *Point) float64 {
 
 			if pta != nil && ptb != nil {
 				dist = minf64(
-					DistanceToPoint(oa, ob, pta),
-					DistanceToPoint(sa, sb, ptb),
+					distanceToPoint(oa, ob, pta, hypotFn),
+					distanceToPoint(sa, sb, ptb, hypotFn),
 				)
 			} else if pta != nil {
-				dist = DistanceToPoint(oa, ob, pta)
+				dist = distanceToPoint(oa, ob, pta, hypotFn)
 			} else {
-				dist = DistanceToPoint(sa, sb, ptb)
+				dist = distanceToPoint(sa, sb, ptb, hypotFn)
 			}
 		} else {
-			//lines intersect
-			dist = 0
+			dist = 0 //lines intersect
 		}
 	}
 
 	return dist
 }
 
-//Minimum distance from segement to point
-func (self *Segment) DistanceToPoint(pt *Point) float64 {
-	return DistanceToPoint(self.A(), self.B(), pt)
+func minDistSegmentEndpoints(sa, sb, oa, ob *Point, fn hypotFunc) float64 {
+	var o_sa = distanceToPoint(oa, ob, sa, fn)
+	var o_sb = distanceToPoint(oa, ob, sb, fn)
+	var s_oa = distanceToPoint(sa, sb, oa, fn)
+	var s_ob = distanceToPoint(sa, sb, ob, fn)
+	return minf64(minf64(o_sa, o_sb), minf64(s_oa, s_ob))
 }
 
-func DistanceToPoint(sa, sb, pt *Point) float64 {
+//Distance from segment endpoints to point
+func distanceToPoint(sa, sb, pt *Point, hypotFunc func(float64, float64) float64) float64 {
+	var cPtx, cPty, u float64
 	var dist = math.NaN()
-	//var cPt *Point
 	var ax, ay = sa[X], sa[Y]
 	var bx, by = sb[X], sb[Y]
 	var px, py = pt[X], pt[Y]
-	//var dab = sb.Sub(sa)
 	var dx, dy = bx-ax, by-ay
-	//a == b || Abs(a - b) < EPSILON
-	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON
-	var isz_y = (dy == 0) || math.Abs(dy) < math.EPSILON
+	var isz_x = feq(dx, 0)
+	var isz_y = feq(dy, 0)
 
 	if isz_x && isz_y {
 		//line with zero length
-		dist = hypot(px-ax, py-ay)
+		dist = hypotFunc(px-ax, py-ay)
 	} else {
-		var cPtx, cPty float64
-		var u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
+		u = (((px - ax) * dx) + ((py - ay) * dy)) / (dx*dx + dy*dy)
 
 		if u < 0 {
 			cPtx, cPty = ax, ay
@@ -142,7 +162,7 @@ func DistanceToPoint(sa, sb, pt *Point) float64 {
 		} else {
 			cPtx, cPty = ax+u*dx, ay+u*dy
 		}
-		dist = hypot(px-cPtx, py-cPty)
+		dist = hypotFunc(px-cPtx, py-cPty)
 	}
 
 	return dist
