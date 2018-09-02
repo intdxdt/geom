@@ -2,19 +2,10 @@ package geom
 
 import (
 	"bytes"
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
 	"strings"
 )
 
-var nan = math.NaN()
-
-const (
-	X = iota
-	Y
-	Z
-	null = -9
-)
 
 const (
 	GeoTypeUnknown GeoType = iota - 1
@@ -23,8 +14,6 @@ const (
 	GeoTypeLineString
 	GeoTypePolygon
 )
-
-var feq = math.FloatEqual
 
 type Geometry interface {
 	BBox() *mbr.MBR

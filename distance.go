@@ -1,9 +1,9 @@
 package geom
 
 import (
+	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom/mono"
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/index"
 )
 
