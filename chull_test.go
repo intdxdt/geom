@@ -176,7 +176,7 @@ func TestCHull(t *testing.T) {
 
 			var inters = plyA.Intersection(plyB)
 			g.Assert(len(inters)).Equal(1)
-			g.Assert(inters[0].Equals2D(&coords._c[29])).IsTrue()
+			g.Assert(inters[0].Equals2D(&coords.Pnts[29])).IsTrue()
 			inters = plyA.Intersection(plyC)
 			g.Assert(len(inters)).Equal(4)
 

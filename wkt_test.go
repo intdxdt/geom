@@ -7,7 +7,7 @@ import (
 )
 
 func TestWKT(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
 
 	var pt = " \n\rPOINT (30 10)\n\r "
 	var ept = " \n\rPOINT EMPTY\n\r "
@@ -25,63 +25,63 @@ func TestWKT(t *testing.T) {
 			obj := readWKT(pt, GeoTypePoint)
 			g.Assert(obj.gtype).Eql(GeoTypePoint)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePoint)
-			g.Assert(obj.Shell()._c == nil).IsFalse()
-			g.Assert(len(obj.Shell()._c)).Eql(1)
-			g.Assert(obj.shell._c[0][:2]).Eql([]float64{30, 10})
+			g.Assert(obj.Shell().Pnts == nil).IsFalse()
+			g.Assert(len(obj.Shell().Pnts)).Eql(1)
+			g.Assert(obj.shell.Pnts[0][:2]).Eql([]float64{30, 10})
 
 			obj = readWKT(ept, GeoTypePoint)
 			g.Assert(obj.gtype).Eql(GeoTypePoint)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePoint)
-			g.Assert(obj.Shell()._c == nil).IsTrue()
+			g.Assert(obj.Shell().Pnts == nil).IsTrue()
 			g.Assert(obj.Holes() == nil).IsTrue()
 
 			obj = readWKT(cpoly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
-			g.Assert(obj.Shell()._c == nil).Eql(false)
-			g.Assert(len(obj.Shell()._c)).Eql(5)
+			g.Assert(obj.Shell().Pnts == nil).Eql(false)
+			g.Assert(len(obj.Shell().Pnts)).Eql(5)
 			g.Assert(len(obj.Holes())).Eql(1)
-			g.Assert(len(obj.Holes()[0]._c)).Eql(4)
+			g.Assert(len(obj.Holes()[0].Pnts)).Eql(4)
 
 			obj = readWKT(poly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
-			g.Assert(obj.shell._c == nil).Eql(false)
-			g.Assert(len(obj.shell._c)).Eql(5)
+			g.Assert(obj.shell.Pnts == nil).Eql(false)
+			g.Assert(len(obj.shell.Pnts)).Eql(5)
 			g.Assert(obj.holes == nil).Eql(false)
 			g.Assert(len(obj.holes)).Eql(0)
 
 			obj = readWKT(epoly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
-			g.Assert(obj.shell._c == nil).Eql(true)
+			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			obj = readWKT(ln, GeoTypeLineString)
 			g.Assert(obj.gtype).Eql(GeoTypeLineString)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeLineString)
-			g.Assert(obj.shell._c == nil).Eql(false)
-			g.Assert(len(obj.shell._c)).Eql(3)
+			g.Assert(obj.shell.Pnts == nil).Eql(false)
+			g.Assert(len(obj.shell.Pnts)).Eql(3)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			obj = readWKT(eln, GeoTypeLineString)
 			g.Assert(obj.gtype).Eql(GeoTypeLineString)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeLineString)
-			g.Assert(obj.shell._c == nil).Eql(true)
+			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			var unknownLn = "unknown empty"
 			obj = readWKT(unknownLn, GeoTypeUnknown)
 			g.Assert(obj.gtype).Eql(GeoTypeUnknown)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeUnknown)
-			g.Assert(obj.shell._c == nil).Eql(true)
+			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			var notImplemented = "MultiPoint ((3 4), (5 6))"
 			obj = readWKT(notImplemented, GeoTypeUnknown)
 			g.Assert(obj.gtype).Eql(GeoTypeUnknown)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeUnknown)
-			g.Assert(obj.shell._c == nil).Eql(true)
+			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			var gtype = wktType("polygon empty")

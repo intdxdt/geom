@@ -32,7 +32,7 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 
 			self.segsInrange(&selfsegs, minx, miny, maxx, maxy, ibox.I, ibox.J)
 			other.segsInrange(&othersegs, minx, miny, maxx, maxy, qbox.I, qbox.J)
-			self.segsegIntersection(self.Coordinates._c, selfsegs, other.Coordinates._c, othersegs, ptset)
+			self.segsegIntersection(self.Coordinates.Pnts, selfsegs, other.Coordinates.Pnts, othersegs, ptset)
 		}
 	}
 
@@ -71,7 +71,7 @@ func (self *LineString) intersectsLinestring(other *LineString) bool {
 			other.segsInrange(&othersegs, minx, miny, maxx, maxy, qbox.I, qbox.J)
 
 			if len(othersegs) > 0 && len(selfsegs) > 0 {
-				bln = self.segseg_intersects(self.Coordinates._c, selfsegs, other.Coordinates._c, othersegs)
+				bln = self.segseg_intersects(self.Coordinates.Pnts, selfsegs, other.Coordinates.Pnts, othersegs)
 			}
 		}
 	}

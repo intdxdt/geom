@@ -7,21 +7,31 @@ import (
 
 func TestCoordinate(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var cds  = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
-	var c0 = ShallowClone(cds, 0, 1)
+	var cds = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
+	var c0 = cds.ShallowClone(0, 1)
 	g.Assert(cds.DataView()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
+	g.Assert(cds.Clone().DataView()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
 	g.Assert(c0.Points()).Equal([]Point{{0.0, 0.2}})
-	var c1 = ShallowClone(cds, 0, 2)
+	var c1 = cds.ShallowClone(0, 2)
 	g.Assert(c1.Points()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}})
-	g.Assert(c1).Equal(ShallowClone(cds, 2))
+	g.Assert(c1).Equal(cds.ShallowClone(2))
 
-	var c2 = ShallowClone(cds, 1, 3)
+	cds = Coordinates([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
+	var cds_1 = cds.Clone()
+	cds_1.Append(Point{2, 2})
+	cds_1.Append(Point{3, 3})
+	g.Assert(cds.DataView()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}})
+	g.Assert(cds_1.DataView()).Equal([]Point{{0.0, 0.2}, {1.0, 0.1}, {1.0, 0.05}, {2, 2}, {3, 3}})
+
+	var c2 = cds.ShallowClone(1, 3)
 	g.Assert(c2.Points()).Equal([]Point{{1.0, 0.1}, {1.0, 0.05}})
-	g.Assert(cds.Slice(1,3).Points()).Equal(c2.Points())
-	var c4 = ShallowClone(cds, 2, 3)
+	g.Assert(c2.Clone().Points()).Equal([]Point{{1.0, 0.1}, {1.0, 0.05}})
+
+	g.Assert(cds.Slice(1, 3).Points()).Equal(c2.Points())
+	var c4 = cds.ShallowClone(2, 3)
 	g.Assert(c4.Points()).Equal([]Point{{1.0, 0.05}})
-	g.Assert(cds.Slice(2,3).Points()).Equal(c4.Points())
-	var c5 = ShallowClone(cds, 2, 2)
+	g.Assert(cds.Slice(2, 3).Points()).Equal(c4.Points())
+	var c5 = cds.ShallowClone(2, 2)
 	g.Assert(c5.Points()).Equal([]Point{})
 
 	var coords = []Point{{0.0, 0.0}, {1.0, 0.0}, {2.0, 0.0}}
@@ -67,7 +77,7 @@ func TestCoordinate(t *testing.T) {
 
 			g.Assert(xycoords.Sort().Points()).Eql(coords)
 			g.Assert(coords_2d.Sort().Points()).Eql(expect_2d)
-			g.Assert(coords2d.Sort() .Points() ).Eql([]Point{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}})
+			g.Assert(coords2d.Sort().Points()).Eql([]Point{{0.0, 0.2}, {1.0, 0.05}, {1.0, 0.1}})
 			g.Assert(coords2d1.Sort().Points()).Eql([]Point{{0.0, 0.2}, {1.0, 0.5}, {1.0, 0.9}})
 			g.Assert(coords2d2.Sort().Points()).Eql([]Point{{0.0, 0.2}, {1.0, 0.5}, {1.0, 0.5}})
 		})

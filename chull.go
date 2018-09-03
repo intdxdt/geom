@@ -3,7 +3,7 @@ package geom
 // description computes the convex hull of a point set.
 // param points An array of [X, Y] coordinates
 func ConvexHull(points Coords) Coords {
-	var pnts = ShallowClone(points)
+	var pnts = points.ShallowClone()
 	//trivial case less than three coordinates
 	if points.Len() < 3 {
 		return pnts
@@ -47,21 +47,7 @@ func buildHull(hb, points Coords, start, step, stop int) Coords {
 
 //Coords returns a copy of linestring coordinates
 func makeCoords(coordinates Coords, i, j int) Coords {
-	var o = Coords{_c: coordinates._c, Idxs: make([]int, 0, j-i+1)}
+	var o = Coords{Pnts: coordinates.Pnts, Idxs: make([]int, 0, j-i+1)}
 	return o
 }
 
-//Coords returns a copy of linestring coordinates
-func ShallowClone(coordinates Coords, slice ...int) Coords {
-	var i, j = 0, coordinates.Len()
-	if len(slice) == 1 {
-		j = slice[0]
-	} else if len(slice) > 1 {
-		i, j = slice[0], slice[1]
-	}
-	var o = Coords{_c: coordinates._c, Idxs: make([]int, 0,  j-i)}
-	for _, v := range coordinates.Idxs[i:j]{
-		o.Idxs = append(o.Idxs, v)
-	}
-	return o
-}

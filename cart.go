@@ -35,7 +35,7 @@ func ProjectXY(ux, uy, onvX, onvY float64) float64 {
 	return DotProduct(ux, uy, cx, cy)
 }
 
-//2D cross product of AB and AC vectors given A, B, and C as points,
+//2D cross product of AB and AC vectors given A, B, and Pnts as points,
 //i.e. z-component of their 3D cross product.
 //Returns a positive value, if ABC makes a counter-clockwise turn,
 //negative for clockwise turn, and zero if the points are collinear.

@@ -25,8 +25,8 @@ func WriteWKT(obj *WKTParserObj) string {
 //str point
 func str_point(shell Coords) string {
 	var s = "EMPTY"
-	if shell._c != nil && len(shell._c) > 0 {
-		s = "(" + coordStr(shell._c[0][:]) + ")"
+	if shell.Pnts != nil && len(shell.Pnts) > 0 {
+		s = "(" + coordStr(shell.Pnts[0][:]) + ")"
 	}
 	return s
 }
@@ -34,7 +34,7 @@ func str_point(shell Coords) string {
 //str polyline
 func str_polyline(shell Coords) string {
 	var s = "EMPTY"
-	if shell._c == nil {
+	if shell.Pnts == nil {
 		return s
 	}
 

@@ -71,9 +71,9 @@ func TestExtVect(t *testing.T) {
 			g.Assert(math.Round(vbc[0], precision)).Equal(math.Round(vextc[0], precision))
 			g.Assert(math.Round(vbc[1], precision)).Equal(math.Round(vextc[1], precision))
 
-			// "vextc with magnitudie extension from vdb C"
+			// "vextc with magnitudie extension from vdb Pnts"
 			g.Assert(math.Round(vextc[0], precision)).Equal(-MagnitudeXY(cx, cy))
-			// "vextc horizontal vector test:  extension from vdb C"
+			// "vextc horizontal vector test:  extension from vdb Pnts"
 			g.Assert(math.Round(vextc[1], precision)).Equal(0.)
 
 			cx, cy = Deflect(5, 0, 2, math.Deg2rad(90), true)

@@ -2,8 +2,8 @@ package geom
 
 import (
 	"bytes"
-	"github.com/intdxdt/mbr"
 	"strings"
+	"github.com/intdxdt/mbr"
 )
 
 

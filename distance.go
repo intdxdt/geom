@@ -125,7 +125,7 @@ func knnMinLinearDistance(a, b Coords) float64 {
 		db.KnnMinDist(&queries[q],
 			func(query *mono.MBR, item *mono.MBR) (float64, float64) {
 				d = SegSegDistance(
-					&a._c[query.I], &a._c[query.J], &b._c[item.I], &b._c[item.J],
+					&a.Pnts[query.I], &a.Pnts[query.J], &b.Pnts[item.I], &b.Pnts[item.J],
 				)
 
 				if d < dist {
@@ -149,8 +149,8 @@ func queryBounds(coords Coords) []mono.MBR {
 		I, J = coords.Idxs[i], coords.Idxs[i+1]
 		items = append(items, mono.MBR{
 			MBR: mbr.CreateMBR(
-				coords._c[I][X], coords._c[I][Y],
-				coords._c[J][X], coords._c[J][Y]), I: I, J: J,
+				coords.Pnts[I][X], coords.Pnts[I][Y],
+				coords.Pnts[J][X], coords.Pnts[J][Y]), I: I, J: J,
 		})
 	}
 	return items
@@ -165,8 +165,8 @@ func segmentDB(coords Coords) *index.Index {
 		I, J = coords.Idxs[i], coords.Idxs[i+1]
 		items = append(items, mono.MBR{
 			MBR: mbr.CreateMBR(
-				coords._c[I][X], coords._c[I][Y],
-				coords._c[J][X], coords._c[J][Y]), I: I, J: J,
+				coords.Pnts[I][X], coords.Pnts[I][Y],
+				coords.Pnts[J][X], coords.Pnts[J][Y]), I: I, J: J,
 		})
 	}
 	tree.Load(items)

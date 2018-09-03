@@ -4,7 +4,7 @@ package geom
 func (self *LineString) Clone() *LineString {
 	var coords = make([]Point, 0, self.Coordinates.Len())
 	for _, i := range self.Coordinates.Idxs {
-		coords = append(coords, self.Coordinates._c[i])
+		coords = append(coords, self.Coordinates.Pnts[i])
 	}
 	return NewLineString(Coordinates(coords))
 }

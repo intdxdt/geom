@@ -34,7 +34,7 @@ func (self *Point) Compare(o *Point) int {
 	return 1
 }
 
-//position of C relative to line AB
+//position of Pnts relative to line AB
 func (c *Point) SideOf(a, b *Point) *side.Side {
 	var s = side.NewSide()
 	var ccw = c.Orientation2D(a, b)
@@ -48,7 +48,7 @@ func (c *Point) SideOf(a, b *Point) *side.Side {
 	return s
 }
 
-//2D cross product of AB and AC vectors given A, B, and C as points,
+//2D cross product of AB and AC vectors given A, B, and Pnts as points,
 //i.e. z-component of their 3D cross product.
 //Returns a positive value, if ABC makes a counter-clockwise turn,
 //negative for clockwise turn, and zero if the points are collinear.
