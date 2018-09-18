@@ -106,7 +106,7 @@ func buildTokens(stream []byte) []*wktToken {
 	return tokens
 }
 
-func wktType(stream string) []byte {
+func WKTType(stream string) []byte {
 	if strings.Index(stream, "empty") != -1 {
 		var gtype = "unknown"
 		var subs = strings.Split(stream, "empty")

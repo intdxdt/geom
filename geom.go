@@ -33,7 +33,7 @@ type GeoType int
 func ReadGeometry(wkt string) Geometry {
 	wkt = strings.ToLower(wkt_string(wkt))
 	var g Geometry
-	var gtype = wktType(wkt)
+	var gtype = WKTType(wkt)
 
 	if bytes.Equal(gtype, wktPolygon) {
 		g = NewPolygonFromWKT(wkt)

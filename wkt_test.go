@@ -84,9 +84,9 @@ func TestWKT(t *testing.T) {
 			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
-			var gtype = wktType("polygon empty")
+			var gtype = WKTType("polygon empty")
 			g.Assert(string(gtype) == "polygon").IsTrue()
-			gtype = wktType(unknownLn)
+			gtype = WKTType(unknownLn)
 			g.Assert(string(gtype) == "unknown").IsTrue()
 		})
 
