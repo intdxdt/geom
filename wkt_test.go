@@ -22,20 +22,20 @@ func TestWKT(t *testing.T) {
 	g.Describe("WKT Read", func() {
 		g.It("test wkt parser", func() {
 			g.Timeout(1 * time.Hour)
-			obj := readWKT(pt, GeoTypePoint)
+			obj := ReadWKT(pt, GeoTypePoint)
 			g.Assert(obj.gtype).Eql(GeoTypePoint)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePoint)
 			g.Assert(obj.Shell().Pnts == nil).IsFalse()
 			g.Assert(len(obj.Shell().Pnts)).Eql(1)
 			g.Assert(obj.shell.Pnts[0][:2]).Eql([]float64{30, 10})
 
-			obj = readWKT(ept, GeoTypePoint)
+			obj = ReadWKT(ept, GeoTypePoint)
 			g.Assert(obj.gtype).Eql(GeoTypePoint)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePoint)
 			g.Assert(obj.Shell().Pnts == nil).IsTrue()
 			g.Assert(obj.Holes() == nil).IsTrue()
 
-			obj = readWKT(cpoly, GeoTypePolygon)
+			obj = ReadWKT(cpoly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
 			g.Assert(obj.Shell().Pnts == nil).Eql(false)
@@ -43,7 +43,7 @@ func TestWKT(t *testing.T) {
 			g.Assert(len(obj.Holes())).Eql(1)
 			g.Assert(len(obj.Holes()[0].Pnts)).Eql(4)
 
-			obj = readWKT(poly, GeoTypePolygon)
+			obj = ReadWKT(poly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
 			g.Assert(obj.shell.Pnts == nil).Eql(false)
@@ -51,34 +51,34 @@ func TestWKT(t *testing.T) {
 			g.Assert(obj.holes == nil).Eql(false)
 			g.Assert(len(obj.holes)).Eql(0)
 
-			obj = readWKT(epoly, GeoTypePolygon)
+			obj = ReadWKT(epoly, GeoTypePolygon)
 			g.Assert(obj.gtype).Eql(GeoTypePolygon)
 			g.Assert(obj.GeometryType()).Eql(GeoTypePolygon)
 			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
-			obj = readWKT(ln, GeoTypeLineString)
+			obj = ReadWKT(ln, GeoTypeLineString)
 			g.Assert(obj.gtype).Eql(GeoTypeLineString)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeLineString)
 			g.Assert(obj.shell.Pnts == nil).Eql(false)
 			g.Assert(len(obj.shell.Pnts)).Eql(3)
 			g.Assert(obj.holes == nil).Eql(true)
 
-			obj = readWKT(eln, GeoTypeLineString)
+			obj = ReadWKT(eln, GeoTypeLineString)
 			g.Assert(obj.gtype).Eql(GeoTypeLineString)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeLineString)
 			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			var unknownLn = "unknown empty"
-			obj = readWKT(unknownLn, GeoTypeUnknown)
+			obj = ReadWKT(unknownLn, GeoTypeUnknown)
 			g.Assert(obj.gtype).Eql(GeoTypeUnknown)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeUnknown)
 			g.Assert(obj.shell.Pnts == nil).Eql(true)
 			g.Assert(obj.holes == nil).Eql(true)
 
 			var notImplemented = "MultiPoint ((3 4), (5 6))"
-			obj = readWKT(notImplemented, GeoTypeUnknown)
+			obj = ReadWKT(notImplemented, GeoTypeUnknown)
 			g.Assert(obj.gtype).Eql(GeoTypeUnknown)
 			g.Assert(obj.GeometryType()).Eql(GeoTypeUnknown)
 			g.Assert(obj.shell.Pnts == nil).Eql(true)
@@ -100,7 +100,7 @@ func TestWKT(t *testing.T) {
 				}
 				done()
 			}()
-			readWKT(tln, GeoTypeLineString)
+			ReadWKT(tln, GeoTypeLineString)
 		})
 
 	})
@@ -111,19 +111,19 @@ func TestWKT(t *testing.T) {
 		var wkt_sh = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10))"
 		g.It("tests wkt writer", func() {
 			g.Timeout(1 * time.Hour)
-			g.Assert(WriteWKT(readWKT(pt, GeoTypePoint))).Eql("POINT (30 10)")
-			ept := readWKT(ept, GeoTypePoint)
+			g.Assert(WriteWKT(ReadWKT(pt, GeoTypePoint))).Eql("POINT (30 10)")
+			ept := ReadWKT(ept, GeoTypePoint)
 
 			g.Assert(WriteWKT(ept)).Eql("POINT EMPTY")
 
-			g.Assert(WriteWKT(readWKT(ln, GeoTypeLineString))).Eql("LINESTRING (30 10, 10 30, 40 40)")
-			g.Assert(WriteWKT(readWKT(eln, GeoTypeLineString))).Eql("LINESTRING EMPTY")
+			g.Assert(WriteWKT(ReadWKT(ln, GeoTypeLineString))).Eql("LINESTRING (30 10, 10 30, 40 40)")
+			g.Assert(WriteWKT(ReadWKT(eln, GeoTypeLineString))).Eql("LINESTRING EMPTY")
 
-			g.Assert(WriteWKT(readWKT(poly, GeoTypePolygon))).Eql(poly)
-			g.Assert(WriteWKT(readWKT(cpoly, GeoTypePolygon))).Eql(cpoly)
+			g.Assert(WriteWKT(ReadWKT(poly, GeoTypePolygon))).Eql(poly)
+			g.Assert(WriteWKT(ReadWKT(cpoly, GeoTypePolygon))).Eql(cpoly)
 			g.Assert(WriteWKT(NewWKTParserObj(GeoTypePolygon, sh))).Eql(wkt_sh)
 			g.Assert(WriteWKT(NewWKTParserObj(GeoTypePolygon, sh, h1))).Eql(cpoly)
-			g.Assert(WriteWKT(readWKT(epoly, GeoTypePolygon))).Eql(epoly)
+			g.Assert(WriteWKT(ReadWKT(epoly, GeoTypePolygon))).Eql(epoly)
 		})
 	})
 
@@ -136,8 +136,8 @@ func TestWKT(t *testing.T) {
 		var ln_array = Coordinates([]Point{{2.28, 3.7}, {2.98, 5.36}, {3.92, 4.8}, {3.9, 3.64}, {2.28, 3.7}})
 
 		g.It("tests wkt to array", func() {
-			ln_obj := readWKT(ln, GeoTypeLineString)
-			poly_obj := readWKT(cpoly, GeoTypePolygon)
+			ln_obj := ReadWKT(ln, GeoTypeLineString)
+			poly_obj := ReadWKT(cpoly, GeoTypePolygon)
 			g.Assert(ln_obj.ToCoordinates()[0]).Eql(ln_array)
 			g.Assert(poly_obj.ToCoordinates()).Eql(poly_array)
 		})

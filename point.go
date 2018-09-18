@@ -36,7 +36,7 @@ func CreatePoint(array []float64) Point {
 //create a new linestring from wkt string
 //empty wkt will raise an exception
 func PointFromWKT(wkt string) Point {
-	return *readWKT(wkt, GeoTypePoint).ToCoordinates()[0].Pt(0)
+	return *ReadWKT(wkt, GeoTypePoint).ToCoordinates()[0].Pt(0)
 }
 
 //Is point zero in 2d - origin

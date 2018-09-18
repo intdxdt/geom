@@ -22,7 +22,7 @@ func newPolygonFromRings(rings ...*LinearRing) *Polygon {
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewPolygonFromWKT(wkt string) *Polygon {
-	return NewPolygon(readWKT(wkt, GeoTypePolygon).ToCoordinates()...)
+	return NewPolygon(ReadWKT(wkt, GeoTypePolygon).ToCoordinates()...)
 }
 
 //get geometry type

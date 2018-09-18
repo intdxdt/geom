@@ -33,7 +33,7 @@ func NewLineStringFromArray(array Coords) *LineString {
 //empty wkt are not allowed
 func NewLineStringFromWKT(wkt string) *LineString {
 	return NewLineStringFromArray(
-		readWKT(wkt, GeoTypeLineString).ToCoordinates()[0],
+		ReadWKT(wkt, GeoTypeLineString).ToCoordinates()[0],
 	)
 }
 

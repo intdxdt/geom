@@ -66,7 +66,7 @@ func NewWKTParserObj(gtype GeoType, coords ...Coords) *WKTParserObj {
 }
 
 //Read wkt string
-func readWKT(wkt string, typeId GeoType) *WKTParserObj {
+func ReadWKT(wkt string, typeId GeoType) *WKTParserObj {
 	var wktBytes = bytes.ToLower([]byte(wkt_string(wkt)))
 	if isEmptyWKT(wktBytes) {
 		return &WKTParserObj{gtype: typeId}
