@@ -9,13 +9,13 @@ import (
 func TestWKT(t *testing.T) {
 	var g = goblin.Goblin(t)
 
-	var pt = " \n\rPOINT (30 10)\n\r "
+	var pt = " \n\rPOINT (30 10 2.5)\n\r "
 	var ept = " \n\rPOINT EMPTY\n\r "
-	var ln = " \n\rLINESTRING (30 10, 10 30, 40 40)\n\r "
+	var ln = " \n\rLINESTRING (30 10 1, 10 30 2, 40 40 3)\n\r "
 	var tln = " \n\rLINESTRING (30 1$0.$, 10 v, 40 40)\n\r "
 	var eln = "LINESTRING EMPTY"
 
-	var poly = "POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))"
+	var poly = "POLYGON ((30 10 1, 40 40 2, 20 40 3, 10 20 4, 30 10 5))"
 	var cpoly = "POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))"
 	var epoly = "POLYGON EMPTY"
 
@@ -27,7 +27,7 @@ func TestWKT(t *testing.T) {
 			g.Assert(obj.GeometryType()).Eql(GeoTypePoint)
 			g.Assert(obj.Shell().Pnts == nil).IsFalse()
 			g.Assert(len(obj.Shell().Pnts)).Eql(1)
-			g.Assert(obj.shell.Pnts[0][:2]).Eql([]float64{30, 10})
+			g.Assert(obj.shell.Pnts[0][:]).Eql([]float64{30, 10, 2.5})
 
 			obj = ReadWKT(ept, GeoTypePoint)
 			g.Assert(obj.gtype).Eql(GeoTypePoint)
@@ -112,18 +112,22 @@ func TestWKT(t *testing.T) {
 		g.It("tests wkt writer", func() {
 			g.Timeout(1 * time.Hour)
 			g.Assert(WriteWKT(ReadWKT(pt, GeoTypePoint))).Eql("POINT (30 10)")
+			g.Assert(WriteWKT3D(ReadWKT(pt, GeoTypePoint))).Eql("POINT (30 10 2.5)")
 			ept := ReadWKT(ept, GeoTypePoint)
 
 			g.Assert(WriteWKT(ept)).Eql("POINT EMPTY")
 
 			g.Assert(WriteWKT(ReadWKT(ln, GeoTypeLineString))).Eql("LINESTRING (30 10, 10 30, 40 40)")
+			g.Assert(WriteWKT3D(ReadWKT(ln, GeoTypeLineString))).Eql("LINESTRING (30 10 1, 10 30 2, 40 40 3)")
 			g.Assert(WriteWKT(ReadWKT(eln, GeoTypeLineString))).Eql("LINESTRING EMPTY")
 
-			g.Assert(WriteWKT(ReadWKT(poly, GeoTypePolygon))).Eql(poly)
+			g.Assert(WriteWKT(ReadWKT(poly, GeoTypePolygon))).Eql("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))")
+			g.Assert(WriteWKT3D(ReadWKT(poly, GeoTypePolygon))).Eql(poly)
 			g.Assert(WriteWKT(ReadWKT(cpoly, GeoTypePolygon))).Eql(cpoly)
 			g.Assert(WriteWKT(NewWKTParserObj(GeoTypePolygon, sh))).Eql(wkt_sh)
 			g.Assert(WriteWKT(NewWKTParserObj(GeoTypePolygon, sh, h1))).Eql(cpoly)
 			g.Assert(WriteWKT(ReadWKT(epoly, GeoTypePolygon))).Eql(epoly)
+			g.Assert(WriteWKT3D(ReadWKT(epoly, GeoTypePolygon))).Eql(epoly)
 		})
 	})
 

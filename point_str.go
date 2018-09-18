@@ -27,3 +27,7 @@ func (self *Point) String() string {
 func coordStr(pt []float64) string {
 	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y])
 }
+//coordinate string
+func coordStr3D(pt []float64) string {
+	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y]) + " " + math.FloatToString(pt[Z])
+}
