@@ -26,11 +26,7 @@ func NewLineString(coordinates Coords) *LineString {
 
 //New line string from array
 func NewLineStringFromArray(array [][]float64) *LineString {
-	var pts = make([]Point, 0, len(array))
-	for i := range array {
-		pts = append(pts, CreatePoint(array[i]))
-	}
-	return NewLineString(Coordinates(pts))
+	return NewLineString(CoordinatesFromArray(array))
 }
 
 //create a new linestring from wkt string

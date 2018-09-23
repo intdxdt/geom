@@ -13,6 +13,18 @@ func Coordinates(c []Point) Coords {
 	return coords
 }
 
+func CoordinatesFromArray (array [][]float64) Coords {
+	var pts = make([]Point, 0, len(array))
+	for i := range array {
+		pts = append(pts, CreatePoint(array[i]))
+	}
+	var coords = Coords{Pnts: pts, Idxs: make([]int, len(pts))}
+	for i := range coords.Pnts {
+		coords.Idxs[i] = i
+	}
+	return coords
+}
+
 type Coords struct {
 	Pnts []Point
 	Idxs []int
