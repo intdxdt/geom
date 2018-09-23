@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/geom/index"
+	"github.com/intdxdt/geom/mono"
 )
 
 type LineString struct {
@@ -25,14 +25,18 @@ func NewLineString(coordinates Coords) *LineString {
 }
 
 //New line string from array
-func NewLineStringFromArray(array Coords) *LineString {
-	return NewLineString(array)
+func NewLineStringFromArray(array [][]float64) *LineString {
+	var pts = make([]Point, 0, len(array))
+	for i := range array {
+		pts = append(pts, CreatePoint(array[i]))
+	}
+	return NewLineString(Coordinates(pts))
 }
 
 //create a new linestring from wkt string
 //empty wkt are not allowed
 func NewLineStringFromWKT(wkt string) *LineString {
-	return NewLineStringFromArray(
+	return NewLineString(
 		ReadWKT(wkt, GeoTypeLineString).ToCoordinates()[0],
 	)
 }
