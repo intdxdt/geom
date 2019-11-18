@@ -36,7 +36,7 @@ func buildHull(hb, points Coords, start, step, stop int) Coords {
 	for i != stop {
 		idx, pnt = points.Idxs[i], points.Pt(i)
 		//pnt.CrossProduct(boundary[n - 2], boundary[n - 1])
-		for n := hb.Len(); n >= 2 && pnt.SideOf(hb.Pt(n-2), hb.Pt(n-1)).IsOnOrRight(); n = hb.Len() {
+		for n := hb.Len(); hb.Len() >= 2 && pnt.SideOf(hb.Pt(n-2), hb.Pt(n-1)).IsOnOrRight(); n = hb.Len() {
 			hb.Pop()
 		}
 		hb.Idxs = append(hb.Idxs, idx)

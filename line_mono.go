@@ -1,11 +1,13 @@
 package geom
 
 import (
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/math"
+	"github.com/intdxdt/mbr"
 )
+
 const miniMonoSize = 8
+
 //build xymonotone chain, perimeter length,
 //monotone build starts from i and ends at j, designed for
 //appending new points to the end of line
@@ -13,7 +15,7 @@ func (self *LineString) processChains() *LineString {
 	var dx, dy float64
 	var cur_x, cur_y, prev_x, prev_y int
 	var n = self.Coordinates.Len()
-	var i, j = 0, n-1
+	var i, j = 0, n - 1
 	var a, b *Point
 
 	a = self.Coordinates.Pt(i)
@@ -35,7 +37,7 @@ func (self *LineString) processChains() *LineString {
 	prev_x, prev_y = null, null
 
 	self.bbox = mono.CreateMonoMBR(box)
-	var mbox  = self.bbox
+	var mbox = self.bbox
 
 	self.xyMonobox(&mbox, i, i)
 	self.chains = append(self.chains, mbox)

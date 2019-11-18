@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 	"github.com/intdxdt/math"
 )
 
@@ -43,8 +43,8 @@ func (p *InterPoint) IsVertexOther() bool {
 }
 
 func (p *InterPoint) IsVerteXOR() bool {
-	return ( p.IsVertexSelf() &&  !p.IsVertexOther()) ||
-			(!p.IsVertexSelf() &&   p.IsVertexOther())
+	return (p.IsVertexSelf() && !p.IsVertexOther()) ||
+		(!p.IsVertexSelf() && p.IsVertexOther())
 }
 
 //string

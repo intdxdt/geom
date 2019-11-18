@@ -10,8 +10,6 @@ func (pt Point) Intersection(other Geometry) []Point {
 		return res
 	}
 
-	other.Type().IsPoint()
-
 	if other.Type().IsPoint() {
 		var p = CastAsPoint(other)
 		if pt.Equals2D(&p) {
@@ -110,8 +108,8 @@ func (self *LineString) intersectionPolygonRings(rings []*LinearRing) []Point {
 			ptset.Add(spts[idx])
 		}
 		//inside shell, does it touch hole boundary ?
-		for i := range rings {
-			var hpts = self.linearIntersection(rings[i].LineString)
+		for _, hole := range rings[1:] {
+			var hpts = self.linearIntersection(hole.LineString)
 			for idx := range hpts {
 				ptset.Add(hpts[idx])
 			}

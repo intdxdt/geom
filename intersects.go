@@ -34,7 +34,7 @@ func (self *LineString) Intersects(other Geometry) bool {
 		bln = self.intersects_polygon(other_lns)
 	} else if other.Type().IsLineString() ||
 		other.Type().IsSegment() || other.Type().IsPoint() {
-		bln = self.intersectsLinestring(shell)
+		bln = self.intersects_linestring(shell)
 	}
 
 	return bln
@@ -63,22 +63,17 @@ func (self *Polygon) Intersects(other Geometry) bool {
 
 	} else if other.Type().IsPolygon() {
 		var ply = CastAsPolygon(other)
-		if self.Shell.bbox.Disjoint(&ply.Shell.bbox.MBR) {
-			bln = false
+		if self.Shell.bbox.Intersects(&ply.Shell.bbox.MBR) {
+			var small, big *Polygon
+
+			if self.Shell.bbox.Area() < ply.Shell.bbox.Area() {
+				small, big = self, ply
+			} else {
+				small, big = ply, self
+			}
+			bln = small.Shell.LineString.intersects_polygon( big.AsLinear())
 		}
-		var small, big *Polygon
-
-		if self.Shell.bbox.Area() < ply.Shell.bbox.Area() {
-			small, big = self, ply
-		} else {
-			small, big = ply, self
-		}
-
-		ln = small.Shell.LineString
-		rings = big.AsLinear()
-		within_bounds = ln.bbox.Intersects(&rings[0].bbox.MBR)
-		bln = within_bounds && ln.intersects_polygon(rings)
-
 	}
+
 	return bln
 }

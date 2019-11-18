@@ -46,7 +46,7 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 
 //Checks if line intersects other line
 //other{LineString} - geometry types and array as Point
-func (self *LineString) intersectsLinestring(other *LineString) bool {
+func (self *LineString) intersects_linestring(other *LineString) bool {
 	var bln = false
 	var othersegs []int
 	var selfsegs []int
