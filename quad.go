@@ -55,7 +55,6 @@ func quadrants(g, other Geometry) []Geometry {
 	   //TODO: ii can be improved by changing ii to convex hull
 	*/
 
-
 	nw = NewPolygon(Coordinates([]Point{mat[2][0], mat[3][0], mat[3][1], mat[2][1], mat[2][0]}))
 	ne = NewPolygon(Coordinates([]Point{mat[2][2], mat[3][2], mat[3][3], mat[2][3], mat[2][2]}))
 	sw = NewPolygon(Coordinates([]Point{mat[0][0], mat[1][0], mat[1][1], mat[0][1], mat[0][0]}))

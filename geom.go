@@ -2,10 +2,9 @@ package geom
 
 import (
 	"bytes"
-	"strings"
 	"github.com/intdxdt/mbr"
+	"strings"
 )
-
 
 const (
 	GeoTypeUnknown GeoType = iota - 1

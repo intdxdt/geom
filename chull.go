@@ -50,4 +50,3 @@ func makeCoords(coordinates Coords, i, j int) Coords {
 	var o = Coords{Pnts: coordinates.Pnts, Idxs: make([]int, 0, j-i+1)}
 	return o
 }
-

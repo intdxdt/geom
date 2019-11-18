@@ -1,21 +1,21 @@
 package geom
 
 import (
-	"testing"
-	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
+	"testing"
 )
 
 func TestLineString(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var pts         = []Point{{5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9}}
-	var pt_array    = [][]float64{{5.6, 7.9, 0}, {5.6, 8.9, 0}, {6.6, 8.9, 0}, {6.6, 7.9, 0}, {5.6, 7.9, 0}}
+	var pts = []Point{{5.6, 7.9}, {5.6, 8.9}, {6.6, 8.9}, {6.6, 7.9}, {5.6, 7.9}}
+	var pt_array = [][]float64{{5.6, 7.9, 0}, {5.6, 8.9, 0}, {6.6, 8.9, 0}, {6.6, 7.9, 0}, {5.6, 7.9, 0}}
 
 	var pts_closed = []Point{{5.538, 8.467}, {5.498, 8.559}, {5.858, 8.987}, {6.654, 8.638}, {6.549, 8.024}, {5.765, 8.082}, {5.538, 8.467}}
 	var pts_open = []Point{{5.538, 8.467}, {5.498, 8.559}, {5.858, 8.987}, {6.654, 8.638}, {6.549, 8.024}, {5.765, 8.082}}
 
-	var ln  = NewLineString(Coordinates(pts))
+	var ln = NewLineString(Coordinates(pts))
 	var ln2 = NewLineString(Coordinates(pts_closed))
 	var ln3 = NewLineString(Coordinates(pts_open))
 	var ply = NewPolygon(Coordinates(pts_closed))
@@ -127,9 +127,9 @@ func TestLineStringRelate(t *testing.T) {
 	var plywktf = "POLYGON (( -0.277913921826967 -0.5367427902210501, -0.4850871029131916 -0.6997643097643087, -0.3424432733128402 -0.8152378861074503, -0.2337622602840011 -0.7303308446786697, -0.1080998389694059 -0.8661821109647186, 0.0141663006880382 -0.7371234079929722, -0.1182886839408595 -0.5842907334211672, -0.277913921826967 -0.5367427902210501 ))"
 	var plywktg = "POLYGON (( 0.1161332552173457 -0.4654208754208744, 0.1161332552173457 -0.2431398008042315, 0.2824725516029848 -0.2431398008042315, 0.2824725516029848 -0.4654208754208744, 0.1161332552173457 -0.4654208754208744 ))"
 
-	var lna  = NewLineString(Coordinates(coords))
-	var lnb  = NewLineString(Coordinates(coords2))
-	var plya = NewPolygon   (Coordinates(coords2))
+	var lna = NewLineString(Coordinates(coords))
+	var lnb = NewLineString(Coordinates(coords2))
+	var plya = NewPolygon(Coordinates(coords2))
 
 	var plyb = NewPolygonFromWKT(plywkt)
 	var plyc = NewPolygonFromWKT(plywktc)

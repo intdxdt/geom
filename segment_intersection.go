@@ -21,7 +21,7 @@ func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 	}
 
 	// is the intersection along the the segments
-	var ua, ub = a/d, b/d
+	var ua, ub = a / d, b / d
 	ua = snap_to_zero_or_one(ua)
 	ub = snap_to_zero_or_one(ub)
 
@@ -75,7 +75,7 @@ func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []
 	var n = len(coords) - 1
 
 	for idx := 0; idx < n; idx++ { //O(n)
-		var i, j = idx, idx+1
+		var i, j = idx, idx + 1
 		var pt = coords[i]
 		for i < n && coords[i].Equals2D(&coords[j].Point) {
 			coords[j].Inter = coords[i].Inter | coords[j].Inter

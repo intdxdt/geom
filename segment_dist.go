@@ -145,7 +145,7 @@ func distanceToPoint(sa, sb, pt *Point, hypotFunc func(float64, float64) float64
 	var ax, ay = sa[X], sa[Y]
 	var bx, by = sb[X], sb[Y]
 	var px, py = pt[X], pt[Y]
-	var dx, dy = bx-ax, by-ay
+	var dx, dy = bx - ax, by - ay
 	var isz_x = feq(dx, 0)
 	var isz_y = feq(dy, 0)
 

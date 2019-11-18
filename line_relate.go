@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/sset"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/sset"
 )
 
 //intersection of self linestring with other

@@ -13,7 +13,7 @@ func Coordinates(c []Point) Coords {
 	return coords
 }
 
-func CoordinatesFromArray (array [][]float64) Coords {
+func CoordinatesFromArray(array [][]float64) Coords {
 	var pts = make([]Point, 0, len(array))
 	for i := range array {
 		pts = append(pts, CreatePoint(array[i]))

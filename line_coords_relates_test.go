@@ -2,9 +2,9 @@ package geom
 
 import (
 	"fmt"
-	"testing"
-	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
+	"testing"
 )
 
 func TestLineStringEdit(t *testing.T) {
@@ -17,7 +17,7 @@ func TestLineStringEdit(t *testing.T) {
 
 	g.Describe("Linestring", func() {
 		g.It("should test length on append", func() {
-			var ln  = NewLineString(pts)
+			var ln = NewLineString(pts)
 
 			g.Assert(
 				math.Round(ln.Length(), 10)).Equal(
@@ -27,12 +27,12 @@ func TestLineStringEdit(t *testing.T) {
 			//test util pop_coords
 			g.Assert(pts.Len()).Equal(3)
 
-			var bln , v = pts.Pop()
+			var bln, v = pts.Pop()
 			g.Assert(pts.Len()).Equal(2)
 			g.Assert(bln).IsTrue()
 			g.Assert(v).Equal(c)
 
-			bln , v = pts.Pop()
+			bln, v = pts.Pop()
 			g.Assert(pts.Len()).Equal(1)
 			g.Assert(v).Equal(b)
 
@@ -40,7 +40,7 @@ func TestLineStringEdit(t *testing.T) {
 			g.Assert(pts.Len()).Equal(0)
 			g.Assert(v).Equal(a)
 
-			bln, v  = pts.Pop()
+			bln, v = pts.Pop()
 			g.Assert(pts.Len()).Equal(0)
 			g.Assert(v.IsNull()).IsTrue()
 		})
@@ -56,10 +56,10 @@ func TestLineStringEdit(t *testing.T) {
 			var ln_e *LineString
 			fmt.Println(">? ln_e >> ", ln_e == nil)
 			var pt_e Point
-			var ln_ab       = NewLineString(Coordinates([]Point{a, b}))
-			var ln_cd       = NewLineString(Coordinates([]Point{c, d}))
+			var ln_ab = NewLineString(Coordinates([]Point{a, b}))
+			var ln_cd = NewLineString(Coordinates([]Point{c, d}))
 			var ln_cd_clone = ln_cd.Clone()
-			var ln_hi       = NewLineString(Coordinates([]Point{h, i}))
+			var ln_hi = NewLineString(Coordinates([]Point{h, i}))
 
 			var ok = ln_cd.Intersects(ln_ab)
 			g.Assert(ok).IsFalse()

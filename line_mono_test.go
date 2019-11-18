@@ -1,10 +1,10 @@
 package geom
 
 import (
-	"testing"
-	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
+	"testing"
 )
 
 func TestLineStringMono(t *testing.T) {
@@ -15,9 +15,9 @@ func TestLineStringMono(t *testing.T) {
 
 	g.Describe("Linestring", func() {
 		g.It("should test mono mbr", func() {
-			var a, b = pts.Pt(0), pts.Pt(n-1)
+			var a, b = pts.Pt(0), pts.Pt(n - 1)
 			var bounds = mbr.CreateMBR(a[X], a[Y], b[X], b[Y])
-			var mbox   = mono.MBR{bounds, 0, n - 1}
+			var mbox = mono.MBR{bounds, 0, n - 1}
 			g.Assert(mbox.I).Eql(ln.bbox.I)
 			g.Assert(mbox.J).Eql(ln.bbox.J)
 			g.Assert(ln.BBox()).Eql(mbox.BBox())

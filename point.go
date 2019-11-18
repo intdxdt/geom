@@ -5,6 +5,7 @@ import (
 )
 
 type Point [3]float64
+
 var NullPt = Point{nan, nan, nan}
 
 //New Point from x, y values

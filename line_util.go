@@ -13,4 +13,3 @@ func pop_mono_mbr(a []mono.MBR) (mono.MBR, []mono.MBR) {
 	v, a[n] = a[n], mono.MBR{}
 	return v, a[:n]
 }
-

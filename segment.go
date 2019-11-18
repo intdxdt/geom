@@ -19,7 +19,6 @@ const (
 	OtherMask = OtherA | OtherB
 )
 
-
 type Segment struct {
 	Coords Coords
 	ln     *LineString

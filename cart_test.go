@@ -291,9 +291,9 @@ func TestDistanceToPoint(t *testing.T) {
 	g := goblin.Goblin(t)
 	g.Describe("Vector - Dist2Vect", func() {
 		g.It("should test distance vector", func() {
-			var a       = Point{16.82295, 10.44635}
-			var b       = Point{28.99656, 15.76452}
-			var onAb    = Point{25.32, 14.16}
+			var a = Point{16.82295, 10.44635}
+			var b = Point{28.99656, 15.76452}
+			var onAb = Point{25.32, 14.16}
 
 			tpoints := []Point{
 				{30., 0.},
@@ -306,7 +306,7 @@ func TestDistanceToPoint(t *testing.T) {
 			}
 
 			var tDists = []float64{14.85, 13.99, 23.69, 12.05, 0.00, 0.00, 0.00}
-			var dists  = make([]float64, len(tpoints))
+			var dists = make([]float64, len(tpoints))
 
 			for i, tp := range tpoints {
 				dists[i] = DistanceToPoint(&a, &b, &tp)

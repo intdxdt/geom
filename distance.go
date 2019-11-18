@@ -1,10 +1,10 @@
 package geom
 
 import (
-	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/math"
-	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/geom/index"
+	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
+	"github.com/intdxdt/mbr"
 )
 
 //Distance computes distance between two points
@@ -97,7 +97,7 @@ func (self *LineString) mindistBruteforce(other *LineString) float64 {
 	var bln = false
 	var ln = self.Coordinates
 	var ln2 = other.Coordinates
-	var n1, n2 = ln.Len()-1, ln2.Len()-1
+	var n1, n2 = ln.Len() - 1, ln2.Len() - 1
 	var d float64
 	for i := 0; !bln && i < n1; i++ {
 		for j := 0; !bln && j < n2; j++ {

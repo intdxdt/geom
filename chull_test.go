@@ -1,11 +1,11 @@
 package geom
 
 import (
-	"time"
-	"testing"
-	"github.com/intdxdt/math"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
 	"github.com/intdxdt/sset"
+	"testing"
+	"time"
 )
 
 func createHulls(indxs [][]int, coords Coords) []Geometry {

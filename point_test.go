@@ -1,14 +1,14 @@
 package geom
 
 import (
-	"testing"
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
+	"testing"
 )
 
 func TestPoint(t *testing.T) {
-	var g  = goblin.Goblin(t)
+	var g = goblin.Goblin(t)
 	var p0 = PointXY(0.0, 0.0)
 	var p1 = PointXY(4, 5)
 	var p2 = PointXY(4.0, 5.0)
@@ -19,7 +19,7 @@ func TestPoint(t *testing.T) {
 	var p7 = PointXY(4.0, 4.9)
 	var p8 = PointXY(3.9, 4.9)
 
-	var p9  = PointXYZ(3.9, 4.9, 9.8)
+	var p9 = PointXYZ(3.9, 4.9, 9.8)
 	var p10 = CreatePoint([]float64{3.9, 4.9, 9.8})
 	var p11 = CreatePoint([]float64{3.9, 4.9, 9.8, 7.9})
 

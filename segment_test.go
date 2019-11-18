@@ -1,11 +1,11 @@
 package geom
 
 import (
-	"testing"
-	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/math"
-	"github.com/franela/goblin"
 	"fmt"
+	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
+	"github.com/intdxdt/mbr"
+	"testing"
 	"time"
 )
 
@@ -37,8 +37,8 @@ func TestSegment(t *testing.T) {
 			seg_ab := NewSegmentAB(a, b)
 			ln_ab := NewLineString(Coordinates([]Point{a, b}))
 			seg_de := NewSegmentAB(d, e)
-			seg_cd := NewSegmentAB(c, d, )
-			seg_gkh := NewSegmentAB(gk, h, )
+			seg_cd := NewSegmentAB(c, d)
+			seg_gkh := NewSegmentAB(gk, h)
 			seg_hi := NewSegmentAB(h, i)
 			seg_ak := NewSegmentAB(a, k)
 			seg_kn := NewSegmentAB(k, n)
@@ -202,8 +202,8 @@ func TestSegDist(t *testing.T) {
 			}
 
 			var t_dists = []float64{14.85, 13.99, 23.69, 12.05, 0.00, 0.00, 0.00}
-			var tvect   = NewSegmentAB(a, b)
-			var dists   = make([]float64, len(tpoints))
+			var tvect = NewSegmentAB(a, b)
+			var dists = make([]float64, len(tpoints))
 
 			for i, tp := range tpoints {
 				dists[i] = tvect.DistanceToPoint(&tp)
@@ -336,7 +336,7 @@ func TestSegDist(t *testing.T) {
 
 			a = Point{16.82295, 10.44635}
 			b = Point{28.99656, 15.76452}
-			var on_ab   = Point{25.32, 14.16}
+			var on_ab = Point{25.32, 14.16}
 			var tpoints = []Point{
 				{30., 0.}, {15.78786, 25.26468}, {-2.61504, -3.09018}, {28.85125, 27.81773}, a, b, on_ab,
 			}

@@ -71,7 +71,7 @@ func (self *Polygon) Intersects(other Geometry) bool {
 			} else {
 				small, big = ply, self
 			}
-			bln = small.Shell.LineString.intersects_polygon( big.AsLinear())
+			bln = small.Shell.LineString.intersects_polygon(big.AsLinear())
 		}
 	}
 

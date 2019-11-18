@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"github.com/intdxdt/side"
 	"github.com/intdxdt/robust"
+	"github.com/intdxdt/side"
 )
 
 //Equals evaluates whether two points are the same

@@ -22,6 +22,6 @@ func (pt *Point) DotProduct(other *Point) float64 {
 
 //Neg create new point by finding the negation of point
 func (self *Point) Neg() Point {
-	var x, y  = self.KProduct(-1)
+	var x, y = self.KProduct(-1)
 	return Point{x, y}
 }

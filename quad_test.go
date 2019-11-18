@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"testing"
 	"github.com/franela/goblin"
+	"testing"
 )
 
 func TestQuadrantRelation(t *testing.T) {

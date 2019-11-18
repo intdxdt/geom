@@ -21,8 +21,7 @@ func (s IntPts) Swap(i, j int) {
 }
 
 func (s IntPts) Less(i, j int) bool {
-	return (s[i].Point[X] < s[j].Point[X]) || (
-		feq(s[i].Point[X], s[j].Point[X]) && s[i].Point[Y] < s[j].Point[Y])
+	return (s[i].Point[X] < s[j].Point[X]) || (feq(s[i].Point[X], s[j].Point[X]) && s[i].Point[Y] < s[j].Point[Y])
 }
 
 func (p *InterPoint) IsIntersection() bool {

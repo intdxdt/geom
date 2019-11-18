@@ -18,7 +18,7 @@ func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 		return bln
 	}
 
-	var ua, ub = a/d, b/d
+	var ua, ub = a / d, b / d
 	ua, ub = snap_to_zero_or_one(ua), snap_to_zero_or_one(ub)
 
 	return (0 <= ua && ua <= 1) && (0 <= ub && ub <= 1)

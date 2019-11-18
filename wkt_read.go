@@ -2,16 +2,15 @@ package geom
 
 import (
 	"bytes"
+	"sort"
 	"strconv"
 	"strings"
-	"sort"
 )
 
 var wktEmpty = []byte("empty")
 var wktPolygon = []byte("polygon")
 var wktLinestring = []byte("linestring")
 var wktPoint = []byte("point")
-
 
 type WKTParserObj struct {
 	shell Coords
@@ -204,7 +203,7 @@ func wktPointParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	var indices = numberIndices(wktStr)
 	var dim = len(indices) / 2
 	var lns = parseNums(wktStr, indices)
-	var  pts = make([]Point, 0, len(lns)/dim)
+	var pts = make([]Point, 0, len(lns)/dim)
 	for i := 0; i < len(lns); i += dim {
 		pts = append(pts, CreatePoint(lns[i:i+dim]))
 	}
@@ -248,7 +247,7 @@ func parseString(wkt []byte, tok *wktToken) Coords {
 	for i := 0; i < len(lns); i += dim {
 		pts = append(pts, CreatePoint(lns[i:i+dim]))
 	}
-	return  Coords(Coordinates(pts))
+	return Coords(Coordinates(pts))
 }
 
 func numberIndices(stream []byte) []int {
