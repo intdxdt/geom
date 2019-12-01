@@ -1,8 +1,8 @@
 package index
 
 import (
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
 )
 
@@ -10,7 +10,7 @@ import (
 func mindistBruteforce(ln, ln2 [][]float64) float64 {
 	var dist = math.MaxFloat64
 	var bln = false
-	var n1, n2 = len(ln)-1, len(ln2)-1
+	var n1, n2 = len(ln) - 1, len(ln2) - 1
 	var d float64
 	for i := 0; !bln && i < n1; i++ {
 		for j := 0; !bln && j < n2; j++ {
@@ -24,7 +24,6 @@ func mindistBruteforce(ln, ln2 [][]float64) float64 {
 	}
 	return dist
 }
-
 
 func knnMinLinearDistance(a, b [][]float64) float64 {
 	if len(a) > len(b) {
@@ -71,7 +70,6 @@ func queryBounds(coords [][]float64) []mono.MBR {
 	return items
 }
 
-
 func segmentDB(coords [][]float64) *Index {
 	var tree = NewIndex()
 	var n = len(coords) - 1
@@ -89,7 +87,6 @@ func segmentDB(coords [][]float64) *Index {
 	}
 	return tree.Load(items)
 }
-
 
 //Distance betwen two segments
 func segsegDistance(sa, sb, oa, ob []float64) float64 {
@@ -110,8 +107,8 @@ func segsegDistance(sa, sb, oa, ob []float64) float64 {
 	numerb = (x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)
 
 	if math.Abs(denom) < math.EPSILON {
-		is_aspt_a = math.FloatEqual(sa[0] , sb[0]) && math.FloatEqual(sa[1] , sb[1])
-		is_aspt_b = math.FloatEqual(oa[0] , ob[0]) && math.FloatEqual(oa[1] , ob[1])
+		is_aspt_a = math.FloatEqual(sa[0], sb[0]) && math.FloatEqual(sa[1], sb[1])
+		is_aspt_b = math.FloatEqual(oa[0], ob[0]) && math.FloatEqual(oa[1], ob[1])
 
 		if is_aspt_a && is_aspt_b {
 			dist = math.Hypot(x1-x4, y1-y4)
@@ -187,7 +184,6 @@ func segsegDistance(sa, sb, oa, ob []float64) float64 {
 	return dist
 }
 
-
 func distanceToPoint(sa, sb, pt []float64) float64 {
 	var dist = math.NaN()
 	//var cPt *Point
@@ -195,7 +191,7 @@ func distanceToPoint(sa, sb, pt []float64) float64 {
 	var bx, by = sb[0], sb[1]
 	var px, py = pt[0], pt[1]
 	//var dab = sb.Sub(sa)
-	var dx, dy = bx-ax, by-ay
+	var dx, dy = bx - ax, by - ay
 	//a == b || Abs(a - b) < EPSILON
 	var isz_x = (dx == 0) || math.Abs(dx) < math.EPSILON
 	var isz_y = (dy == 0) || math.Abs(dy) < math.EPSILON
@@ -219,4 +215,3 @@ func distanceToPoint(sa, sb, pt []float64) float64 {
 
 	return dist
 }
-

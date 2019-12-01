@@ -2,11 +2,10 @@ package index
 
 import (
 	"fmt"
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/math"
+	"github.com/intdxdt/mbr"
 )
-
 
 //KObj instance struct
 type KObj struct {
