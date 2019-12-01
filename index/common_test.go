@@ -32,26 +32,21 @@ func knnMinLinearDistance(a, b [][]float64) float64 {
 	var db = segmentDB(b)
 	var queries = queryBounds(a)
 
-	var dist = math.MaxFloat64
-	var d float64
+	var min_dist = math.MaxFloat64
 	for q := range queries {
-		db.KnnMinDist(&queries[q],
-			func(query *mono.MBR, item *mono.MBR) (float64, float64) {
-				d = segsegDistance(
+		min_dist = db.KnnMinDist(&queries[q],
+			func(query *mono.MBR, item *mono.MBR) float64 {
+				return segsegDistance(
 					a[query.I], a[query.J], b[item.I], b[item.J],
 				)
-
-				if d < dist {
-					dist = d
-				}
-				return d, dist
 			},
-			func(o *KObj) bool {
+			func(o *KObj, dist float64) bool {
 				return o.Distance > dist || dist == 0 //add to neibs, stop
-			})
+			},
+			min_dist)
 	}
 
-	return dist
+	return min_dist
 }
 func queryBounds(coords [][]float64) []mono.MBR {
 	var n = len(coords) - 1

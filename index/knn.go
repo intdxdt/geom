@@ -1,10 +1,9 @@
 package index
 
 import (
+	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/heap"
 	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/geom/mono"
-	"github.com/intdxdt/math"
 )
 
 func predicate(_ *KObj) (bool, bool) {
@@ -67,16 +66,14 @@ func (tree *Index) Knn(
 
 func (tree *Index) KnnMinDist(
 	query *mono.MBR,
-	distScore func(query *mono.MBR, dbitem *mono.MBR) (float64, float64),
-	predicate func(*KObj) bool,
-) {
+	distScore func(query *mono.MBR, dbitem *mono.MBR) float64,
+	predicate func(*KObj, float64) bool, mindist float64) float64 {
 
 	var nd = &tree.data
 	//var result []*mono.MBR
 	var child *node
 	var stop bool
 	var queue = heap.NewHeap(kobjCmp, heap.NewHeapType().AsMin())
-	var mindist = math.MaxFloat64
 
 	for !stop && (nd != nil) {
 		for i := range nd.children {
@@ -89,7 +86,10 @@ func (tree *Index) KnnMinDist(
 				o.IsItem = len(child.children) == 0
 				o.Distance = box_dist
 				if o.IsItem {
-					o.Distance, mindist = distScore(query, child.item)
+					o.Distance = distScore(query, child.item)
+					if o.Distance < mindist {
+						mindist = o.Distance
+					}
 				}
 				queue.Push(o)
 			}
@@ -97,7 +97,7 @@ func (tree *Index) KnnMinDist(
 
 		for !queue.IsEmpty() && queue.Peek().(*KObj).IsItem {
 			var candidate = queue.Pop().(*KObj)
-			stop = predicate(candidate)
+			stop = predicate(candidate, mindist)
 			if stop {
 				break
 			}
@@ -112,4 +112,5 @@ func (tree *Index) KnnMinDist(
 			}
 		}
 	}
+	return mindist
 }
