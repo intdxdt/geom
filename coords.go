@@ -68,12 +68,12 @@ func (s *Coords) LastIndex() int {
 
 //Point at index 0
 func (s *Coords) First() *Point {
-	return &s.Pnts[s.Idxs[0]]
+	return &s.Pnts[s.FirstIndex()]
 }
 
 //Point at index 0
 func (s *Coords) Last() *Point {
-	return &s.Pnts[s.Idxs[s.Len()-1]]
+	return &s.Pnts[s.LastIndex()]
 }
 
 //len of Coords - sort interface
