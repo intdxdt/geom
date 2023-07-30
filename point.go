@@ -8,54 +8,54 @@ type Point [3]float64
 
 var NullPt = Point{nan, nan, nan}
 
-//New Point from x, y values
+// New Point from x, y values
 func Pt(x, y float64) Point {
 	return Point{x, y}
 }
 
-//New Point from x, y values
+// New Point from x, y values
 func PointXY(x, y float64) Point {
 	return Pt(x, y)
 }
 
-//New Point from x, y, z values
+// New Point from x, y, z values
 func PointXYZ(x, y, z float64) Point {
 	return Point{x, y, z}
 }
 
-//New constructor of Point
+// CreatePoint Point
 func CreatePoint(array []float64) Point {
 	var pt = Point{}
 
-	var n = math.MinInt(len(pt), len(array))
+	var n = math.Min(len(pt), len(array))
 	for i := 0; i < n; i++ {
 		pt[i] = array[i]
 	}
 	return pt
 }
 
-//create a new linestring from wkt string
-//empty wkt will raise an exception
+// create a new linestring from wkt string
+// empty wkt will raise an exception
 func PointFromWKT(wkt string) Point {
 	return *ReadWKT(wkt, GeoTypePoint).ToCoordinates()[0].Pt(0)
 }
 
-//Is point zero in 2d - origin
+// Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
 	return IsZero(self[X], self[Y])
 }
 
-//is null
+// is null
 func (self *Point) IsNull() bool {
 	return IsNull(self[X], self[Y])
 }
 
-//As line strings
+// As line strings
 func (self Point) AsLineString() *LineString {
 	return NewLineString(Coordinates([]Point{self, self}))
 }
 
-//As line strings
+// As line strings
 func (self *Point) AsLineStrings() []*LineString {
 	return []*LineString{self.AsLineString()}
 }
