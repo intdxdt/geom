@@ -83,7 +83,7 @@ func segmentDB(coords [][]float64) *Index {
 	return tree.Load(items)
 }
 
-//Distance betwen two segments
+// Distance betwen two segments
 func segsegDistance(sa, sb, oa, ob []float64) float64 {
 	var dist = math.NaN()
 	var x1, y1 = sa[0], sa[1]
@@ -120,11 +120,11 @@ func segsegDistance(sa, sb, oa, ob []float64) float64 {
 
 			dist = distanceToPoint(lna, lnb, pta)
 		} else {
-			dist = math.MinF64(
-				math.MinF64(
+			dist = math.Min(
+				math.Min(
 					distanceToPoint(oa, ob, sa),
 					distanceToPoint(oa, ob, sb)),
-				math.MinF64(
+				math.Min(
 					distanceToPoint(sa, sb, oa),
 					distanceToPoint(sa, sb, ob),
 				))
@@ -147,7 +147,7 @@ func segsegDistance(sa, sb, oa, ob []float64) float64 {
 		}
 
 		if mua < 0 || mua > 1 || mub < 0 || mub > 1 {
-			//the is intersection along the the segments
+			//the is intersection along the segments
 			if mua < 0 {
 				pta = sa
 			} else if mua > 1 {
@@ -161,7 +161,7 @@ func segsegDistance(sa, sb, oa, ob []float64) float64 {
 			}
 
 			if pta != nil && ptb != nil {
-				dist = math.MinF64(
+				dist = math.Min(
 					distanceToPoint(oa, ob, pta),
 					distanceToPoint(sa, sb, ptb),
 				)
