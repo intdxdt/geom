@@ -132,11 +132,11 @@ func segsegDistance(sa, sb, oa, ob *Point, hypotFn hypotFunc) float64 {
 }
 
 func minDistSegmentEndpoints(sa, sb, oa, ob *Point, fn hypotFunc) float64 {
-	var o_sa, _ = distanceToPoint(oa, ob, sa, fn)
-	var o_sb, _ = distanceToPoint(oa, ob, sb, fn)
-	var s_oa, _ = distanceToPoint(sa, sb, oa, fn)
-	var s_ob, _ = distanceToPoint(sa, sb, ob, fn)
-	return minf64(minf64(o_sa, o_sb), minf64(s_oa, s_ob))
+	var distOsa, _ = distanceToPoint(oa, ob, sa, fn)
+	var distOsb, _ = distanceToPoint(oa, ob, sb, fn)
+	var distSoa, _ = distanceToPoint(sa, sb, oa, fn)
+	var distSob, _ = distanceToPoint(sa, sb, ob, fn)
+	return minf64(minf64(distOsa, distOsb), minf64(distSoa, distSob))
 }
 
 // Distance from segment endpoints to point

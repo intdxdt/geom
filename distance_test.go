@@ -1,8 +1,8 @@
 package geom
 
 import (
-	"fmt"
 	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
 	"testing"
 	"time"
 )
@@ -53,11 +53,21 @@ func TestDistance(t *testing.T) {
 			g.Assert(Bg.Distance(Ag)).Equal(actual)
 			g.Assert(Ag.Distance(Bg)).Equal(actual)
 
-			var lnA = NewLineStringFromWKT("LINESTRING ( 300 400, 300 600, 500 600, 500 400, 300 400 )")
-			//var ptA = PointFromWKT("POINT ( 181.31962109153542 263.6066681552902 )")
+			var lnA = NewLineStringFromWKT("LINESTRING ( 300 500, 300 600, 500 600, 500 400, 300 500 )")
 			var ptA = PointFromWKT("POINT ( 400 500 )")
-			var dist = lnA.Distance(ptA)
-			fmt.Println("distance:", dist)
+			g.Assert(math.FloatEqual(lnA.Project(&ptA), 634.1640786499873)).IsTrue()
+
+			ptA = PointFromWKT("POINT ( 250 450 )")
+			g.Assert(math.FloatEqual(lnA.Project(&ptA), 0.0)).IsTrue()
+
+			ptA = PointFromWKT("POINT ( 250 650 )")
+			g.Assert(math.FloatEqual(lnA.Project(&ptA), 100.0)).IsTrue()
+
+			lnA = NewLineStringFromWKT("LINESTRING (0 0, 0 1, 1 1)")
+			ptA = PointFromWKT("POINT (0.5 1)")
+			g.Assert(math.FloatEqual(lnA.Project(&ptA), 1.5)).IsTrue()
+			g.Assert(math.FloatEqual(lnA.Project(&ptA, true), 0.75)).IsTrue()
+
 		})
 	})
 
