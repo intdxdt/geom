@@ -64,10 +64,14 @@ func (self *LineString) Interpolate(distance float64, normalized ...bool) *Point
 	}
 
 	var pt *Point
-	if math.FloatEqual(distance, 0) {
+	if distance < 0 || math.FloatEqual(distance, 0) {
 		pt = coords.Pt(0).Clone()
-	} else if math.FloatEqual(dist, distance) {
-		pt = coords.Pt(idx + 1).Clone()
+	} else if idx == n || math.FloatEqual(dist, distance) {
+		if idx == n {
+			pt = coords.Pt(idx).Clone()
+		} else {
+			pt = coords.Pt(idx + 1).Clone()
+		}
 	} else {
 		var delta = distance - idxDist
 		var a = coords.Pt(idx)
