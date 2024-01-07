@@ -56,6 +56,9 @@ func TestDistance(t *testing.T) {
 			var lnA = NewLineStringFromWKT("LINESTRING ( 300 500, 300 600, 500 600, 500 400, 300 500 )")
 			var ptA = PointFromWKT("POINT ( 400 500 )")
 			g.Assert(math.FloatEqual(lnA.Project(&ptA), 634.1640786499873)).IsTrue()
+			g.Assert(lnA.Interpolate(634.1640786499873).WKT()).Equal("POINT (380 460)")
+			g.Assert(lnA.Interpolate(0).WKT()).Equal("POINT (300 500)")
+			g.Assert(lnA.Interpolate(723.606797749979).WKT()).Equal("POINT (300 500)")
 
 			ptA = PointFromWKT("POINT ( 250 450 )")
 			g.Assert(math.FloatEqual(lnA.Project(&ptA), 0.0)).IsTrue()
@@ -67,6 +70,14 @@ func TestDistance(t *testing.T) {
 			ptA = PointFromWKT("POINT (0.5 1)")
 			g.Assert(math.FloatEqual(lnA.Project(&ptA), 1.5)).IsTrue()
 			g.Assert(math.FloatEqual(lnA.Project(&ptA, true), 0.75)).IsTrue()
+
+			lnA = NewLineStringFromWKT("LINESTRING (0 0, 0 1, 1 1)")
+			ptA = PointFromWKT("POINT (0.5 1)")
+			g.Assert(lnA.Interpolate(1.5).WKT()).Equal("POINT (0.5 1)")
+			g.Assert(lnA.Interpolate(0).WKT()).Equal("POINT (0 0)")
+			g.Assert(lnA.Interpolate(2.0).WKT()).Equal("POINT (1 1)")
+			g.Assert(lnA.Interpolate(1.0).WKT()).Equal("POINT (0 1)")
+			g.Assert(lnA.Interpolate(0.75, true).WKT()).Equal("POINT (0.5 1)")
 
 		})
 	})

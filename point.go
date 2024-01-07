@@ -40,6 +40,11 @@ func PointFromWKT(wkt string) Point {
 	return *ReadWKT(wkt, GeoTypePoint).ToCoordinates()[0].Pt(0)
 }
 
+// Clone - clone point
+func (self *Point) Clone() *Point {
+	return &Point{self[X], self[Y], self[Z]}
+}
+
 // Is point zero in 2d - origin
 func (self *Point) IsZero() bool {
 	return IsZero(self[X], self[Y])

@@ -46,12 +46,7 @@ func TestExtVect(t *testing.T) {
 				math.Round(math.Deg2rad(38.65980825409009), precision),
 			)
 			deflangle := 157.2855876468
-			cx, cy = Extend(
-				vdb[X], vdb[Y],
-				3.64005494464026,
-				math.Deg2rad(180+deflangle),
-				true,
-			)
+			cx, cy = Extend(vdb[X], vdb[Y], 3.64005494464026, math.Deg2rad(180+deflangle), true)
 			vo := Point{cx, cy}
 
 			g.Assert(math.Round(vo[0], precision)).Equal(
@@ -86,5 +81,4 @@ func TestExtVect(t *testing.T) {
 			g.Assert(math.Round(cy, precision)).Equal(math.Round(2, precision))
 		})
 	})
-
 }
