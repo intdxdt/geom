@@ -79,6 +79,8 @@ func TestDistance(t *testing.T) {
 			g.Assert(lnA.Interpolate(1.0).WKT()).Equal("POINT (0 1)")
 			g.Assert(lnA.Interpolate(0.75, true).WKT()).Equal("POINT (0.5 1)")
 
+			lnA = NewLineStringFromWKT("LINESTRING (0 0, 0 0.1, 0.2 0.1, 0.3 0.1, 0.5 0.1, 0.7 0.1)")
+			g.Assert(lnA.Interpolate(0.3).WKT()).Equal("POINT (0.2 0.1)")
 		})
 	})
 
