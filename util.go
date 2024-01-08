@@ -146,3 +146,10 @@ func minf64(x, y float64) float64 {
 	}
 	return x
 }
+
+func concat[T any](this []T, other []T) []T {
+	var v = make([]T, 0, len(this)+len(other))
+	v = append(v, this...)
+	v = append(v, other...)
+	return v
+}

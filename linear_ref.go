@@ -83,3 +83,35 @@ func (self *LineString) Interpolate(distance float64, normalized ...bool) *Point
 
 	return pt
 }
+
+// SplitLineString splits a linestring at a certain distance
+func (self *LineString) SplitLineString(distance float64) []*LineString {
+	var coords = self.Coordinates.Points()
+	if math.FloatEqual(distance, 0.0) || distance < 0 {
+		return []*LineString{NewLineString(Coordinates(coords))}
+	}
+
+	var pd float64
+	var p Point
+	var length = self.Length()
+	var overflow = math.FloatEqual(distance, length) || distance > length
+	for i := 0; !overflow && i < len(coords); i++ {
+		p = coords[i]
+		if i == 0 {
+			continue
+		}
+		pd += p.Magnitude(&coords[i-1])
+
+		if math.FloatEqual(pd, distance) {
+			return []*LineString{NewLineString(Coordinates(coords[:i+1])), NewLineString(Coordinates(coords[i:]))}
+		}
+
+		if pd > distance {
+			var cp = self.Interpolate(distance)
+			var coordsA = concat(coords[:i], []Point{{cp[X], cp[Y]}})
+			var coordsB = concat([]Point{{cp[X], cp[Y]}}, coords[i:])
+			return []*LineString{NewLineString(Coordinates(coordsA)), NewLineString(Coordinates(coordsB))}
+		}
+	}
+	return []*LineString{NewLineString(Coordinates(coords))}
+}
