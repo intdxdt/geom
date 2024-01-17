@@ -19,6 +19,8 @@ github.com/intdxdt/math v1.1.0 h1:xY91Vn4O+BQHpRvL/9bRB5uTzx2AiZuSvmX7dEZFfKw=
 github.com/intdxdt/math v1.1.0/go.mod h1:bahlwnDeXJatMqSX8f6VUEG+3kUoZC1G9RqhJ6+DI0Q=
 github.com/intdxdt/mbr v1.0.0 h1:e6ojEZTyuKZcTw9Epy7W+CCj9FJ99bOuHwiN08kAnEk=
 github.com/intdxdt/mbr v1.0.0/go.mod h1:uXexpyXa+e2CojlaEdT6NAIbzRQh+Egt3m7rTo9x6Yc=
+github.com/intdxdt/mbr v1.1.0 h1:s1gLhHf8/R+xcbGg+Dtylv694NI0lwwzPkgrN9t8YDk=
+github.com/intdxdt/mbr v1.1.0/go.mod h1:zKYyKyaTIkW+dzR9EF4U+3M2j64HykI5lofllsOg/2g=
 github.com/intdxdt/robust v1.0.0/go.mod h1:uIGXMmYcuFItUjeG37oxt0x7RFXdL4MEfXP4uVstLZ0=
 github.com/intdxdt/robust v1.0.1 h1:WyyYY3C011oBAYFzBQodY+edhJTalSTrGQIEL+fZgFk=
 github.com/intdxdt/robust v1.0.1/go.mod h1:vfmLO6zLX5kmDeZpZ1RwShtncYZszKySQVk8aOdaNOk=
@@ -37,3 +39,7 @@ github.com/intdxdt/twiddle v1.0.0/go.mod h1:SOM5zV/wCJBghQXBBoOEqP7r6EqhVqs8E0oh
 github.com/intdxdt/twiddle v1.0.1 h1:UTyO0Gcb39cE+Ofm75Qs7HUO/gNqBnethjCI7OjTR/g=
 golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691 h1:/yRP+0AN7mf5DkD3BAI6TOFnd51gEoDEb8o35jIFtgw=
 golang.org/x/exp v0.0.0-20230728194245-b0cb94b80691/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
+golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b h1:r+vk0EmXNmekl0S0BascoeeoHk/L7wmaW2QF90K+kYI=
+golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 h1:hNQpMuAJe5CtcUqCXaWga3FHu+kQvCqcsoVaQgSV60o=
+golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
