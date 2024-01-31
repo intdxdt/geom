@@ -1,12 +1,12 @@
 package index
 
 import (
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
 )
 
-//loadBoxes loads bounding boxes
-func (tree *Index) loadBoxes(data []mbr.MBR) *Index {
+// loadBoxes loads bounding boxes
+func (tree *Index) loadBoxes(data []mbr.MBR[float64]) *Index {
 	var items = make([]mono.MBR, 0, len(data))
 	for i := range data {
 		items = append(items, mono.MBR{MBR: data[i]})
@@ -14,7 +14,7 @@ func (tree *Index) loadBoxes(data []mbr.MBR) *Index {
 	return tree.Load(items)
 }
 
-//Load implements bulk loading
+// Load implements bulk loading
 func (tree *Index) Load(items []mono.MBR) *Index {
 	var n = len(items)
 	if n < tree.minEntries {
@@ -24,7 +24,7 @@ func (tree *Index) Load(items []mono.MBR) *Index {
 		return tree
 	}
 
-	var data = make([]*mono.MBR,  n)
+	var data = make([]*mono.MBR, n)
 	for i := range items {
 		data[i] = &items[i]
 	}

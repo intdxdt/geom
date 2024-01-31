@@ -8,9 +8,9 @@ import (
 
 const miniMonoSize = 8
 
-//build xymonotone chain, perimeter length,
-//monotone build starts from i and ends at j, designed for
-//appending new points to the end of line
+// build xymonotone chain, perimeter length,
+// monotone build starts from i and ends at j, designed for
+// appending new points to the end of line
 func (self *LineString) processChains() *LineString {
 	var dx, dy float64
 	var cur_x, cur_y, prev_x, prev_y int
@@ -19,7 +19,7 @@ func (self *LineString) processChains() *LineString {
 	var a, b *Point
 
 	a = self.Coordinates.Pt(i)
-	var box = mbr.MBR{a[X], a[Y], a[X], a[Y]}
+	var box = mbr.MBR[float64]{a[X], a[Y], a[X], a[Y]}
 
 	if n <= miniMonoSize {
 		for i := range self.Coordinates.Idxs {
@@ -77,7 +77,7 @@ func (self *LineString) processChains() *LineString {
 	return self
 }
 
-//compute bbox of x or y mono chain
+// compute bbox of x or y mono chain
 func (self *LineString) xyMonobox(mono *mono.MBR, i, j int) {
 	if i != null {
 		var pt = self.Coordinates.Pt(i)
@@ -99,7 +99,7 @@ func (self *LineString) xyMonobox(mono *mono.MBR, i, j int) {
 	}
 }
 
-//find the sign of value -1, 0 , 1
+// find the sign of value -1, 0 , 1
 func xySign(v float64) int {
 	var i int
 	if v > 0 {

@@ -1,12 +1,12 @@
 package index
 
 import (
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
 )
 
-//Search item
-func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
+// Search item
+func (tree *Index) Search(query mbr.MBR[float64]) []*mono.MBR {
 	var bbox = &query
 	var result []*mono.MBR
 	var nd = &tree.data
@@ -41,12 +41,12 @@ func (tree *Index) Search(query mbr.MBR) []*mono.MBR {
 	return result
 }
 
-//All items from  root node
+// All items from  root node
 func (tree *Index) All() []*mono.MBR {
 	return all(&tree.data, []*mono.MBR{})
 }
 
-//all - fetch all items from node
+// all - fetch all items from node
 func all(nd *node, result []*mono.MBR) []*mono.MBR {
 	var nodesToSearch []*node
 	for {

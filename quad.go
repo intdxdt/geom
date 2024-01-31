@@ -4,15 +4,8 @@ import (
 	"bytes"
 )
 
-const (
-	minx = iota
-	miny
-	maxx
-	maxy
-)
-
 func QuadrantRelation(g, other Geometry) string {
-	//Expand oject intersections with extended bouding box intersections
+	//Expand object intersections with extended bounding box intersections
 	var buffer bytes.Buffer
 	for _, q := range quadrants(g, other) {
 		if g.Intersects(q) {

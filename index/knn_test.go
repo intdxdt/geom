@@ -1,21 +1,21 @@
 package index
 
 import (
-	"testing"
-	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
+	"testing"
 	"time"
 )
 
 var knnData []mono.MBR
 
-func scoreFn(query *mbr.MBR, boxer *KObj) float64 {
+func scoreFn(query *mbr.MBR[float64], boxer *KObj) float64 {
 	return query.Distance(boxer.MBR)
 }
 
 func initKnn() {
-	var dat = []mbr.MBR{
+	var dat = []mbr.MBR[float64]{
 		{87, 55, 87, 56}, {38, 13, 39, 16}, {7, 47, 8, 47}, {89, 9, 91, 12}, {4, 58, 5, 60}, {0, 11, 1, 12}, {0, 5, 0, 6}, {69, 78, 73, 78},
 		{56, 77, 57, 81}, {23, 7, 24, 9}, {68, 24, 70, 26}, {31, 47, 33, 50}, {11, 13, 14, 15}, {1, 80, 1, 80}, {72, 90, 72, 91}, {59, 79, 61, 83},
 		{98, 77, 101, 77}, {11, 55, 14, 56}, {98, 4, 100, 6}, {21, 54, 23, 58}, {44, 74, 48, 74}, {70, 57, 70, 61}, {32, 9, 33, 12}, {43, 87, 44, 91},
@@ -36,7 +36,7 @@ func initKnn() {
 	}
 }
 
-func foundIn(needle mbr.MBR, haystack []mbr.MBR) bool {
+func foundIn(needle mbr.MBR[float64], haystack []mbr.MBR[float64]) bool {
 	var found = false
 	for i := range haystack {
 		found = needle.Equals(&haystack[i])
@@ -54,8 +54,8 @@ func TestRtreeKNN(t *testing.T) {
 		g.It("finds n neighbours", func() {
 			var rt = NewIndex(9)
 			rt.Load(knnData)
-			var nn = rt.Knn(mbr.CreateMBR(40, 40, 40, 40), 10, scoreFn)
-			var result = []mbr.MBR{
+			var nn = rt.Knn(mbr.CreateMBR[float64](40, 40, 40, 40), 10, scoreFn)
+			var result = []mbr.MBR[float64]{
 				{38, 39, 39, 39}, {35, 39, 38, 40}, {34, 43, 36, 44},
 				{29, 42, 33, 42}, {48, 38, 48, 40}, {31, 47, 33, 50},
 				{34, 29, 34, 32}, {29, 45, 31, 47}, {39, 52, 39, 56},
@@ -65,7 +65,7 @@ func TestRtreeKNN(t *testing.T) {
 				g.Assert(foundIn(n.MBR, result)).IsTrue()
 			}
 
-			nn = rt.Knn(mbr.CreateMBR(40, 40, 40, 40), 1000, scoreFn)
+			nn = rt.Knn(mbr.CreateMBR[float64](40, 40, 40, 40), 1000, scoreFn)
 			g.Assert(len(nn)).Equal(len(knnData))
 		})
 	})
@@ -78,11 +78,11 @@ func TestRtreeKNNPredScore(t *testing.T) {
 		initKnn()
 		g.It("finds n neighbours with geoms", func() {
 
-			var scoreFunc = func(query *mbr.MBR, obj *KObj) float64 {
+			var scoreFunc = func(query *mbr.MBR[float64], obj *KObj) float64 {
 				return query.Distance(obj.MBR)
 			}
 
-			var predicateMbr []*mbr.MBR
+			var predicateMbr []*mbr.MBR[float64]
 
 			var createPredicate = func(dist float64) func(*KObj) (bool, bool) {
 				return func(candidate *KObj) (bool, bool) {
@@ -113,13 +113,13 @@ func TestRtreeKNNPredScore(t *testing.T) {
 }
 
 type RichData struct {
-	*mbr.MBR
+	*mbr.MBR[float64]
 	version int
 }
 
 func fnRichData() []mono.MBR {
 	var richData = make([]mono.MBR, 0)
-	var data = []mbr.MBR{
+	var data = []mbr.MBR[float64]{
 		{1, 2, 1, 2}, {3, 3, 3, 3}, {5, 5, 5, 5},
 		{4, 2, 4, 2}, {2, 4, 2, 4}, {5, 3, 5, 3},
 		{3, 4, 3, 4}, {2.5, 4, 2.5, 4},
@@ -134,7 +134,7 @@ func TestQobj_String(t *testing.T) {
 	g := goblin.Goblin(t)
 	g.Describe("", func() {
 		g.It("test qobject", func() {
-			var box = mbr.MBR{3, 3, 3, 3}
+			var box = mbr.MBR[float64]{3, 3, 3, 3}
 			var obj = &mono.MBR{MBR: box}
 			var nd = newLeafNode(obj)
 			var qo = &KObj{&nd, &box, true, 3.4}
@@ -151,20 +151,20 @@ func TestRtreeKNNPredicate(t *testing.T) {
 			var rt = NewIndex(9)
 			rt.Load(fnRichData())
 
-			var scoreFn = func(query *mbr.MBR, boxer *KObj) float64 {
+			var scoreFn = func(query *mbr.MBR[float64], boxer *KObj) float64 {
 				return query.Distance(boxer.MBR)
 			}
 			var predicate = func(v *KObj) (bool, bool) {
 				return v.node.item.I < 5, false
 			}
-			var result = rt.Knn(mbr.CreateMBR(2, 4, 2, 4), 1, scoreFn, predicate)
+			var result = rt.Knn(mbr.CreateMBR[float64](2, 4, 2, 4), 1, scoreFn, predicate)
 
 			g.Assert(len(result)).Equal(1)
 
 			var v = result[0]
 			var expectsVersion = 2
 
-			g.Assert(v.MBR.Equals(&mbr.MBR{3, 3, 3, 3})).IsTrue()
+			g.Assert(v.MBR.Equals(&mbr.MBR[float64]{3, 3, 3, 3})).IsTrue()
 			g.Assert(v.I).Equal(expectsVersion)
 		})
 	})
@@ -193,11 +193,10 @@ func TestRtreeKNNMinDist(t *testing.T) {
 			g.Assert(expects).Equal(actual)
 			g.Assert(knnMinLinearDistance(A, B)).Equal(knnMinLinearDistance(B, A))
 
-
 			//"LINESTRING ( 190.5152458489664 281.16775426125224, 182.87934122063538 276.175047388882, 188.75311401165925 269.42020867920456, 193.45213224447832 269.12652003965337, 193.7458208840295 263.8401245277319, 188.16573673255687 259.1411062949128, 183.17302986018657 261.7843040508735, 177.88663434826512 255.9105312598497, 184.93516169749373 248.8620039106211, 193.7458208840295 252.0925789456842 )";
 			//"LINESTRING ( 184.05409577884015 283.2235747381106, 176.41819115050916 278.8182451448427, 176.41819115050916 273.23816099337006, 180.52983210422585 270.59496323740933, 181.9982753019818 268.2454541209998, 180.82352074377704 265.60225636503907, 175.2434365923044 264.1338131672831, 171.1317956385877 260.02217221356636, 172.30655019679247 255.9105312598497, 176.71187979006035 250.33044710837706, 179.94245482512346 243.86929703825083, 188.75311401165925 242.10716520094365 )";
-			A = [][]float64{{190.515245849, 281.167754261},{182.879341221, 276.175047389},{188.753114012, 269.420208679},{193.452132244, 269.12652004},{193.745820884, 263.840124528},{188.165736733, 259.141106295},{183.17302986, 261.784304051},{177.886634348, 255.91053126},{184.935161697, 248.862003911},{193.745820884, 252.092578946}}
-			B = [][]float64{{184.054095779, 283.223574738},{176.418191151, 278.818245145},{176.418191151, 273.238160993},{180.529832104, 270.594963237},{181.998275302, 268.245454121},{180.823520744, 265.602256365},{175.243436592, 264.133813167},{171.131795639, 260.022172214},{172.306550197, 255.91053126},{176.71187979, 250.330447108},{179.942454825, 243.869297038},{188.753114012, 242.107165201}}
+			A = [][]float64{{190.515245849, 281.167754261}, {182.879341221, 276.175047389}, {188.753114012, 269.420208679}, {193.452132244, 269.12652004}, {193.745820884, 263.840124528}, {188.165736733, 259.141106295}, {183.17302986, 261.784304051}, {177.886634348, 255.91053126}, {184.935161697, 248.862003911}, {193.745820884, 252.092578946}}
+			B = [][]float64{{184.054095779, 283.223574738}, {176.418191151, 278.818245145}, {176.418191151, 273.238160993}, {180.529832104, 270.594963237}, {181.998275302, 268.245454121}, {180.823520744, 265.602256365}, {175.243436592, 264.133813167}, {171.131795639, 260.022172214}, {172.306550197, 255.91053126}, {176.71187979, 250.330447108}, {179.942454825, 243.869297038}, {188.753114012, 242.107165201}}
 			expects = mindistBruteforce(A, B)
 			actual = knnMinLinearDistance(A, B)
 			g.Assert(expects).Equal(actual)

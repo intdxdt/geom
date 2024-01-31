@@ -7,7 +7,7 @@ import (
 	"github.com/intdxdt/mbr"
 )
 
-//Distance computes distance between two points
+// Distance computes distance between two points
 func (self Point) Distance(other Geometry) float64 {
 	var dist = math.NaN()
 	if IsNullGeometry(other) {
@@ -25,7 +25,7 @@ func (self Point) Distance(other Geometry) float64 {
 	return dist
 }
 
-//Distance computes distance from segment to other geometry
+// Distance computes distance from segment to other geometry
 func (self *Segment) Distance(other Geometry) float64 {
 	return self.AsLineString().Distance(other)
 }
@@ -47,7 +47,7 @@ func (self *Polygon) Distance(other Geometry) float64 {
 	return dist
 }
 
-//Computes the distance between wktreg and another linestring
+// Computes the distance between wktreg and another linestring
 func (self *LineString) Distance(other Geometry) float64 {
 	var dist = math.NaN()
 	if IsNullGeometry(other) {
@@ -61,7 +61,7 @@ func (self *LineString) Distance(other Geometry) float64 {
 	return dist
 }
 
-//Computes the distance between geometries
+// Computes the distance between geometries
 func distAsLines(self, other Geometry) float64 {
 	var dist = nan
 	var lns1 = self.AsLinear()
@@ -73,16 +73,16 @@ func distAsLines(self, other Geometry) float64 {
 			if math.IsNaN(dist) {
 				dist = d
 			} else {
-				dist = minf64(d, dist)
+				dist = min(d, dist)
 			}
 		}
 	}
 	return dist
 }
 
-//Computes the distance between a linestring and another linestring
-//the distance between intersecting linestrings is 0.  Otherwise, the
-//distance is the Euclidean distance between the closest segments.
+// Computes the distance between a linestring and another linestring
+// the distance between intersecting linestrings is 0.  Otherwise, the
+// distance is the Euclidean distance between the closest segments.
 func (self *LineString) line_line_dist(other *LineString) float64 {
 	if self.Coordinates.Len() < 16 && other.Coordinates.Len() < 16 {
 		return self.mindistBruteforce(other)

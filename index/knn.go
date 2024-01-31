@@ -11,7 +11,7 @@ func predicate(_ *KObj) (bool, bool) {
 }
 
 func (tree *Index) Knn(
-	query mbr.MBR, limit int, score func(*mbr.MBR, *KObj) float64,
+	query mbr.MBR[float64], limit int, score func(*mbr.MBR[float64], *KObj) float64,
 	predicates ...func(*KObj) (bool, bool)) []*mono.MBR {
 
 	var predFn = predicate

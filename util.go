@@ -71,7 +71,7 @@ func IsNullGeometry(g Geometry) bool {
 	return bln
 }
 
-// Insersection of two intersecting mono bounding boxes
+// monoIntersection - Intersection of two intersecting mono bounding boxes
 func monoIntersection(mbr, other *mono.MBR) (float64, float64, float64, float64) {
 	var minx, miny = other.MinX, other.MinY
 	var maxx, maxy = other.MaxX, other.MaxY
@@ -114,10 +114,10 @@ func boundsIntersects(sa, sb, oa, ob *Point) bool {
 
 // Intersects bounding box defined by two points pt1 & pt2
 func intersectsBounds(minx, miny, maxx, maxy float64, pt1, pt2 *Point) bool {
-	if minx > maxf64(pt1[0], pt2[0]) || maxx < minf64(pt1[0], pt2[0]) {
+	if minx > max(pt1[0], pt2[0]) || maxx < min(pt1[0], pt2[0]) {
 		return false
 	}
-	return !(miny > maxf64(pt1[1], pt2[1]) || maxy < minf64(pt1[1], pt2[1]))
+	return !(miny > max(pt1[1], pt2[1]) || maxy < min(pt1[1], pt2[1]))
 }
 
 // bounds contains x, y
@@ -128,23 +128,7 @@ func containsXY(minx, miny, maxx, maxy, x, y float64) bool {
 // envelope of segment
 func bounds(a, b *Point) (float64, float64, float64, float64) {
 	var minx, miny, maxx, maxy = a[X], a[Y], b[X], b[Y]
-	return minf64(minx, maxx), minf64(miny, maxy), maxf64(minx, maxx), maxf64(miny, maxy)
-}
-
-// max
-func maxf64(x, y float64) float64 {
-	if y > x {
-		return y
-	}
-	return x
-}
-
-// min
-func minf64(x, y float64) float64 {
-	if y < x {
-		return y
-	}
-	return x
+	return min(minx, maxx), min(miny, maxy), max(minx, maxx), max(miny, maxy)
 }
 
 func concat[T any](this []T, other []T) []T {

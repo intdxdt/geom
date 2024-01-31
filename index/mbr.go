@@ -1,17 +1,17 @@
 package index
 
 import (
-	"sort"
 	"github.com/intdxdt/mbr"
+	"sort"
 )
 
-//calcBBox calculates its bbox from bboxes of its children.
+// calcBBox calculates its bbox from bboxes of its children.
 func calcBBox(nd *node) {
 	nd.bbox = distBBox(nd, 0, len(nd.children))
 }
 
-//distBBox computes min bounding rectangle of node children from k to p-1.
-func distBBox(nd *node, k, p int) mbr.MBR {
+// distBBox computes min bounding rectangle of node children from k to p-1.
+func distBBox(nd *node, k, p int) mbr.MBR[float64] {
 	var bbox = emptyMBR()
 	for i := k; i < p; i++ {
 		bbox.ExpandIncludeMBR(&nd.children[i].bbox)
@@ -19,8 +19,8 @@ func distBBox(nd *node, k, p int) mbr.MBR {
 	return bbox
 }
 
-//allDistMargin computes total margin of all possible split distributions.
-//Each node is at least m full.
+// allDistMargin computes total margin of all possible split distributions.
+// Each node is at least m full.
 func (tree *Index) allDistMargin(nd *node, m, M int, sortBy sortBy) float64 {
 	if sortBy == byX {
 		sort.Sort(xNodePath{nd.children})

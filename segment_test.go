@@ -46,7 +46,7 @@ func TestSegment(t *testing.T) {
 			g.Assert(seg_ab.Type().IsSegment()).IsTrue()
 			g.Assert(seg_ab.IsSimple()).IsTrue()
 			g.Assert(seg_ab.Type().IsLineString()).IsFalse()
-			var box = mbr.CreateMBR(0, 0, -3, 4)
+			var box = mbr.CreateMBR[float64](0, 0, -3, 4)
 			var seg_ab_box = seg_ab.BBox()
 			g.Assert(seg_ab_box.Equals(&box)).IsTrue()
 			g.Assert(seg_ab.AsLinear()).Eql([]*LineString{ln_ab})

@@ -1,8 +1,8 @@
 package index
 
 import (
-	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
 )
 
 func nodeAtIndex(a []*node, i int) *node {
@@ -44,7 +44,7 @@ func popIndex(indxs *[]int) int {
 	return v
 }
 
-//remove node at given index from node slice.
+// remove node at given index from node slice.
 func removeNode(a []node, i int) []node {
 	var n = len(a) - 1
 	if i > n {
@@ -54,7 +54,7 @@ func removeNode(a []node, i int) []node {
 	return a
 }
 
-//condense node and its path from the root
+// condense node and its path from the root
 func (tree *Index) condense(path []*node) {
 	var parent *node
 	var i = len(path) - 1
@@ -81,8 +81,8 @@ func (tree *Index) condense(path []*node) {
 	}
 }
 
-//Remove Item from Index
-//NOTE: remove node
+// Remove Item from Index
+// NOTE: remove node
 func (tree *Index) Remove(item *mono.MBR) *Index {
 	if item == nil {
 		return tree
@@ -93,9 +93,9 @@ func (tree *Index) Remove(item *mono.MBR) *Index {
 	return tree
 }
 
-//Remove Item from Index
-//NOTE:if item is a bbox , then first found bbox is removed
-func (tree *Index) removeMBR(item *mbr.MBR) *Index {
+// Remove Item from Index
+// NOTE:if item is a bbox , then first found bbox is removed
+func (tree *Index) removeMBR(item *mbr.MBR[float64]) *Index {
 	tree.removeItem(item,
 		func(nd *node, i int) bool {
 			return nd.children[i].bbox.Equals(item)
@@ -103,7 +103,7 @@ func (tree *Index) removeMBR(item *mbr.MBR) *Index {
 	return tree
 }
 
-func (tree *Index) removeItem(item *mbr.MBR, predicate func(*node, int) bool) *Index {
+func (tree *Index) removeItem(item *mbr.MBR[float64], predicate func(*node, int) bool) *Index {
 	var nd = &tree.data
 	var parent *node
 	var bbox = item.BBox()

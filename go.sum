@@ -17,10 +17,16 @@ github.com/intdxdt/heap v0.0.0-20180830201411-bfa61463ae8b/go.mod h1:rftfIJ/6uLm
 github.com/intdxdt/math v1.0.0/go.mod h1:/iQnUD7sXRLoOziKeJ628KqhSF3GQi7HdQ3LsbgiKpk=
 github.com/intdxdt/math v1.1.0 h1:xY91Vn4O+BQHpRvL/9bRB5uTzx2AiZuSvmX7dEZFfKw=
 github.com/intdxdt/math v1.1.0/go.mod h1:bahlwnDeXJatMqSX8f6VUEG+3kUoZC1G9RqhJ6+DI0Q=
+github.com/intdxdt/math v1.2.0 h1:LSRbFa0FbkzuAdDXUKPfIoAqR/dUixilrl48kWhWsEM=
+github.com/intdxdt/math v1.2.0/go.mod h1:CxiArl7TMvQ7/U3erUtH6NIa58MAHcAQ5X2sjWXpHn8=
 github.com/intdxdt/mbr v1.0.0 h1:e6ojEZTyuKZcTw9Epy7W+CCj9FJ99bOuHwiN08kAnEk=
 github.com/intdxdt/mbr v1.0.0/go.mod h1:uXexpyXa+e2CojlaEdT6NAIbzRQh+Egt3m7rTo9x6Yc=
 github.com/intdxdt/mbr v1.1.0 h1:s1gLhHf8/R+xcbGg+Dtylv694NI0lwwzPkgrN9t8YDk=
 github.com/intdxdt/mbr v1.1.0/go.mod h1:zKYyKyaTIkW+dzR9EF4U+3M2j64HykI5lofllsOg/2g=
+github.com/intdxdt/mbr v1.2.0 h1:mc5ztrJ/jfatLUkZIXs6mqmL0FdpTSVLIUhGRJKsfus=
+github.com/intdxdt/mbr v1.2.0/go.mod h1:YmAtNvzc+4tkYyaMZwqamS0Y0U04t2HzmpDKdRBCAUM=
+github.com/intdxdt/mbr v1.3.0 h1:E5VNhvF1lRRdOmnzvSE6O2ng7RyiY8ld/8DV37dllkE=
+github.com/intdxdt/mbr v1.3.0/go.mod h1:YmAtNvzc+4tkYyaMZwqamS0Y0U04t2HzmpDKdRBCAUM=
 github.com/intdxdt/robust v1.0.0/go.mod h1:uIGXMmYcuFItUjeG37oxt0x7RFXdL4MEfXP4uVstLZ0=
 github.com/intdxdt/robust v1.0.1 h1:WyyYY3C011oBAYFzBQodY+edhJTalSTrGQIEL+fZgFk=
 github.com/intdxdt/robust v1.0.1/go.mod h1:vfmLO6zLX5kmDeZpZ1RwShtncYZszKySQVk8aOdaNOk=
@@ -43,3 +49,5 @@ golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b h1:r+vk0EmXNmekl0S0BascoeeoH
 golang.org/x/exp v0.0.0-20230801115018-d63ba01acd4b/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
 golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 h1:hNQpMuAJe5CtcUqCXaWga3FHu+kQvCqcsoVaQgSV60o=
 golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=
+golang.org/x/exp v0.0.0-20240119083558-1b970713d09a h1:Q8/wZp0KX97QFTc2ywcOE0YRjZPVIx+MXInMzdvQqcA=
+golang.org/x/exp v0.0.0-20240119083558-1b970713d09a/go.mod h1:idGWGoKP1toJGkd5/ig9ZLuPcZBC3ewk7SzmH0uou08=

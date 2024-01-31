@@ -117,7 +117,7 @@ func segsegDistance(sa, sb, oa, ob *Point, hypotFn hypotFunc) float64 {
 			if pta != nil && ptb != nil {
 				d1, _ := distanceToPoint(oa, ob, pta, hypotFn)
 				d2, _ := distanceToPoint(sa, sb, ptb, hypotFn)
-				dist = minf64(d1, d2)
+				dist = min(d1, d2)
 			} else if pta != nil {
 				dist, _ = distanceToPoint(oa, ob, pta, hypotFn)
 			} else {
@@ -136,7 +136,7 @@ func minDistSegmentEndpoints(sa, sb, oa, ob *Point, fn hypotFunc) float64 {
 	var distOsb, _ = distanceToPoint(oa, ob, sb, fn)
 	var distSoa, _ = distanceToPoint(sa, sb, oa, fn)
 	var distSob, _ = distanceToPoint(sa, sb, ob, fn)
-	return minf64(minf64(distOsa, distOsb), minf64(distSoa, distSob))
+	return min(min(distOsa, distOsb), min(distSoa, distSob))
 }
 
 // Distance from segment endpoints to point

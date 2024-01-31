@@ -15,8 +15,8 @@ const (
 )
 
 type Geometry interface {
-	BBox() *mbr.MBR
-	Bounds() mbr.MBR
+	BBox() *mbr.MBR[float64]
+	Bounds() mbr.MBR[float64]
 	AsLinear() []*LineString
 	Intersects(Geometry) bool
 	Intersection(Geometry) []Point
