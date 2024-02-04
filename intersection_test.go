@@ -12,6 +12,7 @@ func TestIntersection(t *testing.T) {
 	type Seg struct{ *Segment }
 
 	var lnwkt = [][]float64{{350, 710}, {400, 770}, {450, 770}, {480, 810}, {570, 820}, {670, 730}, {720, 760}, {930, 800}}
+	var lnwkt2D = [][2]float64{{350, 710}, {400, 770}, {450, 770}, {480, 810}, {570, 820}, {670, 730}, {720, 760}, {930, 800}}
 	var lnwkt2 = "LINESTRING ( 620 620, 720 690, 790 680, 820 630, 870 630, 910 600, 900 530, 800 450, 730 390, 680 420, 640 460, 600 480, 650 540, 690 570, 780 570, 730 630, 680 600, 610 570, 550 610 )"
 
 	var plywkt = "POLYGON (( 720 760, 860 770, 950 700, 930 640, 800 600, 740 580, 730 500, 760 440, 720 360, 620 390, 510 480, 460 570, 440 630, 450 740, 480 810, 570 820, 570 770, 580 740, 670 730, 720 760 ), ( 630 670, 580 650, 590 600, 650 580, 710 600, 710 670, 630 670 ), ( 780 650, 800 640, 850 710, 830 720, 780 650 ))"
@@ -30,6 +31,7 @@ func TestIntersection(t *testing.T) {
 	var polyBwkt = "POLYGON ((630 620, 730 410, 890 410, 1040 510, 1080 620, 1020 720, 690 720, 630 620))"
 
 	var ln = NewLineStringFromArray(lnwkt)
+	var ln2d = NewLineStringFrom2DArray(lnwkt2D)
 	var ln2 = NewLineStringFromWKT(lnwkt2)
 	var ply = NewPolygonFromWKT(plywkt)
 	var ply2 = NewPolygonFromWKT(plywkt2)
@@ -56,6 +58,7 @@ func TestIntersection(t *testing.T) {
 
 		g.It("intersection", func() {
 			g.Timeout(1 * time.Hour)
+			g.Assert(ln.Length() == ln2d.Length()).IsTrue()
 			inters := plyA.Intersection(plyB)
 			g.Assert(len(inters)).Equal(7)
 
