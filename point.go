@@ -40,6 +40,22 @@ func PointFromWKT(wkt string) Point {
 	return *ReadWKT(wkt, GeoTypePoint).ToCoordinates()[0].Pt(0)
 }
 
+func PointsFromArray(array [][]float64) []Point {
+	var pts = make([]Point, 0, len(array))
+	for i := range array {
+		pts = append(pts, CreatePoint(array[i]))
+	}
+	return pts
+}
+
+func PointsFromArray2D(array [][2]float64) []Point {
+	var pts = make([]Point, 0, len(array))
+	for i := range array {
+		pts = append(pts, Pt(array[i][0], array[i][1]))
+	}
+	return pts
+}
+
 // Clone - clone point
 func (self *Point) Clone() *Point {
 	return &Point{self[X], self[Y], self[Z]}

@@ -14,10 +14,7 @@ func Coordinates(c []Point) Coords {
 }
 
 func CoordinatesFromArray(array [][]float64) Coords {
-	var pts = make([]Point, 0, len(array))
-	for i := range array {
-		pts = append(pts, CreatePoint(array[i]))
-	}
+	var pts = PointsFromArray(array)
 	var coords = Coords{Pnts: pts, Idxs: make([]int, len(pts))}
 	for i := range coords.Pnts {
 		coords.Idxs[i] = i
@@ -26,10 +23,7 @@ func CoordinatesFromArray(array [][]float64) Coords {
 }
 
 func CoordinatesFrom2DArray(array [][2]float64) Coords {
-	var pts = make([]Point, 0, len(array))
-	for i := range array {
-		pts = append(pts, Pt(array[i][0], array[i][1]))
-	}
+	var pts = PointsFromArray2D(array)
 	var coords = Coords{Pnts: pts, Idxs: make([]int, len(pts))}
 	for i := range coords.Pnts {
 		coords.Idxs[i] = i
