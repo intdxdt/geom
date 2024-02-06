@@ -56,6 +56,26 @@ func PointsFromArray2D(array [][2]float64) []Point {
 	return pts
 }
 
+// AsArray2D - as Point 2D
+func (self *Point) AsArray2D() [2]float64 {
+	return [2]float64{self[X], self[Y]}
+}
+
+// AsArray - as array 3D
+func (self *Point) AsArray() [3]float64 {
+	return [3]float64{self[X], self[Y], self[Z]}
+}
+
+// AsSlice2D - as slice 2D
+func (self *Point) AsSlice2D() []float64 {
+	return []float64{self[X], self[Y]}
+}
+
+// AsSlice - as slice
+func (self *Point) AsSlice() []float64 {
+	return []float64{self[X], self[Y], self[Z]}
+}
+
 // Clone - clone point
 func (self *Point) Clone() *Point {
 	return &Point{self[X], self[Y], self[Z]}
