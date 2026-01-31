@@ -46,7 +46,7 @@ func (p *InterPoint) IsVerteXOR() bool {
 		(!p.IsVertexSelf() && p.IsVertexOther())
 }
 
-//string
+// string
 func (self *InterPoint) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("[")

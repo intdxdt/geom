@@ -2,7 +2,7 @@ package geom
 
 import "github.com/intdxdt/sset"
 
-//Checks if pt intersection other geometry
+// Checks if pt intersection other geometry
 func (pt Point) Intersection(other Geometry) []Point {
 	var res []Point
 	//checks for non-geometry types
@@ -25,12 +25,12 @@ func (pt Point) Intersection(other Geometry) []Point {
 	return res
 }
 
-//Segment intersection other geometry
+// Segment intersection other geometry
 func (self *Segment) Intersection(other Geometry) []Point {
 	return self.AsLineString().Intersection(other)
 }
 
-//Checks if pt intersection other geometry
+// Checks if pt intersection other geometry
 func (self *LineString) Intersection(other Geometry) []Point {
 	var res []Point
 	//checks for non-geometry types
@@ -52,7 +52,7 @@ func (self *LineString) Intersection(other Geometry) []Point {
 	return res
 }
 
-//Checks if pt intersection other geometry
+// Checks if pt intersection other geometry
 func (self *Polygon) Intersection(other Geometry) []Point {
 	var res []Point
 	//checks for non-geometry types

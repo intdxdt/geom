@@ -1,9 +1,10 @@
 package geom
 
 import (
+	"testing"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
-	"testing"
 )
 
 const precision = 8

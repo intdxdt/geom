@@ -2,10 +2,11 @@ package index
 
 import (
 	"fmt"
-	"github.com/franela/goblin"
-	"github.com/intdxdt/mbr"
 	"testing"
 	"time"
+
+	"github.com/franela/goblin"
+	"github.com/intdxdt/mbr"
 )
 
 func print_rtree(n *node) {

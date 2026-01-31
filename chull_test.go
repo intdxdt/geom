@@ -16,7 +16,7 @@ func createHulls(indxs [][]int, coords Coords) []Geometry {
 	return hulls
 }
 
-//generates sub polyline from generator indices
+// generates sub polyline from generator indices
 func subCoordinates(coordinates Coords, i, j int) Coords {
 	coordinates.Idxs = make([]int, 0, j-i+1)
 	for v := i; v <= j; v++ {
@@ -25,7 +25,7 @@ func subCoordinates(coordinates Coords, i, j int) Coords {
 	return coordinates
 }
 
-//hull geom
+// hull geom
 func hullGeom(coords Coords) Geometry {
 	var g Geometry
 	if coords.Len() > 2 {

@@ -27,14 +27,14 @@ func (tree *Index) split(insertPath []*node, level int) {
 	}
 }
 
-//_splitRoot splits the root of tree.
+// _splitRoot splits the root of tree.
 func (tree *Index) splitRoot(nd, other node) {
 	// split root node
 	tree.data = createNode(nil, nd.height+1, false, []node{nd, other})
 	calcBBox(&tree.data)
 }
 
-//_chooseSplitIndex selects split index.
+// _chooseSplitIndex selects split index.
 func (tree *Index) chooseSplitIndex(nd *node, m, M int) int {
 	var i, index int
 	var overlap, area, minOverlap, minArea float64
@@ -68,8 +68,8 @@ func (tree *Index) chooseSplitIndex(nd *node, m, M int) int {
 	return index
 }
 
-//_chooseSplitAxis selects split axis : sorts node children
-//by the best axis for split.
+// _chooseSplitAxis selects split axis : sorts node children
+// by the best axis for split.
 func (tree *Index) chooseSplitAxis(nd *node, m, M int) {
 	var xMargin = tree.allDistMargin(nd, m, M, byX)
 	var yMargin = tree.allDistMargin(nd, m, M, byY)

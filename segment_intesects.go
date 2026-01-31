@@ -1,7 +1,7 @@
 package geom
 
-//do two lines intersect line segments a && b with
-//vertices sa, sb, oa, ob
+// SegSegIntersects - do two lines intersect line segments a && b with
+// vertices sa, sb, oa, ob
 func SegSegIntersects(sa, sb, oa, ob *Point) bool {
 	var bln = false
 	var a = ((ob[0] - oa[0]) * (sa[1] - oa[1])) - ((ob[1] - oa[1]) * (sa[0] - oa[0]))

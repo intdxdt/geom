@@ -1,11 +1,11 @@
 package index
 
 import (
-	"math"
 	"github.com/intdxdt/geom/mono"
+	"math"
 )
 
-//Build Tree
+// Build Tree
 func (tree *Index) buildTree(items []*mono.MBR, left, right, height int) node {
 	var N = float64(right - left + 1)
 	var M = float64(tree.maxEntries)

@@ -1,6 +1,6 @@
 package index
 
-//split at index
+// split at index
 func splitAtIndex(nodes []node, index int) ([]node, []node) {
 	var ln = len(nodes)
 	var ext = make([]node, 0, ln-index)
@@ -11,7 +11,7 @@ func splitAtIndex(nodes []node, index int) ([]node, []node) {
 	return nodes[:index], ext
 }
 
-//slice index
+// slice index
 func sliceIndex(limit int, predicate func(i int) bool) int {
 	var index = -1
 	for i := 0; i < limit; i++ {
@@ -23,7 +23,7 @@ func sliceIndex(limit int, predicate func(i int) bool) int {
 	return index
 }
 
-//minimum float
+// minimum float
 func min(a, b float64) float64 {
 	if b < a {
 		return b
@@ -31,7 +31,7 @@ func min(a, b float64) float64 {
 	return a
 }
 
-//maximum float
+// maximum float
 func max(a, b float64) float64 {
 	if b > a {
 		return b
@@ -39,7 +39,7 @@ func max(a, b float64) float64 {
 	return a
 }
 
-//minint
+// minint
 func minInt(a, b int) int {
 	if b < a {
 		return b
@@ -47,7 +47,7 @@ func minInt(a, b int) int {
 	return a
 }
 
-//maximum integer
+// maximum integer
 func maxInt(a, b int) int {
 	if b > a {
 		return b

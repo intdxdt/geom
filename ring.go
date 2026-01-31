@@ -6,7 +6,7 @@ type LinearRing struct {
 	*LineString
 }
 
-//new linear ring
+// new linear ring
 func NewLinearRing(coords Coords) *LinearRing {
 	var n = coords.Len()
 	if n > 1 {
@@ -18,13 +18,13 @@ func NewLinearRing(coords Coords) *LinearRing {
 	return &LinearRing{NewLineString(coords)}
 }
 
-//Contains point
+// Contains point
 func (self *LinearRing) containsPoint(pnt *Point) bool {
 	return self.bbox.IntersectsPoint(pnt[:]) &&
 		self.PointCompletelyInRing(pnt)
 }
 
-//Contains line
+// Contains line
 func (self *LinearRing) containsLine(ln *LineString) bool {
 	if self.bbox.Disjoint(&ln.bbox.MBR) { //disjoint
 		return false
@@ -36,20 +36,20 @@ func (self *LinearRing) containsLine(ln *LineString) bool {
 	return bln
 }
 
-//Contains polygon
+// Contains polygon
 func (self *LinearRing) containsPolygon(polygon *Polygon) bool {
 	return self.containsLine(polygon.Shell.LineString)
 }
 
-//point completely in ring
+// point completely in ring
 func (self *LinearRing) PointCompletelyInRing(pnt *Point) bool {
 	return self.LineString.bbox.IntersectsPoint(pnt[:]) && self.completelyInRing(pnt)
 }
 
-//Test whether a point lies inside a ring.
-//The ring may be oriented in either direction.
-//If the point lies on the ring boundary the result of this method is unspecified.
-//This algorithm does not attempt to first check the point against the envelope of the ring.
+// Test whether a point lies inside a ring.
+// The ring may be oriented in either direction.
+// If the point lies on the ring boundary the result of this method is unspecified.
+// This algorithm does not attempt to first check the point against the envelope of the ring.
 func (self *LinearRing) completelyInRing(p *Point) bool {
 	var i, i1 int
 	var p1, p2 *Point

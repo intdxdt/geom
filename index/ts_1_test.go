@@ -1,11 +1,12 @@
 package index
 
 import (
+	"testing"
+	"time"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/mbr"
-	"testing"
-	"time"
 )
 
 type Pnt struct {

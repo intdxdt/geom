@@ -1,8 +1,8 @@
 package index
 
 import (
-	"math"
 	"github.com/intdxdt/geom/mono"
+	"math"
 )
 
 // sort an array so that items come in groups of n unsorted items,
@@ -10,7 +10,7 @@ import (
 // combines selection algorithm with binary divide & conquer approach.
 func multiSelect(arr []*mono.MBR, left, right, n int, compare int) {
 	var mid int
-	var stack = []int{ left, right}
+	var stack = []int{left, right}
 
 	for len(stack) > 0 {
 		right, stack = popInt(stack)
@@ -56,7 +56,7 @@ func selectBox(arr []*mono.MBR, k, left, right int, cmp int) {
 
 		swapItem(arr, left, k)
 
-		if  (cmp == cmpMinX && (arr[right].MinX-tMinX) > 0) ||
+		if (cmp == cmpMinX && (arr[right].MinX-tMinX) > 0) ||
 			(cmp == cmpMinY && (arr[right].MinY-tMinY) > 0) {
 			swapItem(arr, left, right)
 		}
@@ -77,7 +77,7 @@ func selectBox(arr []*mono.MBR, k, left, right int, cmp int) {
 			}
 		}
 
-		if  (cmp == cmpMinX && (arr[left].MinX-tMinX) == 0) ||
+		if (cmp == cmpMinX && (arr[left].MinX-tMinX) == 0) ||
 			(cmp == cmpMinY && (arr[left].MinY-tMinY) == 0) {
 			swapItem(arr, left, j)
 		} else {

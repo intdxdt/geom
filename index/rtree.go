@@ -7,7 +7,7 @@ package index
  @after  (c) 2015, Vladimir Agafonkin
 */
 
-//Index type
+// Index type
 type Index struct {
 	data       node
 	maxEntries int

@@ -1,12 +1,13 @@
 package index
 
 import (
-	"github.com/intdxdt/geom/mono"
-	"github.com/intdxdt/mbr"
 	"math"
 	"math/rand"
 	"testing"
 	"time"
+
+	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/mbr"
 )
 
 func RandBox(size float64, rnd *rand.Rand) mbr.MBR[float64] {

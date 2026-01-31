@@ -2,7 +2,7 @@ package geom
 
 import "strings"
 
-//write wkt
+// write wkt
 func WriteWKT(obj *WKTParserObj) string {
 	var s string
 	if obj.gtype == GeoTypePoint {
@@ -20,7 +20,7 @@ func WriteWKT(obj *WKTParserObj) string {
 	return s
 }
 
-//write wkt 3d
+// write wkt 3d
 func WriteWKT3D(obj *WKTParserObj) string {
 	var s string
 	if obj.gtype == GeoTypePoint {
@@ -38,7 +38,7 @@ func WriteWKT3D(obj *WKTParserObj) string {
 	return s
 }
 
-//str point
+// str point
 func strPoint(shell Coords, fnCoordStr func([]float64) string) string {
 	var s = "EMPTY"
 	if shell.Pnts != nil && len(shell.Pnts) > 0 {
@@ -47,7 +47,7 @@ func strPoint(shell Coords, fnCoordStr func([]float64) string) string {
 	return s
 }
 
-//str polyline
+// str polyline
 func strPolyline(shell Coords, fnCoordStr func([]float64) string) string {
 	var s = "EMPTY"
 	if shell.Pnts == nil {
@@ -65,7 +65,7 @@ func strPolyline(shell Coords, fnCoordStr func([]float64) string) string {
 	return s
 }
 
-//str polygon
+// str polygon
 func strPolygon(obj *WKTParserObj, fnCoordStr func([]float64) string) string {
 	var n int
 	var shell = strPolyline(obj.shell, fnCoordStr)

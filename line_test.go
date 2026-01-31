@@ -1,10 +1,11 @@
 package geom
 
 import (
+	"testing"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
-	"testing"
 )
 
 func TestLineString(t *testing.T) {

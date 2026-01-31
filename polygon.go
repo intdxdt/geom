@@ -5,12 +5,12 @@ type Polygon struct {
 	Holes []*LinearRing
 }
 
-//New polygon from points
+// New polygon from points
 func NewPolygon(coordinates ...Coords) *Polygon {
 	return newPolygonFromRings(lnrRings(coordinates)...)
 }
 
-//New Polygon from rings
+// New Polygon from rings
 func newPolygonFromRings(rings ...*LinearRing) *Polygon {
 	var holes []*LinearRing
 	if len(rings) > 1 {
@@ -19,28 +19,28 @@ func newPolygonFromRings(rings ...*LinearRing) *Polygon {
 	return &Polygon{Shell: rings[0], Holes: holes}
 }
 
-//create a new linestring from wkt string
-//empty wkt are not allowed
+// create a new linestring from wkt string
+// empty wkt are not allowed
 func NewPolygonFromWKT(wkt string) *Polygon {
 	return NewPolygon(ReadWKT(wkt, GeoTypePolygon).ToCoordinates()...)
 }
 
-//get geometry type
+// get geometry type
 func (self *Polygon) Type() GeoType {
 	return GeoType(GeoTypePolygon)
 }
 
-//get geometry interface
+// get geometry interface
 func (self *Polygon) Geometry() Geometry {
 	return self
 }
 
-//ConvexHull computes slice of vertices as points forming convex hull
+// ConvexHull computes slice of vertices as points forming convex hull
 func (self *Polygon) ConvexHull() *Polygon {
 	return NewPolygon(ConvexHull(self.Shell.Coordinates))
 }
 
-//As line strings
+// As line strings
 func (self *Polygon) AsLinearRings() []*LinearRing {
 	var rings = make([]*LinearRing, 0, len(self.Holes)+1)
 	rings = append(rings, self.Shell)
@@ -50,7 +50,7 @@ func (self *Polygon) AsLinearRings() []*LinearRing {
 	return rings
 }
 
-//polygon lnrRings
+// polygon lnrRings
 func lnrRings(coords []Coords) []*LinearRing {
 	var rings = make([]*LinearRing, 0, len(coords))
 	for i := range coords {

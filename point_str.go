@@ -6,12 +6,12 @@ import (
 	"strconv"
 )
 
-//String creates a wkt string format of point
+// String creates a wkt string format of point
 func (self Point) WKT() string {
 	return WriteWKT(NewWKTParserObj(GeoTypePoint, Coordinates([]Point{self})))
 }
 
-//String creates a wkt string format of point
+// String creates a wkt string format of point
 func (self *Point) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("[")
@@ -23,12 +23,12 @@ func (self *Point) String() string {
 	return buf.String()
 }
 
-//coordinate string
+// coordinate string
 func coordStr(pt []float64) string {
 	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y])
 }
 
-//coordinate string
+// coordinate string
 func coordStr3D(pt []float64) string {
 	return math.FloatToString(pt[X]) + " " + math.FloatToString(pt[Y]) + " " + math.FloatToString(pt[Z])
 }

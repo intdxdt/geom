@@ -2,7 +2,7 @@ package geom
 
 import "bytes"
 
-//polygon as  string
+// polygon as  string
 func (self *Polygon) String() string {
 	var buf bytes.Buffer
 	var aslines = self.AsLinear()
@@ -18,7 +18,7 @@ func (self *Polygon) String() string {
 	return buf.String()
 }
 
-//polygon as  string
+// polygon as  string
 func (self *Polygon) WKT() string {
 	var rings = make([]Coords, 0, len(self.Holes)+1)
 	rings = append(rings, self.Shell.Coordinates)

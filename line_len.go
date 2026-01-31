@@ -2,17 +2,17 @@ package geom
 
 import "github.com/intdxdt/geom/mono"
 
-//length of line
+// length of line
 func (self *LineString) Length() float64 {
 	return self.len(0, self.Coordinates.Len()-1)
 }
 
-//compute length of chain
+// compute length of chain
 func (self *LineString) chainLength(chain *mono.MBR) float64 {
 	return self.len(chain.I, chain.J)
 }
 
-//length of line from index i to j
+// length of line from index i to j
 func (self *LineString) len(i, j int) float64 {
 	var dist float64
 	if j < i {

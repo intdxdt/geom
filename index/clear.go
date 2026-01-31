@@ -1,8 +1,9 @@
 package index
 
 import (
-	"github.com/intdxdt/mbr"
 	"math"
+
+	"github.com/intdxdt/mbr"
 )
 
 func emptyMBR() mbr.MBR[float64] {

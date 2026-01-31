@@ -4,7 +4,7 @@ import (
 	"github.com/intdxdt/math"
 )
 
-//Compute angle at point
+// AngleAtPoint - Compute angle at point
 func (self *Point) AngleAtPoint(a, b *Point) float64 {
 	var ax, ay = a.Sub(self[X], self[Y])
 	var bx, by = b.Sub(self[X], self[Y])

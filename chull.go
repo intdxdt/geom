@@ -28,7 +28,7 @@ func ConvexHull(points Coords) Coords {
 	return lower
 }
 
-//build boundary
+// build boundary
 func buildHull(hb, points Coords, start, step, stop int) Coords {
 	var pnt *Point
 	var i = start
@@ -45,7 +45,7 @@ func buildHull(hb, points Coords, start, step, stop int) Coords {
 	return hb
 }
 
-//Coords returns a copy of linestring coordinates
+// Coords returns a copy of linestring coordinates
 func makeCoords(coordinates Coords, i, j int) Coords {
 	var o = Coords{Pnts: coordinates.Pnts, Idxs: make([]int, 0, j-i+1)}
 	return o

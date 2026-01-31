@@ -1,9 +1,10 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
 	"testing"
 	"time"
+
+	"github.com/franela/goblin"
 )
 
 func segment(ln string) *Segment {

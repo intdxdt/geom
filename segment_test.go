@@ -2,11 +2,12 @@ package geom
 
 import (
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
 	"github.com/intdxdt/mbr"
-	"testing"
-	"time"
 )
 
 func sqr(x float64) float64 {

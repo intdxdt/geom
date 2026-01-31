@@ -1,10 +1,11 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
-	"github.com/intdxdt/math"
 	"testing"
 	"time"
+
+	"github.com/franela/goblin"
+	"github.com/intdxdt/math"
 )
 
 func TestLinearReference(t *testing.T) {

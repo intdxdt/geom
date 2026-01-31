@@ -4,8 +4,8 @@ import (
 	"github.com/intdxdt/sset"
 )
 
-//segments in range
-//xor - altenate segments if nothing is in range of box
+// segments in range
+// xor - altenate segments if nothing is in range of box
 func (self *LineString) segsInrange(seglist *[]int, minx, miny, maxx, maxy float64, i, j int) {
 	*seglist = (*seglist)[:0]
 	var a, b *Point
@@ -17,7 +17,7 @@ func (self *LineString) segsInrange(seglist *[]int, minx, miny, maxx, maxy float
 	}
 }
 
-//Segment - Segment intersection of slice of arrays
+// Segment - Segment intersection of slice of arrays
 func (self *LineString) segsegIntersection(a_coords []Point, segsa []int, b_coords []Point, segsb []int, ptset *sset.SSet) {
 	var na, nb = len(segsa), len(segsb)
 	var a0, a1 *Point

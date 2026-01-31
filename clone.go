@@ -1,6 +1,6 @@
 package geom
 
-//Clone linestring
+// Clone linestring
 func (self *LineString) Clone() *LineString {
 	var coords = make([]Point, 0, self.Coordinates.Len())
 	for _, i := range self.Coordinates.Idxs {
@@ -9,12 +9,12 @@ func (self *LineString) Clone() *LineString {
 	return NewLineString(Coordinates(coords))
 }
 
-//Clone linestring
+// Clone linestring
 func (self *LinearRing) Clone() *LinearRing {
 	return &LinearRing{self.LineString.Clone()}
 }
 
-//Clone polygon
+// Clone polygon
 func (self *Polygon) Clone() *Polygon {
 	rings := self.AsLinearRings()
 	for i := range rings {

@@ -1,6 +1,6 @@
 package geom
 
-//compare points as items - x | y ordering
+// compare points as items - x | y ordering
 func ptCmp(oa, ob interface{}) int {
 	var a, b = oa.(Point), ob.(Point)
 	var d = a[X] - b[X]

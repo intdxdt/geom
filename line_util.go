@@ -2,7 +2,7 @@ package geom
 
 import "github.com/intdxdt/geom/mono"
 
-//pop chain from chainl list
+// pop chain from chainl list
 func pop_mono_mbr(a []mono.MBR) (mono.MBR, []mono.MBR) {
 	var v mono.MBR
 	var n int

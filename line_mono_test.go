@@ -1,10 +1,11 @@
 package geom
 
 import (
+	"testing"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/geom/mono"
 	"github.com/intdxdt/mbr"
-	"testing"
 )
 
 func TestLineStringMono(t *testing.T) {

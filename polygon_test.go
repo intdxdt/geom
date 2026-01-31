@@ -2,9 +2,10 @@ package geom
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/franela/goblin"
 	"github.com/intdxdt/math"
-	"testing"
 )
 
 func TestPolygon(t *testing.T) {

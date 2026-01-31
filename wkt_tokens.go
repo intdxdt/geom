@@ -8,17 +8,17 @@ type wktToken struct {
 
 type wktTokens []*wktToken
 
-//len of Coords - sort interface
+// Len - length of Coords - sort interface
 func (s wktTokens) Len() int {
 	return len(s)
 }
 
-//swap - sort interface
+// Swap - sort interface
 func (s wktTokens) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
 }
 
-//less - 2d compare - sort interface
+// Less - 2d compare - sort interface
 func (s wktTokens) Less(i, j int) bool {
 	return s[i].i < s[j].i
 }

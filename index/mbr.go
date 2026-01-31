@@ -1,8 +1,9 @@
 package index
 
 import (
-	"github.com/intdxdt/mbr"
 	"sort"
+
+	"github.com/intdxdt/mbr"
 )
 
 // calcBBox calculates its bbox from bboxes of its children.

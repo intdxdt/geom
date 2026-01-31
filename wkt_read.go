@@ -18,22 +18,22 @@ type WKTParserObj struct {
 	gtype GeoType
 }
 
-//Coords
+// Coords
 func (self *WKTParserObj) Shell() Coords {
 	return self.shell
 }
 
-//Holes
+// Holes
 func (self *WKTParserObj) Holes() []Coords {
 	return self.holes
 }
 
-//Geometry Type
+// Geometry Type
 func (self *WKTParserObj) GeometryType() GeoType {
 	return self.gtype
 }
 
-//To array of coodinates of wkt string
+// To array of coodinates of wkt string
 func (self *WKTParserObj) ToCoordinates() []Coords {
 	var shells = make([]Coords, 0)
 	var sh = self.shell
@@ -48,7 +48,7 @@ func (self *WKTParserObj) ToCoordinates() []Coords {
 	return shells
 }
 
-//New WKT parser object
+// New WKT parser object
 func NewWKTParserObj(gtype GeoType, coords ...Coords) *WKTParserObj {
 	var shells = make([]Coords, 0, len(coords))
 	for i := range coords {
@@ -64,7 +64,7 @@ func NewWKTParserObj(gtype GeoType, coords ...Coords) *WKTParserObj {
 	return obj
 }
 
-//Read wkt string
+// Read wkt string
 func ReadWKT(wkt string, typeId GeoType) *WKTParserObj {
 	var wktBytes = bytes.ToLower([]byte(wkt_string(wkt)))
 	if isEmptyWKT(wktBytes) {
@@ -145,8 +145,8 @@ func aggregateTokens(tokens []*wktToken) []*wktToken {
 	return tokens
 }
 
-//Aggregate sequence - single wkt type - Point, LineString, Polygon
-//Does not support Multi-WKT types
+// Aggregate sequence - single wkt type - Point, LineString, Polygon
+// Does not support Multi-WKT types
 func aggregateSequence(tokens []*wktToken) (bool, []*wktToken) {
 	if len(tokens) <= 1 {
 		return false, tokens
@@ -173,7 +173,7 @@ func aggregateSequence(tokens []*wktToken) (bool, []*wktToken) {
 	return aggregate, heads
 }
 
-//wkt string
+// wkt string
 func wkt_string(wkt string) string {
 	var buffer bytes.Buffer
 	var tokens = strings.Split(wkt, "\n")
@@ -183,12 +183,12 @@ func wkt_string(wkt string) string {
 	return buffer.String()
 }
 
-//checks for the emptiness of wkt string
+// checks for the emptiness of wkt string
 func isEmptyWKT(wkt []byte) bool {
 	return bytes.Index(wkt, wktEmpty) != -1
 }
 
-//parse float
+// parse float
 func parseF64(str []byte) float64 {
 	var x, err = strconv.ParseFloat(string(str), 64)
 	if err != nil {
@@ -197,7 +197,7 @@ func parseF64(str []byte) float64 {
 	return x
 }
 
-//Parse point
+// Parse point
 func wktPointParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	var wktStr = wkt[tok.i+1 : tok.j]
 	var indices = numberIndices(wktStr)
@@ -210,7 +210,7 @@ func wktPointParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	return &WKTParserObj{gtype: typeId, shell: Coords(Coordinates(pts))}
 }
 
-//parse linestring
+// parse linestring
 func wktLinestringParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserObj {
 	return &WKTParserObj{
 		gtype: typeId,
@@ -218,7 +218,7 @@ func wktLinestringParser(typeId GeoType, wkt []byte, tok *wktToken) *WKTParserOb
 	}
 }
 
-//parse polygon
+// parse polygon
 func wktPolygonParser(typeId GeoType, wkt []byte, token *wktToken) *WKTParserObj {
 	var shell Coords
 	var obj = &WKTParserObj{gtype: typeId}
@@ -236,7 +236,7 @@ func wktPolygonParser(typeId GeoType, wkt []byte, token *wktToken) *WKTParserObj
 	return obj
 }
 
-//parse linestring
+// parse linestring
 func parseString(wkt []byte, tok *wktToken) Coords {
 	var wktStr = wkt[tok.i+1 : tok.j]
 	var indices = numberIndices(wktStr)
@@ -283,7 +283,7 @@ func parseNums(strBytes []byte, indices []int) []float64 {
 	return coordinates
 }
 
-//Detects dimension 2&3 in wkt string
+// Detects dimension 2&3 in wkt string
 func dimension(stream []byte) int {
 	var idx, i, j = -1, -1, -1
 	var dim, n = 1, len(stream)

@@ -4,7 +4,7 @@ import (
 	"bytes"
 )
 
-//linestring as string
+// linestring as string
 func (self *LineString) String() string {
 	var buf bytes.Buffer
 	var coords = self.Coordinates

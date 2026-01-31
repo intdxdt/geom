@@ -1,12 +1,13 @@
 package index
 
 import (
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/math"
 )
 
 var inf = math.Inf(1)
-var feq =  math.FloatEqual
+var feq = math.FloatEqual
+
 type sortBy int
 
 const (

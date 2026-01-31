@@ -1,8 +1,9 @@
 package geom
 
 import (
-	"github.com/franela/goblin"
 	"testing"
+
+	"github.com/franela/goblin"
 )
 
 func TestCoordinate(t *testing.T) {

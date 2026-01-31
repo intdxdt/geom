@@ -65,7 +65,7 @@ func TestCart(t *testing.T) {
 	})
 }
 
-//Test Neg
+// Test Neg
 func TestNegCart(t *testing.T) {
 	g := goblin.Goblin(t)
 	g.Describe("Negate Vector", func() {

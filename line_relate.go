@@ -5,7 +5,7 @@ import (
 	"github.com/intdxdt/sset"
 )
 
-//intersection of self linestring with other
+// intersection of self linestring with other
 func (self *LineString) linearIntersection(other *LineString) []Point {
 	var ptlist []Point
 	var ptset = sset.NewSSet(ptCmp)
@@ -44,8 +44,8 @@ func (self *LineString) linearIntersection(other *LineString) []Point {
 	return pts
 }
 
-//Checks if line intersects other line
-//other{LineString} - geometry types and array as Point
+// Checks if line intersects other line
+// other{LineString} - geometry types and array as Point
 func (self *LineString) intersects_linestring(other *LineString) bool {
 	var bln = false
 	var othersegs []int

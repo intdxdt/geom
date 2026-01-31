@@ -4,8 +4,8 @@ import (
 	"sort"
 )
 
-//do two lines intersect line segments a && b with
-//vertices lna0, lna1 and lnb0, lnb1
+// SegSegIntersection - do two lines intersect line segments a && b with
+// vertices lna0, lna1 and lnb0, lnb1
 func SegSegIntersection(sa, sb, oa, ob *Point) []InterPoint {
 	var coords []InterPoint
 	var a = ((ob[0] - oa[0]) * (sa[1] - oa[1])) - ((ob[1] - oa[1]) * (sa[0] - oa[0]))
@@ -94,7 +94,7 @@ func coincidentSegs(sa, sb, oa, ob *Point, coords []InterPoint, a, b float64) []
 	return points
 }
 
-//updates Coords that are in bounds
+// updates Coords that are in bounds
 func updateCoordsInbounds(minx, miny, maxx, maxy float64, point *Point, intpts *[]InterPoint, vbits VBits) {
 	if containsXY(minx, miny, maxx, maxy, point[X], point[Y]) {
 		*intpts = append(*intpts, InterPoint{*point, vbits})
